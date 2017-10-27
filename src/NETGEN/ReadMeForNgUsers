@@ -1,0 +1,48 @@
+# ------------------------------------------------------------------
+# ------------------------------------------------------------------
+# Notes for Netgen >= 4.9.13
+# ------------------------------------------------------------------
+# ------------------------------------------------------------------
+
+Netgen home page: http://sourceforge.net/apps/mediawiki/netgen-mesher.
+
+1. Minimal requirements
+
+Minimal version of Netgen required for SALOME is 4.9.13.
+
+2. How to build Netgen for SALOME NETGEN Plugin
+-----------------------------------------
+
+2.1. Download Netgen archive (here netgen-4.9.13.tar.gz) and unpack it
+
+2.2. Patch the Netgen distribution for SALOME
+
+       $ cd netgen45
+       $ patch -p1 < patch_directory/netgen49ForSalome.patch
+
+     Note that patch corresponds to the version of Netgen you use.
+     For example, netgen49ForSalome.patch mentioned above is a patch
+     file for Netgen 4.9.13. The patch for Netgen can be found in
+     NETGENPLUGIN_SRC/src/NETGEN directory.
+
+2.3. Configure the netgen compilation. For example
+
+       $ cd netgen-4.9.13
+       $ ./configure --prefix=THE_INSTALLATION_PATH \
+         --with-occ=${CASROOT} \
+         --with-tcl=${TCLHOME}/lib --with-tk=${TCLHOME}/lib \
+         --with-tclinclude=${TCLHOME}/include
+
+     Note that Netgen depends on some products like Open CASCADE
+     Technology and Tcl/Tk. These products should be specified
+     to the configure script via options.
+
+2.4. Compile the netgen product
+       $ make 
+       $ make install
+
+2.5. Patch the installation directory by copying include files
+     needed by NETGEN Plugin. Use the script
+     NETGENPLUGIN_SRC/src/NETGEN/netgen_copy_include_for_salome
+     to achieve that. The first argument is the directory containing
+     the Netgen sources. The second argument is THE_INSTALLATION_PATH
