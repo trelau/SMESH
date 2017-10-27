@@ -26,11 +26,11 @@
 //              <ota@localhost.localdomain>
 //
 #include "Utils_ExceptHandlers.hxx"
-#include "Utils_CorbaException.hxx"
+// #include "Utils_CorbaException.hxx"
 #include "Utils_SALOME_Exception.hxx"
 
-#include <SALOMEconfig.h>
-#include CORBA_SERVER_HEADER(SALOME_Exception)
+// #include <SALOMEconfig.h>
+// #include CORBA_SERVER_HEADER(SALOME_Exception)
 
 void SalomeException ()
 {
@@ -38,6 +38,6 @@ void SalomeException ()
 }
 
 void SALOME_SalomeException() {
-  THROW_SALOME_CORBA_EXCEPTION("INTERNAL ERROR", SALOME::INTERNAL_ERROR);
+  // THROW_SALOME_CORBA_EXCEPTION("INTERNAL ERROR", SALOME::INTERNAL_ERROR);
 }
 
