@@ -100,6 +100,8 @@
 #include <Standard_NullObject.hxx>
 #include <Standard_ErrorHandler.hxx> // CAREFUL ! position of this file is critic : see Lucien PIGNOLONI / OCC
 
+# include <V3d_Coordinate.hxx>
+
 #define MAX2(X, Y)    (Abs(X) > Abs(Y) ? Abs(X) : Abs(Y))
 #define MAX3(X, Y, Z) (MAX2(MAX2(X,Y), Z))
 
