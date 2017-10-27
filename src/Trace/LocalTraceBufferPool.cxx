@@ -122,7 +122,7 @@ LocalTraceBufferPool* LocalTraceBufferPool::instance()
 #else
               HINSTANCE handle;
               std::string impl_name = std::string ("lib") + traceKind + std::string(".dll");
-			  handle = LoadLibrary( impl_name.c_str() );
+			  handle = LoadLibraryA( impl_name.c_str() );
 #endif
               if ( handle )
                 {
