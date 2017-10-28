@@ -34,6 +34,7 @@
 #include "SMESH_HypoFilter.hxx"
 #include "SMESH_Mesh.hxx"
 #include "SMESH_subMesh.hxx"
+#include "SMESH_subMeshEventListener.hxx"
 
 #include <BRepTools_WireExplorer.hxx>
 #include <TopTools_ListIteratorOfListOfShape.hxx>
