@@ -51,7 +51,7 @@ class SMESHDS_SubMesh;
 class SMESH_Group;
 class SMESH_Mesh;
 class SMESH_MesherHelper;
-class SMESH_NodeSearcher;
+struct SMESH_NodeSearcher;
 class SMESH_subMesh;
 class TopoDS_Edge;
 class TopoDS_Shape;

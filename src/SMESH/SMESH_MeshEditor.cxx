@@ -11024,8 +11024,8 @@ bool SMESH_MeshEditor::AffectedElemGroupsInRegion( const TIDSortedElemSet& theEl
   else
   {
     const double aTol = Precision::Confusion();
-    auto_ptr< BRepClass3d_SolidClassifier> bsc3d;
-    auto_ptr<_FaceClassifier>              aFaceClassifier;
+    unique_ptr< BRepClass3d_SolidClassifier> bsc3d;
+    unique_ptr<_FaceClassifier>              aFaceClassifier;
     if ( theShape.ShapeType() == TopAbs_SOLID )
     {
       bsc3d.reset( new BRepClass3d_SolidClassifier(theShape));;

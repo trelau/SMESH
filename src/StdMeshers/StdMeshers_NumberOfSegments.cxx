@@ -244,7 +244,7 @@ void StdMeshers_NumberOfSegments::SetTableFunction(const vector<double>& table)
         val = pow( 10.0, val );
       }
       catch(Standard_Failure) {
-        Handle(Standard_Failure) aFail = Standard_Failure::Caught();
+        // Handle(Standard_Failure) aFail = Standard_Failure::Caught();
         throw SALOME_Exception( LOCALIZED( "invalid value"));
         return;
       }
@@ -341,7 +341,7 @@ bool process( const TCollection_AsciiString& str, int convMode,
     myExpr = ExprIntrp_GenExp::Create();
     myExpr->Process( str.ToCString() );
   } catch(Standard_Failure) {
-    Handle(Standard_Failure) aFail = Standard_Failure::Caught();
+    // Handle(Standard_Failure) aFail = Standard_Failure::Caught();
     parsed_ok = false;
   }
 
