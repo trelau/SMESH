@@ -76,19 +76,17 @@ namespace nglib {
 #include <nglib.h>
 }
 namespace netgen {
-#ifdef NETGEN_V5
-  extern int OCCGenerateMesh (OCCGeometry&, Mesh*&, MeshingParameters&, int, int);
+#if NETGEN_VERSION >= NETGEN_VERSION_STRING(6,2)
+	DLL_HEADER extern int OCCGenerateMesh(OCCGeometry&, shared_ptr<Mesh>&, MeshingParameters&);
+#elif NETGEN_VERSION >= NETGEN_VERSION_STRING(6,0)
+	DLL_HEADER extern int OCCGenerateMesh(OCCGeometry&, shared_ptr<Mesh>&, MeshingParameters&, int, int);
+#elif NETGEN_VERSION >= NETGEN_VERSION_STRING(5,0)
+	DLL_HEADER extern int OCCGenerateMesh(OCCGeometry&, Mesh*&, MeshingParameters&, int, int);
 #else
-  extern int OCCGenerateMesh (OCCGeometry&, Mesh*&, int, int, char*);
+	DLL_HEADER extern int OCCGenerateMesh(OCCGeometry&, Mesh*&, int, int, char*);
 #endif
-#if defined(NETGEN_V5) && defined(WIN32)
-  DLL_HEADER 
-#endif
-extern MeshingParameters mparam;
-#if defined(NETGEN_V5) && defined(WIN32)
-  DLL_HEADER
-#endif
-  extern volatile multithreadt multithread;
+	DLL_HEADER extern MeshingParameters mparam;
+	DLL_HEADER extern volatile multithreadt multithread;
 }
 using namespace nglib;
 using namespace std;
@@ -211,7 +209,11 @@ bool NETGENPlugin_NETGEN_3D::Compute(SMESH_Mesh&         aMesh,
   int Netgen_triangle[3];
 
   NETGENPlugin_NetgenLibWrapper ngLib;
+#if NETGEN_VERSION < NETGEN_VERSION_STRING(6,0)
   Ng_Mesh * Netgen_mesh = ngLib._ngMesh;
+#else
+  Ng_Mesh * Netgen_mesh = ngLib._ngMesh.get();
+#endif
 
   // vector of nodes in which node index == netgen ID
   vector< const SMDS_MeshNode* > nodeVec;
@@ -431,11 +433,17 @@ bool NETGENPlugin_NETGEN_3D::compute(SMESH_Mesh&                     aMesh,
   netgen::Mesh* ngMesh = (netgen::Mesh*)Netgen_mesh;
   int Netgen_NbOfNodes = Ng_GetNP(Netgen_mesh);
 
-#ifndef NETGEN_V5
+#if NETGEN_VERSION < NETGEN_VERSION_STRING(5,0)
   char *optstr = 0;
 #endif
+
+#if NETGEN_VERSION < NETGEN_VERSION_STRING(6,2)
   int startWith = netgen::MESHCONST_MESHVOLUME;
-  int endWith   = netgen::MESHCONST_OPTVOLUME;
+  int endWith = netgen::MESHCONST_OPTVOLUME;
+#else
+  netgen::mparam.perfstepsstart = netgen::MESHCONST_MESHVOLUME;
+  netgen::mparam.perfstepsend = netgen::MESHCONST_OPTVOLUME;
+#endif
   int err = 1;
 
   NETGENPlugin_Mesher aMesher( &aMesh, helper.GetSubShape(), /*isVolume=*/true );
@@ -463,7 +471,11 @@ bool NETGENPlugin_NETGEN_3D::compute(SMESH_Mesh&                     aMesh,
       }
     }
     if ( !_hypParameters->GetOptimize() )
-      endWith = netgen::MESHCONST_MESHVOLUME;
+#if NETGEN_VERSION < NETGEN_VERSION_STRING(6,2)
+		endWith = netgen::MESHCONST_MESHVOLUME;
+#else
+		netgen::mparam.perfstepsend = netgen::MESHCONST_MESHVOLUME;
+#endif
   }
   else if ( _hypMaxElementVolume )
   {
@@ -490,13 +502,19 @@ bool NETGENPlugin_NETGEN_3D::compute(SMESH_Mesh&                     aMesh,
   try
   {
     OCC_CATCH_SIGNALS;
-
-#ifdef NETGEN_V5
-    ngMesh->CalcLocalH(netgen::mparam.grading);
-    err = netgen::OCCGenerateMesh(occgeo, ngMesh, netgen::mparam, startWith, endWith);
+#if NETGEN_VERSION >= NETGEN_VERSION_STRING(6,0)
+	std::shared_ptr<netgen::Mesh> mesh_ptr(ngMesh, [](netgen::Mesh*) {});
+#if NETGEN_VERSION >= NETGEN_VERSION_STRING(6,2)
+	err = netgen::OCCGenerateMesh(occgeo, mesh_ptr, netgen::mparam);
 #else
-    ngMesh->CalcLocalH();
-    err = netgen::OCCGenerateMesh(occgeo, ngMesh, startWith, endWith, optstr);
+	err = netgen::OCCGenerateMesh(occgeo, mesh_ptr, netgen::mparam, startWith, endWith);
+#endif
+#elif NETGEN_VERSION >= NETGEN_VERSION_STRING(5,0)
+	ngMesh->CalcLocalH(netgen::mparam.grading);
+	err = netgen::OCCGenerateMesh(occgeo, ngMesh, netgen::mparam, startWith, endWith);
+#else
+	ngMesh->CalcLocalH();
+	err = netgen::OCCGenerateMesh(occgeo, ngMesh, startWith, endWith, optstr);
 #endif
     if(netgen::multithread.terminate)
       return false;
@@ -607,7 +625,11 @@ bool NETGENPlugin_NETGEN_3D::Compute(SMESH_Mesh&         aMesh,
   int Netgen_triangle[3];
 
   NETGENPlugin_NetgenLibWrapper ngLib;
+#if NETGEN_VERSION < NETGEN_VERSION_STRING(6,0)
   Ng_Mesh * Netgen_mesh = ngLib._ngMesh;
+#else
+  Ng_Mesh * Netgen_mesh = ngLib._ngMesh.get();
+#endif
 
   SMESH_ProxyMesh::Ptr proxyMesh( new SMESH_ProxyMesh( aMesh ));
   if ( aMesh.NbQuadrangles() > 0 )
