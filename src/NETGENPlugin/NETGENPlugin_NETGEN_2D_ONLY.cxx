@@ -63,16 +63,17 @@ namespace nglib {
 #include <meshing.hpp>
 //#include <meshtype.hpp>
 namespace netgen {
-#ifdef NETGEN_V5
-  extern int OCCGenerateMesh (OCCGeometry&, Mesh*&, MeshingParameters&, int, int);
+#if NETGEN_VERSION >= NETGEN_VERSION_STRING(6,2)
+	DLL_HEADER extern int OCCGenerateMesh(OCCGeometry&, shared_ptr<Mesh>&, MeshingParameters&);
+#elif NETGEN_VERSION >= NETGEN_VERSION_STRING(6,0)
+	DLL_HEADER extern int OCCGenerateMesh(OCCGeometry&, shared_ptr<Mesh>&, MeshingParameters&, int, int);
+#elif NETGEN_VERSION >= NETGEN_VERSION_STRING(5,0)
+	DLL_HEADER extern int OCCGenerateMesh(OCCGeometry&, Mesh*&, MeshingParameters&, int, int);
 #else
-  extern int OCCGenerateMesh (OCCGeometry&, Mesh*&, int, int, char*);
+	DLL_HEADER extern int OCCGenerateMesh(OCCGeometry&, Mesh*&, int, int, char*);
 #endif
-#if defined(NETGEN_V5) && defined(WIN32)
-  DLL_HEADER 
-#endif
-  extern MeshingParameters mparam;
-  extern void OCCSetLocalMeshSize(OCCGeometry & geom, Mesh & mesh);
+	DLL_HEADER extern MeshingParameters mparam;
+	DLL_HEADER extern void OCCSetLocalMeshSize(OCCGeometry & geom, Mesh & mesh);
 }
 
 using namespace std;
@@ -243,7 +244,12 @@ bool NETGENPlugin_NETGEN_2D_ONLY::Compute(SMESH_Mesh&         aMesh,
   ngLib._isComputeOk = false;
 
   netgen::Mesh   ngMeshNoLocSize;
-  netgen::Mesh * ngMeshes[2] = { (netgen::Mesh*) ngLib._ngMesh,  & ngMeshNoLocSize };
+
+#if NETGEN_VERSION < NETGEN_VERSION_STRING(6,0)
+  netgen::Mesh * ngMeshes[2] = { (netgen::Mesh*) ngLib._ngMesh,  &ngMeshNoLocSize };
+#else
+  netgen::Mesh * ngMeshes[2] = { (netgen::Mesh*) ngLib._ngMesh.get(),  &ngMeshNoLocSize };
+#endif
   netgen::OCCGeometry occgeoComm;
 
   // min / max sizes are set as follows:
@@ -479,19 +485,32 @@ bool NETGENPlugin_NETGEN_2D_ONLY::Compute(SMESH_Mesh&         aMesh,
       // -------------------------
       // Generate surface mesh
       // -------------------------
-
-      const int startWith = MESHCONST_MESHSURFACE;
-      const int endWith   = toOptimize ? MESHCONST_OPTSURFACE : MESHCONST_MESHSURFACE;
+#if NETGEN_VERSION < NETGEN_VERSION_STRING(6,2)
+	  const int startWith = MESHCONST_MESHSURFACE;
+	  const int endWith = toOptimize ? MESHCONST_OPTSURFACE : MESHCONST_MESHSURFACE;
+#else
+	  netgen::mparam.perfstepsstart = MESHCONST_MESHEDGES;
+	  netgen::mparam.perfstepsend = toOptimize ? MESHCONST_OPTSURFACE : MESHCONST_MESHSURFACE;
+#endif
 
       SMESH_Comment str;
       try {
         OCC_CATCH_SIGNALS;
 
-#ifdef NETGEN_V5
-        err = netgen::OCCGenerateMesh(occgeom, ngMesh, netgen::mparam, startWith, endWith);
+#if NETGEN_VERSION >= NETGEN_VERSION_STRING(6,0)
+
+		std::shared_ptr<netgen::Mesh> mesh_ptr(ngMesh, [](netgen::Mesh*) {});
+
+#if NETGEN_VERSION >= NETGEN_VERSION_STRING(6,2)
+		err = netgen::OCCGenerateMesh(occgeom, mesh_ptr, netgen::mparam);
 #else
-        char *optstr = 0;
-        err = netgen::OCCGenerateMesh(occgeom, ngMesh, startWith, endWith, optstr);
+		err = netgen::OCCGenerateMesh(occgeom, mesh_ptr, netgen::mparam, startWith, endWith);
+#endif
+#elif NETGEN_VERSION >= NETGEN_VERSION_STRING(5,0)
+		err = netgen::OCCGenerateMesh(occgeom, ngMesh, netgen::mparam, startWith, endWith);
+#else
+		char *optstr = 0;
+		err = netgen::OCCGenerateMesh(occgeom, ngMesh, startWith, endWith, optstr);
 #endif
         if ( netgen::multithread.terminate )
           return false;
