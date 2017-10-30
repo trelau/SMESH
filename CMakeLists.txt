@@ -25,7 +25,6 @@ include_directories(${VTK_INCLUDE_DIRS})
 # Boost 
 find_package(Boost)
 include_directories(${Boost_INCLUDE_DIR})
-link_directories("C:/Users/Trevor/Tools/Development/boost/boost_1_65_1/stage/lib")
 
 # pthread
 set(pthread_INCLUDE_DIRS "C:/Miniconda/envs/occt/Library/include" CACHE PATH "Path to pthread.h")
