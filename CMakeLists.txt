@@ -19,14 +19,13 @@ include_directories(${OpenCASCADE_INCLUDE_DIR})
 link_directories(${OpenCASCADE_LIBRARY_DIR})
 
 # VTK
-# find_package(VTK COMPONENTS vtkCommonCore vtkCommonDataModel vtkIOLegacy vtkFiltersVerdict)
 find_package(VTK)
 include_directories(${VTK_INCLUDE_DIRS})
 
 # Boost 
-set(Boost_USE_STATIC_LIBS OFF)
 find_package(Boost)
 include_directories(${Boost_INCLUDE_DIR})
+link_directories("C:/Users/Trevor/Tools/Development/boost/boost_1_65_1/stage/lib")
 
 # pthread
 set(pthread_INCLUDE_DIRS "C:/Miniconda/envs/occt/Library/include" CACHE PATH "Path to pthread.h")
@@ -37,27 +36,33 @@ link_directories(${pthread_LIB_DIRS})
 # NETGEN
 if(ENABLE_NETGEN)
     find_package(Netgen)
-    find_library(NETGEN_LIBRARIES nglib)
+    link_directories(${NETGEN_LIBRARY_DIR})
+    include_directories(${NETGEN_INCLUDE_DIR})
+    include_directories(${NETGEN_INCLUDE_DIR}/occ)
+    include_directories(${NETGEN_INCLUDE_DIR}/meshing)
+    include_directories(${NETGEN_INCLUDE_DIR}/general)
+    include_directories(${NETGEN_INCLUDE_DIR}/linalg)
+    include_directories(${NETGEN_INCLUDE_DIR}/csg)
+    include_directories(${NETGEN_INCLUDE_DIR}/geom2d)
+    include_directories(${NETGEN_INCLUDE_DIR}/gprim)
+    include_directories(${NETGEN_INCLUDE_DIR}/include)
+    include_directories(${NETGEN_INCLUDE_DIR}/stlgeom)
     
-    include_directories(${NGLIB_INCLUDE_PATH})
-    include_directories(${NETGEN_INCLUDE_PATH})
-    include_directories(${NETGEN_INCLUDE_PATH}/occ)
-    include_directories(${NETGEN_INCLUDE_PATH}/meshing)
-    include_directories(${NETGEN_INCLUDE_PATH}/general)
-    include_directories(${NETGEN_INCLUDE_PATH}/linalg)
-    include_directories(${NETGEN_INCLUDE_PATH}/csg)
-    include_directories(${NETGEN_INCLUDE_PATH}/geom2d)
-    include_directories(${NETGEN_INCLUDE_PATH}/gprim)
-    include_directories(${NETGEN_INCLUDE_PATH}/include)
-    include_directories(${NETGEN_INCLUDE_PATH}/stlgeom)
-    
-    # Manually set NETGEN_VERSION
-    set(NETGEN_VERSION_MAJOR 6)
-    set(NETGEN_VERSION_MINOR 2)
+    # Set NETGEN_VERSION
+    file(STRINGS ${NETGEN_INCLUDE_DIR}/mydefs.hpp NETGEN_VERSION
+        REGEX "#define PACKAGE_VERSION.*"
+    )
+    string(REGEX MATCHALL "[0-9]+" NETGEN_VERSION ${NETGEN_VERSION})
+    list(LENGTH NETGEN_VERSION NETGEN_VERSION_COUNT)
+    list(GET NETGEN_VERSION 0 NETGEN_VERSION_MAJOR)
+    if(NETGEN_VERSION_COUNT GREATER 1)
+        list(GET NETGEN_VERSION 1 NETGEN_VERSION_MINOR)
+    else()
+        set(NETGEN_VERSION_MINOR 0)
+    endif()
+
     MATH(EXPR NETGEN_VERSION "(${NETGEN_VERSION_MAJOR} << 16) + (${NETGEN_VERSION_MINOR} << 8)")
     MESSAGE(STATUS "Using NETGEN version ${NETGEN_VERSION_MAJOR}.${NETGEN_VERSION_MINOR}, calculated: ${NETGEN_VERSION}")
-    
-    add_definitions(-DNETGEN_VERSION=${NETGEN_VERSION} -DNO_PARALLEL_THREADS -DOCCGEOMETRY -DNETGENPLUGIN_EXPORTS)
     
 endif(ENABLE_NETGEN)
 
@@ -93,19 +98,6 @@ else(UNIX)
   endif(WIN32)
 endif(UNIX)
 
-# Fix with std:unique_ptr template
-# if(CMAKE_COMPILER_IS_GNUCXX)
-#   set(CMAKE_CXX_FLAGS "-std=c++0x")
-# endif(CMAKE_COMPILER_IS_GNUCXX)
-# if(APPLE)
-#   set(CMAKE_CXX_FLAGS "-std=c++11 -stdlib=libc++")
-# endif(APPLE)
-
-# Configure file
-# configure_file(${CMAKE_CURRENT_SOURCE_DIR}/cmake/SMESHConfig.cmake.in
-# 	${CMAKE_CURRENT_BINARY_DIR}/SMESHConfig.cmake @ONLY)
-# install(FILES ${CMAKE_CURRENT_BINARY_DIR}/SMESHConfig.cmake DESTINATION cmake)
-
 # Basics
 file(GLOB Basics_SRC src/Basics/*.cxx)
 add_library(SMESHBasics SHARED ${Basics_SRC})
@@ -127,7 +119,6 @@ file(GLOB Driver_SRC src/Driver/*.cxx)
 add_library(Driver SHARED ${Driver_SRC})
 target_link_libraries(Driver SMESHMisc SMESHDS SMESHUtils TKernel TKTopAlgo)
 if(WIN32)
-    # set_target_properties(Driver PROPERTIES COMPILE_FLAGS "-DMESHDRIVER_EXPORTS -DSMESHUtils_EXPORTS")
     set_target_properties(Driver PROPERTIES COMPILE_FLAGS "-DMESHDRIVER_EXPORTS")
 endif(WIN32)
 
@@ -178,10 +169,14 @@ endif(WIN32)
 
 # NETGENPlugin
 if(ENABLE_NETGEN)
-    
     file(GLOB NETGENPlugin_SRC src/NETGENPlugin/*.cxx)
     add_library(NETGENPlugin SHARED ${NETGENPlugin_SRC})
-    
+    target_link_libraries(NETGENPlugin StdMeshers nglib)
+    if(WIN32)
+        set_target_properties(NETGENPlugin PROPERTIES COMPILE_FLAGS "-DNETGENPLUGIN_EXPORTS -DNO_PARALLEL_THREADS -DOCCGEOMETRY -DNETGEN_VERSION=${NETGEN_VERSION}")
+    else()
+        set_target_properties(NETGENPlugin PROPERTIES COMPILE_FLAGS "${NETGEN_CXX_FLAGS}")
+    endif(WIN32)    
 endif(ENABLE_NETGEN)
 
 # SMDS
