@@ -245,3 +245,9 @@ install(TARGETS ${SMESH_LIBRARIES}
 
 install(DIRECTORY ${CMAKE_SOURCE_DIR}/inc/
     DESTINATION "include/smesh")
+
+# Configuration file
+configure_file(${CMAKE_CURRENT_SOURCE_DIR}/cmake/SMESHConfig.cmake.in
+	${CMAKE_CURRENT_BINARY_DIR}/SMESHConfig.cmake @ONLY)
+
+install(FILES ${CMAKE_CURRENT_BINARY_DIR}/SMESHConfig.cmake DESTINATION cmake)
