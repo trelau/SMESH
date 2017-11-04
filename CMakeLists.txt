@@ -14,16 +14,16 @@ option(ENABLE_NETGEN "Enable NETGEN" OFF)
 include_directories(inc)
 
 # OpenCASCADE
-find_package(OpenCASCADE)
+find_package(OpenCASCADE REQUIRED)
 include_directories(${OpenCASCADE_INCLUDE_DIR})
 link_directories(${OpenCASCADE_LIBRARY_DIR})
 
 # VTK
-find_package(VTK)
+find_package(VTK REQUIRED)
 include_directories(${VTK_INCLUDE_DIRS})
 
 # Boost 
-find_package(Boost)
+find_package(Boost REQUIRED)
 include_directories(${Boost_INCLUDE_DIR})
 
 # pthread
@@ -34,7 +34,7 @@ link_directories(${pthread_LIB_DIRS})
 
 # NETGEN
 if(ENABLE_NETGEN)
-    find_package(Netgen)
+    find_package(Netgen REQUIRED)
     link_directories(${NETGEN_LIBRARY_DIR})
     include_directories(${NETGEN_INCLUDE_DIR})
     include_directories(${NETGEN_INCLUDE_DIR}/occ)
@@ -132,7 +132,7 @@ endif(WIN32)
 # DriverGMF
 file(GLOB DriverGMF_SRC src/DriverGMF/*.cxx src/DriverGMF/libmesh5.c)
 add_library(DriverGMF SHARED ${DriverGMF_SRC})
-target_link_libraries(DriverGMF SMESHBasics SMESHUtils Driver ${Boost_LIBRARIES})
+target_link_libraries(DriverGMF SMESHBasics SMESHUtils Driver)
 if(WIN32)
     set_target_properties(DriverGMF PROPERTIES COMPILE_FLAGS "-DMESHDriverGMF_EXPORTS")
 endif(WIN32)
@@ -189,7 +189,7 @@ endif(WIN32)
 # SMESH
 file(GLOB SMESH_SRC src/SMESH/*.cxx)
 add_library(SMESH SHARED ${SMESH_SRC})
-target_link_libraries(SMESH SMESHControls SMESHMisc SMESHDS DriverDAT DriverSTL DriverUNV DriverGMF TKShHealing TKPrim TKG2d TKCDF ${Boost_LIBRARIES})
+target_link_libraries(SMESH SMESHControls SMESHMisc SMESHDS DriverDAT DriverSTL DriverUNV DriverGMF TKShHealing TKPrim TKG2d TKCDF)
 if(WIN32)
     set_target_properties(SMESH PROPERTIES COMPILE_FLAGS "-DSMESHimpl_EXPORTS")
 endif(WIN32)
@@ -223,7 +223,7 @@ endif(WIN32)
 # Utils
 file(GLOB Utils_SRC src/Utils/*.cxx)
 add_library(SMESHUtils SHARED ${Utils_SRC})
-target_link_libraries(SMESHUtils SMDS TKShHealing TKPrim TKernel TKBRep TKG2d TKG3d TKGeomBase TKGeomAlgo TKTopAlgo TKMesh ${Boost_LIBRARIES})
+target_link_libraries(SMESHUtils SMDS TKShHealing TKPrim TKernel TKBRep TKG2d TKG3d TKGeomBase TKGeomAlgo TKTopAlgo TKMesh)
 if(WIN32)
     set_target_properties(SMESHUtils PROPERTIES COMPILE_FLAGS "-DSMESHUtils_EXPORTS")
 endif(WIN32)
