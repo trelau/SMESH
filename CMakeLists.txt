@@ -193,7 +193,7 @@ endif(WIN32)
 # SMESH
 file(GLOB SMESH_SRC src/SMESH/*.cxx)
 add_library(SMESH ${SMESH_SRC})
-target_link_libraries(SMESH SMESHControls SMESHMisc SMESHDS DriverDAT DriverSTL DriverUNV DriverGMF TKShHealing TKPrim TKG2d TKCDF)
+target_link_libraries(SMESH SMESHControls SMESHMisc SMESHDS DriverDAT DriverSTL DriverUNV DriverGMF TKShHealing TKPrim TKG2d TKCDF TKMeshVS)
 if(WIN32)
     set_target_properties(SMESH PROPERTIES COMPILE_FLAGS "-DSMESHimpl_EXPORTS")
 endif(WIN32)

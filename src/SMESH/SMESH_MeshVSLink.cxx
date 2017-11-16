@@ -26,6 +26,7 @@
 
 //local headers
 #include <SMESH_MeshVSLink.hxx>
+#include <SMESHDS_Mesh.hxx>
 #include <SMESHDS_Group.hxx>
 
 //occ headers
@@ -47,6 +48,8 @@ IMPLEMENT_STANDARD_RTTIEXT(SMESH_MeshVSLink,MeshVS_DataSource3D)
 #define MAX_SORT_NODE_COUNT 12
 
 typedef std::map<double, int> T_Double_NodeID_Map;
+
+using std::make_pair;
 
 //=======================================================================
 //function : sortNodes
