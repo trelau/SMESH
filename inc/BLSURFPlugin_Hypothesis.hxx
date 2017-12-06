@@ -27,6 +27,8 @@
 #ifndef _BLSURFPlugin_Hypothesis_HXX_
 #define _BLSURFPlugin_Hypothesis_HXX_
 
+#include <BLSURFPlugin_Defs.hxx>
+
 #include "SMESH_Hypothesis.hxx"
 #include <vector>
 #include <map>
@@ -40,7 +42,7 @@
 
 //  Parameters for work of MG-CADSurf
 
-class BLSURFPlugin_Hypothesis: public SMESH_Hypothesis
+class BLSURFPLUGIN_EXPORT BLSURFPlugin_Hypothesis: public SMESH_Hypothesis
 {
 public:
   BLSURFPlugin_Hypothesis(int hypId, int studyId, SMESH_Gen * gen, bool hasgeom);

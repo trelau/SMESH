@@ -32,6 +32,8 @@
 #ifndef _BLSURFPlugin_Attractor_HXX_
 #define _BLSURFPlugin_Attractor_HXX_
 
+#include <BLSURFPlugin_Defs.hxx>
+
 #include <vector>
 #include <map>
 #include <set>
@@ -79,7 +81,7 @@
 #define TYPE_EXP 0
 #define TYPE_LIN 1
 
-class BLSURFPlugin_Attractor {
+class BLSURFPLUGIN_EXPORT BLSURFPlugin_Attractor {
   
   public:
     

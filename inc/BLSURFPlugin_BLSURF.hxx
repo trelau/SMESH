@@ -27,6 +27,8 @@
 #ifndef _BLSURFPlugin_BLSURF_HXX_
 #define _BLSURFPlugin_BLSURF_HXX_
 
+#include <BLSURFPlugin_Defs.hxx>
+
 #include <TopoDS.hxx>
 #include <TopoDS_Vertex.hxx>
 #include <TopoDS_Edge.hxx>
@@ -74,7 +76,7 @@ extern "C"{
 
 class TopoDS_Shape;
 
-class BLSURFPlugin_BLSURF: public SMESH_2D_Algo {
+class BLSURFPLUGIN_EXPORT BLSURFPlugin_BLSURF: public SMESH_2D_Algo {
   public:
     BLSURFPlugin_BLSURF(int hypId, int studyId, SMESH_Gen* gen, bool theHasGEOM);
 
