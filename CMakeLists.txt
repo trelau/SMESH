@@ -242,18 +242,16 @@ endif(WIN32)
 # BLSURFPlugin
 if(ENABLE_BLSURF)
     # Python requried
-    find_package(PythonLibs)
-    include_directories(${PYTHON_INCLUDE_PATH})
-
+    # find_package(PythonLibs)
+    # include_directories(${PYTHON_INCLUDE_PATH})
     # Include MeshGems
     include_directories(${MESHGEMS_INCLUDE})
     file(GLOB BLSURFPlugin_SRC src/BLSURFPlugin/*.cxx)
     add_library(BLSURFPlugin ${BLSURFPlugin_SRC})
-    target_link_libraries(BLSURFPlugin ${PYTHON_LIBRARY} TKBRep TKG2d TKG3d TKGeomBase TKGeomAlgo TKShHealing SMDS SMESHDS SMESH StdMeshers ${MESHGEMS_CADSURF_LIB} ${MESHGEMS_LIB})
+    target_link_libraries(BLSURFPlugin TKBRep TKG2d TKG3d TKGeomBase TKGeomAlgo TKShHealing SMDS SMESHDS SMESH StdMeshers ${MESHGEMS_CADSURF_LIB} ${MESHGEMS_LIB})
     if(WIN32)
         set_target_properties(BLSURFPlugin PROPERTIES COMPILE_FLAGS "-DBLSURFPLUGIN_EXPORTS")
     endif(WIN32)
-    # TODO Add to SMESH_LIBRARIES
 endif(ENABLE_BLSURF)
 
 # Install

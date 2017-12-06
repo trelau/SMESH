@@ -33,7 +33,7 @@ extern "C"{
 #include <meshgems/cadsurf.h>
 }
 
-#include <structmember.h>
+// #include <structmember.h>
 
 
 #include <Basics_Utils.hxx>
@@ -104,105 +104,105 @@ using namespace std;
  * ===========  PYTHON ==============
  * ==================================*/
 
-namespace
-{
-  typedef struct {
-    PyObject_HEAD
-    int softspace;
-    std::string *out;
-    } PyStdOut;
-
-  static void
-  PyStdOut_dealloc(PyStdOut *self)
-  {
-    PyObject_Del(self);
-  }
-
-  static PyObject *
-  PyStdOut_write(PyStdOut *self, PyObject *args)
-  {
-    char *c;
-    int l;
-    if (!PyArg_ParseTuple(args, "t#:write",&c, &l))
-      return NULL;
-
-    *(self->out)=*(self->out)+c;
-
-    Py_INCREF(Py_None);
-    return Py_None;
-  }
-
-  static PyMethodDef PyStdOut_methods[] = {
-    {"write",  (PyCFunction)PyStdOut_write,  METH_VARARGS,
-      PyDoc_STR("write(string) -> None")},
-    {NULL,    NULL}   /* sentinel */
-  };
-
-  static PyMemberDef PyStdOut_memberlist[] = {
-    {(char*)"softspace", T_INT,  offsetof(PyStdOut, softspace), 0,
-     (char*)"flag indicating that a space needs to be printed; used by print"},
-    {NULL} /* Sentinel */
-  };
-
-  static PyTypeObject PyStdOut_Type = {
-    /* The ob_type field must be initialized in the module init function
-     * to be portable to Windows without using C++. */
-    PyObject_HEAD_INIT(NULL)
-    // TODO Removed from Python2. Could add #indef for Python 2/3 support.
-	// 0,                            /*ob_size*/
-    "PyOut",                      /*tp_name*/
-    sizeof(PyStdOut),             /*tp_basicsize*/
-    0,                            /*tp_itemsize*/
-    /* methods */
-    (destructor)PyStdOut_dealloc, /*tp_dealloc*/
-    0,                            /*tp_print*/
-    0,                            /*tp_getattr*/
-    0,                            /*tp_setattr*/
-    0,                            /*tp_compare*/
-    0,                            /*tp_repr*/
-    0,                            /*tp_as_number*/
-    0,                            /*tp_as_sequence*/
-    0,                            /*tp_as_mapping*/
-    0,                            /*tp_hash*/
-    0,                            /*tp_call*/
-    0,                            /*tp_str*/
-    PyObject_GenericGetAttr,      /*tp_getattro*/
-    /* softspace is writable:  we must supply tp_setattro */
-    PyObject_GenericSetAttr,      /* tp_setattro */
-    0,                            /*tp_as_buffer*/
-    Py_TPFLAGS_DEFAULT,           /*tp_flags*/
-    0,                            /*tp_doc*/
-    0,                            /*tp_traverse*/
-    0,                            /*tp_clear*/
-    0,                            /*tp_richcompare*/
-    0,                            /*tp_weaklistoffset*/
-    0,                            /*tp_iter*/
-    0,                            /*tp_iternext*/
-    PyStdOut_methods,             /*tp_methods*/
-    PyStdOut_memberlist,          /*tp_members*/
-    0,                            /*tp_getset*/
-    0,                            /*tp_base*/
-    0,                            /*tp_dict*/
-    0,                            /*tp_descr_get*/
-    0,                            /*tp_descr_set*/
-    0,                            /*tp_dictoffset*/
-    0,                            /*tp_init*/
-    0,                            /*tp_alloc*/
-    0,                            /*tp_new*/
-    0,                            /*tp_free*/
-    0,                            /*tp_is_gc*/
-  };
-
-  PyObject * newPyStdOut( std::string& out )
-  {
-    PyStdOut* self = PyObject_New(PyStdOut, &PyStdOut_Type);
-    if (self) {
-      self->softspace = 0;
-      self->out=&out;
-    }
-    return (PyObject*)self;
-  }
- }
+//namespace
+//{
+//  typedef struct {
+//    PyObject_HEAD
+//    int softspace;
+//    std::string *out;
+//    } PyStdOut;
+//
+//  static void
+//  PyStdOut_dealloc(PyStdOut *self)
+//  {
+//    PyObject_Del(self);
+//  }
+//
+//  static PyObject *
+//  PyStdOut_write(PyStdOut *self, PyObject *args)
+//  {
+//    char *c;
+//    int l;
+//    if (!PyArg_ParseTuple(args, "t#:write",&c, &l))
+//      return NULL;
+//
+//    *(self->out)=*(self->out)+c;
+//
+//    Py_INCREF(Py_None);
+//    return Py_None;
+//  }
+//
+//  static PyMethodDef PyStdOut_methods[] = {
+//    {"write",  (PyCFunction)PyStdOut_write,  METH_VARARGS,
+//      PyDoc_STR("write(string) -> None")},
+//    {NULL,    NULL}   /* sentinel */
+//  };
+//
+//  static PyMemberDef PyStdOut_memberlist[] = {
+//    {(char*)"softspace", T_INT,  offsetof(PyStdOut, softspace), 0,
+//     (char*)"flag indicating that a space needs to be printed; used by print"},
+//    {NULL} /* Sentinel */
+//  };
+//
+//  static PyTypeObject PyStdOut_Type = {
+//    /* The ob_type field must be initialized in the module init function
+//     * to be portable to Windows without using C++. */
+//    PyObject_HEAD_INIT(NULL)
+//    // TODO Removed from Python2. Could add #indef for Python 2/3 support.
+//	// 0,                            /*ob_size*/
+//    "PyOut",                      /*tp_name*/
+//    sizeof(PyStdOut),             /*tp_basicsize*/
+//    0,                            /*tp_itemsize*/
+//    /* methods */
+//    (destructor)PyStdOut_dealloc, /*tp_dealloc*/
+//    0,                            /*tp_print*/
+//    0,                            /*tp_getattr*/
+//    0,                            /*tp_setattr*/
+//    0,                            /*tp_compare*/
+//    0,                            /*tp_repr*/
+//    0,                            /*tp_as_number*/
+//    0,                            /*tp_as_sequence*/
+//    0,                            /*tp_as_mapping*/
+//    0,                            /*tp_hash*/
+//    0,                            /*tp_call*/
+//    0,                            /*tp_str*/
+//    PyObject_GenericGetAttr,      /*tp_getattro*/
+//    /* softspace is writable:  we must supply tp_setattro */
+//    PyObject_GenericSetAttr,      /* tp_setattro */
+//    0,                            /*tp_as_buffer*/
+//    Py_TPFLAGS_DEFAULT,           /*tp_flags*/
+//    0,                            /*tp_doc*/
+//    0,                            /*tp_traverse*/
+//    0,                            /*tp_clear*/
+//    0,                            /*tp_richcompare*/
+//    0,                            /*tp_weaklistoffset*/
+//    0,                            /*tp_iter*/
+//    0,                            /*tp_iternext*/
+//    PyStdOut_methods,             /*tp_methods*/
+//    PyStdOut_memberlist,          /*tp_members*/
+//    0,                            /*tp_getset*/
+//    0,                            /*tp_base*/
+//    0,                            /*tp_dict*/
+//    0,                            /*tp_descr_get*/
+//    0,                            /*tp_descr_set*/
+//    0,                            /*tp_dictoffset*/
+//    0,                            /*tp_init*/
+//    0,                            /*tp_alloc*/
+//    0,                            /*tp_new*/
+//    0,                            /*tp_free*/
+//    0,                            /*tp_is_gc*/
+//  };
+//
+//  PyObject * newPyStdOut( std::string& out )
+//  {
+//    PyStdOut* self = PyObject_New(PyStdOut, &PyStdOut_Type);
+//    if (self) {
+//      self->softspace = 0;
+//      self->out=&out;
+//    }
+//    return (PyObject*)self;
+//  }
+// }
 
 
 ////////////////////////END PYTHON///////////////////////////
@@ -216,9 +216,9 @@ std::map<int,string> EdgeId2SizeMap;
 TopTools_IndexedMapOfShape VerticesWithSizeMap;
 std::map<int,string> VertexId2SizeMap;
 
-std::map<int,PyObject*> FaceId2PythonSmp;
-std::map<int,PyObject*> EdgeId2PythonSmp;
-std::map<int,PyObject*> VertexId2PythonSmp;
+// std::map<int,PyObject*> FaceId2PythonSmp;
+// std::map<int,PyObject*> EdgeId2PythonSmp;
+// std::map<int,PyObject*> VertexId2PythonSmp;
 
 typedef std::map<int, std::vector< BLSURFPlugin_Attractor* > > TId2ClsAttractorVec;
 TId2ClsAttractorVec FaceId2ClassAttractor;
@@ -270,6 +270,7 @@ BLSURFPlugin_BLSURF::BLSURFPlugin_BLSURF(int        hypId,
   */
 
   /* Initialize the Python interpreter */
+  /*
   assert(Py_IsInitialized());
   PyGILState_STATE gstate;
   gstate = PyGILState_Ensure();
@@ -282,6 +283,7 @@ BLSURFPlugin_BLSURF::BLSURFPlugin_BLSURF(int        hypId,
 
   PyRun_SimpleString("from math import *");
   PyGILState_Release(gstate);
+  */
 
   FacesWithSizeMap.Clear();
   FaceId2SizeMap.clear();
@@ -289,9 +291,9 @@ BLSURFPlugin_BLSURF::BLSURFPlugin_BLSURF(int        hypId,
   EdgeId2SizeMap.clear();
   VerticesWithSizeMap.Clear();
   VertexId2SizeMap.clear();
-  FaceId2PythonSmp.clear();
-  EdgeId2PythonSmp.clear();
-  VertexId2PythonSmp.clear();
+  // FaceId2PythonSmp.clear();
+  // EdgeId2PythonSmp.clear();
+  // VertexId2PythonSmp.clear();
   FaceId2AttractorCoords.clear();
   FaceId2ClassAttractor.clear();
   FaceIndex2ClassAttractor.clear();
@@ -857,9 +859,9 @@ void BLSURFPlugin_BLSURF::SetParameters(const BLSURFPlugin_Hypothesis* hyp,
   EdgeId2SizeMap.clear();
   VerticesWithSizeMap.Clear();
   VertexId2SizeMap.clear();
-  FaceId2PythonSmp.clear();
-  EdgeId2PythonSmp.clear();
-  VertexId2PythonSmp.clear();
+  // FaceId2PythonSmp.clear();
+  // EdgeId2PythonSmp.clear();
+  // VertexId2PythonSmp.clear();
   FaceId2AttractorCoords.clear();
   FaceId2ClassAttractor.clear();
   FaceIndex2ClassAttractor.clear();
@@ -1970,9 +1972,9 @@ bool BLSURFPlugin_BLSURF::compute(SMESH_Mesh&         aMesh,
 
   emap.Clear();
   pmap.Clear();
-  FaceId2PythonSmp.clear();
-  EdgeId2PythonSmp.clear();
-  VertexId2PythonSmp.clear();
+  // FaceId2PythonSmp.clear();
+  // EdgeId2PythonSmp.clear();
+  // VertexId2PythonSmp.clear();
 
   /****************************************************************************************
                                           FACES
@@ -1984,8 +1986,8 @@ bool BLSURFPlugin_BLSURF::compute(SMESH_Mesh&         aMesh,
   TopExp::MapShapes(aShape,TopAbs_VERTEX,_map);
   int ienf = _map.Extent();
 
-  assert(Py_IsInitialized());
-  PyGILState_STATE gstate;
+  // assert(Py_IsInitialized());
+  // PyGILState_STATE gstate;
 
   string theSizeMapStr;
 
@@ -2043,6 +2045,8 @@ bool BLSURFPlugin_BLSURF::compute(SMESH_Mesh&         aMesh,
         if (theSizeMapStr.find(bad_end) == (theSizeMapStr.size()-bad_end.size()-1))
           continue;
         // Expr To Python function, verification is performed at validation in GUI
+		throw SALOME_Exception("Python expression not supported for size map.");
+		/*
         gstate = PyGILState_Ensure();
         PyObject * obj = NULL;
         obj= PyRun_String(theSizeMapStr.c_str(), Py_file_input, main_dict, NULL);
@@ -2052,6 +2056,7 @@ bool BLSURFPlugin_BLSURF::compute(SMESH_Mesh&         aMesh,
         FaceId2PythonSmp[iface]=func;
         FaceId2SizeMap.erase(faceKey);
         PyGILState_Release(gstate);
+		*/
       }
 
       // Specific size map = Attractor
@@ -2168,6 +2173,8 @@ bool BLSURFPlugin_BLSURF::compute(SMESH_Mesh&         aMesh,
           if (theSizeMapStr.find(bad_end) == (theSizeMapStr.size()-bad_end.size()-1))
             continue;
           // Expr To Python function, verification is performed at validation in GUI
+		  throw SALOME_Exception("Python expression not supported for size map.");
+		  /*
           gstate = PyGILState_Ensure();
           PyObject * obj = NULL;
           obj= PyRun_String(theSizeMapStr.c_str(), Py_file_input, main_dict, NULL);
@@ -2177,6 +2184,7 @@ bool BLSURFPlugin_BLSURF::compute(SMESH_Mesh&         aMesh,
           EdgeId2PythonSmp[ic]=func;
           EdgeId2SizeMap.erase(edgeKey);
           PyGILState_Release(gstate);
+		  */
         }
       }
       /* data of nodes existing on the edge */
@@ -2321,6 +2329,8 @@ bool BLSURFPlugin_BLSURF::compute(SMESH_Mesh&         aMesh,
             if (theSizeMapStr.find(bad_end) == (theSizeMapStr.size()-bad_end.size()-1))
               continue;
             // Expr To Python function, verification is performed at validation in GUI
+			throw SALOME_Exception("Python expression not supported for size map.");
+			/*
             gstate = PyGILState_Ensure();
             PyObject * obj = NULL;
             obj= PyRun_String(theSizeMapStr.c_str(), Py_file_input, main_dict, NULL);
@@ -2330,6 +2340,7 @@ bool BLSURFPlugin_BLSURF::compute(SMESH_Mesh&         aMesh,
             VertexId2PythonSmp[*ip]=func;
             VertexId2SizeMap.erase(vertexKey);   // do not erase if using a vector
             PyGILState_Release(gstate);
+			*/
           }
         }
       }
@@ -3198,6 +3209,7 @@ status_t surf_fun(real *uv, real *xyz, real*du, real *dv,
 status_t size_on_surface(integer face_id, real *uv, real *size, void *user_data)
 {
   TId2ClsAttractorVec::iterator f2attVec;
+  /*
   if (FaceId2PythonSmp.count(face_id) != 0){
     assert(Py_IsInitialized());
     PyGILState_STATE gstate;
@@ -3225,7 +3237,8 @@ status_t size_on_surface(integer face_id, real *uv, real *size, void *user_data)
     *size = result;
     PyGILState_Release(gstate);
   }
-  else if (( f2attVec = FaceIndex2ClassAttractor.find(face_id)) != FaceIndex2ClassAttractor.end() && !f2attVec->second.empty())
+  */
+  if (( f2attVec = FaceIndex2ClassAttractor.find(face_id)) != FaceIndex2ClassAttractor.end() && !f2attVec->second.empty())
   {
     real result = 0;
     result = 1e100;
@@ -3247,7 +3260,8 @@ status_t size_on_surface(integer face_id, real *uv, real *size, void *user_data)
 
 status_t size_on_edge(integer edge_id, real t, real *size, void *user_data)
 {
-  if (EdgeId2PythonSmp.count(edge_id) != 0){
+  /*
+	if (EdgeId2PythonSmp.count(edge_id) != 0){
     assert(Py_IsInitialized());
     PyGILState_STATE gstate;
     gstate = PyGILState_Ensure();
@@ -3277,12 +3291,15 @@ status_t size_on_edge(integer edge_id, real t, real *size, void *user_data)
   else {
     *size = *((real*)user_data);
   }
+  */
+  *size = *((real*)user_data);
   return STATUS_OK;
 }
 
 status_t size_on_vertex(integer point_id, real *size, void *user_data)
 {
-  if (VertexId2PythonSmp.count(point_id) != 0){
+  /*
+	if (VertexId2PythonSmp.count(point_id) != 0){
     assert(Py_IsInitialized());
     PyGILState_STATE gstate;
     gstate = PyGILState_Ensure();
@@ -3312,6 +3329,8 @@ status_t size_on_vertex(integer point_id, real *size, void *user_data)
   else {
     *size = *((real*)user_data);
   }
+  */
+ *size = *((real*)user_data);
  return STATUS_OK;
 }
 

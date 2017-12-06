@@ -48,7 +48,7 @@
 #undef _XOPEN_SOURCE
 #endif
 
-#include <Python.h>
+// #include <Python.h>
 #include <SMESH_Algo.hxx>
 #include <SMESH_Mesh.hxx>
 #include <SMESHDS_Mesh.hxx>
@@ -159,8 +159,8 @@ class BLSURFPLUGIN_EXPORT BLSURFPlugin_BLSURF: public SMESH_2D_Algo {
     void BRepClass_FaceClassifierPerform(BRepClass_FaceClassifier* fc, const TopoDS_Face& face, const gp_Pnt& P, const Standard_Real Tol);
 
   private:
-      PyObject *          main_mod;
-      PyObject *          main_dict;
+      // PyObject *          main_mod;
+      // PyObject *          main_dict;
       SMESH_MesherHelper* myHelper;
       // SALOMEDS::Study_var myStudy;
       // SMESH_Gen_i*        smeshGen_i;
