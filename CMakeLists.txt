@@ -4,7 +4,14 @@ cmake_minimum_required(VERSION 2.8)
 
 # Options
 option(ENABLE_NETGEN "Enable NETGEN" OFF)
-set(CMAKE_INSTALL_PREFIX "${CMAKE_SOURCE_DIR}/install" CACHE PATH "Installation directory." FORCE)
+option(ENABLE_BLSURF "Enable BLSURF" OFF)
+set(CMAKE_INSTALL_PREFIX "${CMAKE_SOURCE_DIR}/install" CACHE PATH "Installation directory.")
+
+if(ENABLE_BLSURF)
+    set(MESHGEMS_INCLUDE "" CACHE PATH "MeshGems include directory.")
+    set(MESHGEMS_LIB "" CACHE FILE "MeshGems library.")
+    set(MESHGEMS_CADSURF_LIB "" CACHE FILE "MeshGems MG-CADSurf library.")
+endif(ENABLE_BLSURF)
 
 set(SMESH_VERSION_MAJOR 8)
 set(SMESH_VERSION_MINOR 3)
@@ -231,6 +238,23 @@ target_link_libraries(SMESHUtils SMDS TKShHealing TKPrim TKernel TKBRep TKG2d TK
 if(WIN32)
     set_target_properties(SMESHUtils PROPERTIES COMPILE_FLAGS "-DSMESHUtils_EXPORTS")
 endif(WIN32)
+
+# BLSURFPlugin
+if(ENABLE_BLSURF)
+    # Python requried
+    find_package(PythonLibs)
+    include_directories(${PYTHON_INCLUDE_PATH})
+
+    # Include MeshGems
+    include_directories(${MESHGEMS_INCLUDE})
+    file(GLOB BLSURFPlugin_SRC src/BLSURFPlugin/*.cxx)
+    add_library(BLSURFPlugin ${BLSURFPlugin_SRC})
+    target_link_libraries(BLSURFPlugin ${PYTHON_LIBRARY} TKBRep TKG2d TKG3d TKGeomBase TKGeomAlgo TKShHealing SMDS SMESHDS SMESH StdMeshers ${MESHGEMS_CADSURF_LIB} ${MESHGEMS_LIB})
+    if(WIN32)
+        # set_target_properties(NETGENPlugin PROPERTIES COMPILE_FLAGS "-DNETGENPLUGIN_EXPORTS -DNO_PARALLEL_THREADS -DOCCGEOMETRY -DNETGEN_VERSION=${NETGEN_VERSION}")
+    endif(WIN32)
+    # TODO Add to SMESH_LIBRARIES
+endif(ENABLE_BLSURF)
 
 # Install
 if(ENABLE_NETGEN)

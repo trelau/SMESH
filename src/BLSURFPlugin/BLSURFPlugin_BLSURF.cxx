@@ -148,7 +148,8 @@ namespace
     /* The ob_type field must be initialized in the module init function
      * to be portable to Windows without using C++. */
     PyObject_HEAD_INIT(NULL)
-    0,                            /*ob_size*/
+    // TODO Removed from Python2. Could add #indef for Python 2/3 support.
+	// 0,                            /*ob_size*/
     "PyOut",                      /*tp_name*/
     sizeof(PyStdOut),             /*tp_basicsize*/
     0,                            /*tp_itemsize*/
