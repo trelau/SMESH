@@ -26,7 +26,8 @@
 //
 #include "BLSURFPlugin_Hypothesis.hxx"
 #include "BLSURFPlugin_Attractor.hxx"
-#include "SMESH_Gen_i.hxx"
+// #include "SMESH_Gen_i.hxx"
+#include "SMESH_Gen.hxx"
 #include <utilities.h>
 #include <cstring>
 #include <iostream>
@@ -36,8 +37,8 @@
 #include "ShapeAnalysis.hxx"
 
 // CORBA includes
-#include CORBA_CLIENT_HEADER(SALOMEDS)
-#include CORBA_CLIENT_HEADER(GEOM_Gen)
+// #include CORBA_CLIENT_HEADER(SALOMEDS)
+// #include CORBA_CLIENT_HEADER(GEOM_Gen)
 
 namespace
 {
@@ -255,6 +256,9 @@ BLSURFPlugin_Hypothesis::BLSURFPlugin_Hypothesis(int hypId, int studyId, SMESH_G
 
 TopoDS_Shape BLSURFPlugin_Hypothesis::entryToShape(std::string entry)
 {
+  // TODO entryToShape
+  TopoDS_Shape S = TopoDS_Shape();
+  /*
   GEOM::GEOM_Object_var aGeomObj;
   SMESH_Gen_i* smeshGen_i = SMESH_Gen_i::GetSMESHGen();
   SALOMEDS::Study_ptr myStudy = smeshGen_i->GetCurrentStudy();
@@ -268,6 +272,7 @@ TopoDS_Shape BLSURFPlugin_Hypothesis::entryToShape(std::string entry)
   }
   if ( !aGeomObj->_is_nil() )
     S = smeshGen_i->GeomObjectToShape( aGeomObj.in() );
+  */
   return S;
 }
 
@@ -654,7 +659,7 @@ bool BLSURFPlugin_Hypothesis::GetDebug()
 }
 //=============================================================================
 
-void BLSURFPlugin_Hypothesis::SetPeriodicTolerance( CORBA::Double tol )
+void BLSURFPlugin_Hypothesis::SetPeriodicTolerance( double tol )
   throw (std::invalid_argument)
 {
   if ( tol <= 0 )
@@ -692,7 +697,7 @@ std::string BLSURFPlugin_Hypothesis::GetRequiredEntities()
 }
 //=============================================================================
 
-void BLSURFPlugin_Hypothesis::SetSewingTolerance( CORBA::Double tol )
+void BLSURFPlugin_Hypothesis::SetSewingTolerance( double tol )
   throw (std::invalid_argument)
 {
   if ( tol <= 0 )
@@ -704,7 +709,7 @@ void BLSURFPlugin_Hypothesis::SetSewingTolerance( CORBA::Double tol )
   }
 }
 //=============================================================================
-CORBA::Double BLSURFPlugin_Hypothesis::GetSewingTolerance()
+double BLSURFPlugin_Hypothesis::GetSewingTolerance()
 {
   return ToDbl( GetPreCADOptionValue("sewing_tolerance", GET_DEFAULT()));
 }

@@ -181,7 +181,7 @@ void BLSURFPlugin_Attractor::edgeInit(Handle(Geom_Surface) theSurf, const TopoDS
   Handle(Geom_Curve) aCurve3d = BRep_Tool::Curve (anEdge, first, last);
   ShapeConstruct_ProjectCurveOnSurface curveProjector;
   curveProjector.Init(theSurf, Precision::Confusion());
-  curveProjector.PerformAdvanced (aCurve3d, first, last, aCurve2d);
+  curveProjector.Perform (aCurve3d, first, last, aCurve2d);
   
   int N = 1200;
   for (i=0; i<=N; i++){

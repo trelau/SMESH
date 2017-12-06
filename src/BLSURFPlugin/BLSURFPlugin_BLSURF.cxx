@@ -49,6 +49,7 @@ extern "C"{
 #include <StdMeshers_FaceSide.hxx>
 #include <StdMeshers_ViscousLayers2D.hxx>
 #include <SMESH_File.hxx>
+#include <SMESH_subMesh.hxx>
 
 #include <utilities.h>
 
@@ -200,7 +201,7 @@ namespace
     }
     return (PyObject*)self;
   }
-}
+ }
 
 
 ////////////////////////END PYTHON///////////////////////////
@@ -258,12 +259,14 @@ BLSURFPlugin_BLSURF::BLSURFPlugin_BLSURF(int        hypId,
   _supportSubmeshes = true;
   _requireShape = theHasGEOM;
 
+  /*
   smeshGen_i = SMESH_Gen_i::GetSMESHGen();
   CORBA::Object_var anObject = smeshGen_i->GetNS()->Resolve("/myStudyManager");
   SALOMEDS::StudyManager_var aStudyMgr = SALOMEDS::StudyManager::_narrow(anObject);
 
   myStudy = NULL;
   myStudy = aStudyMgr->GetStudyByID(_studyId);
+  */
 
   /* Initialize the Python interpreter */
   assert(Py_IsInitialized());
@@ -486,7 +489,7 @@ projectionPoint getProjectionPoint(TopoDS_Face& theFace, const gp_Pnt& thePoint)
       throw SMESH_ComputeError(COMPERR_BAD_PARMETERS,
                                "getProjectionPoint: can't project a vertex to a face");
 
-    Quantity_Parameter u,v;
+    Standard_Real u,v;
     projector.LowerDistanceParameters(u,v);
     myPoint.uv = gp_XY(u,v);
     gp_Pnt aPnt = projector.NearestPoint();
@@ -504,6 +507,8 @@ projectionPoint getProjectionPoint(TopoDS_Face& theFace, const gp_Pnt& thePoint)
 TopoDS_Shape BLSURFPlugin_BLSURF::entryToShape(std::string entry)
 {
   TopoDS_Shape S;
+  // TODO entryToShape
+  /*
   if ( !entry.empty() )
   {
     GEOM::GEOM_Object_var aGeomObj;
@@ -516,6 +521,7 @@ TopoDS_Shape BLSURFPlugin_BLSURF::entryToShape(std::string entry)
     if ( !aGeomObj->_is_nil() )
       S = smeshGen_i->GeomObjectToShape( aGeomObj.in() );
   }
+  */
   return S;
 }
 

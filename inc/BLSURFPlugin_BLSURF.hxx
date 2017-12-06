@@ -52,11 +52,12 @@
 #include <SMESHDS_Mesh.hxx>
 #include <SMDS_MeshElement.hxx>
 #include <SMDS_MeshNode.hxx>
-#include <SMESH_Gen_i.hxx>
+// #include <SMESH_Gen_i.hxx>
+#include <SMESH_Gen.hxx>
 #include <StdMeshers_ViscousLayers2D.hxx>
-#include <SALOMEconfig.h>
-#include CORBA_CLIENT_HEADER(SALOMEDS)
-#include CORBA_CLIENT_HEADER(GEOM_Gen)
+// #include <SALOMEconfig.h>
+// #include CORBA_CLIENT_HEADER(SALOMEDS)
+// #include CORBA_CLIENT_HEADER(GEOM_Gen)
 #include "Utils_SALOME_Exception.hxx"
 
 extern "C"{
@@ -159,8 +160,8 @@ class BLSURFPlugin_BLSURF: public SMESH_2D_Algo {
       PyObject *          main_mod;
       PyObject *          main_dict;
       SMESH_MesherHelper* myHelper;
-      SALOMEDS::Study_var myStudy;
-      SMESH_Gen_i*        smeshGen_i;
+      // SALOMEDS::Study_var myStudy;
+      // SMESH_Gen_i*        smeshGen_i;
 
       volatile bool _compute_canceled;
 };
