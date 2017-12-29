@@ -21,8 +21,8 @@
 //  File   : StdMeshers_CompositeBlock_3D.hxx
 //  Module : SMESH
 //
-#ifndef _SMESH_CompositeSegment_1D_HXX_
-#define _SMESH_CompositeSegment_1D_HXX_
+#ifndef _SMESH_CompositeHexa_3D_HXX_
+#define _SMESH_CompositeHexa_3D_HXX_
 
 #include "SMESH_StdMeshers.hxx"
 #include "SMESH_Algo.hxx"
