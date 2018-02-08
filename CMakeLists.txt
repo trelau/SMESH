@@ -38,9 +38,9 @@ find_package(Boost REQUIRED)
 include_directories(${Boost_INCLUDE_DIR})
 
 # pthread
-set(pthread_INCLUDE_DIRS "C:/Miniconda/envs/occt/Library/include" CACHE PATH "Path to pthread.h")
+set(pthread_INCLUDE_DIRS "" CACHE PATH "Path to pthread.h")
 include_directories(${pthread_INCLUDE_DIRS})
-set(pthread_LIB_DIRS "C:/Miniconda/envs/occt/Library/lib" CACHE PATH "Path to pthread library.")
+set(pthread_LIB_DIRS "" CACHE PATH "Path to pthread library.")
 link_directories(${pthread_LIB_DIRS})
 
 # NETGEN
