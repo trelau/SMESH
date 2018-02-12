@@ -7,7 +7,7 @@ latest Salome Platform release which at the time of this writing was 8.3.0.
 Modifications were applied to enable:
 
 1. Functionality independent of the other Salome Platform libraries
-2. Newer [NETGEN](https://github.com/LaughlinResearch/NETGEN) integration
+2. Newer [Netgen](https://github.com/LaughlinResearch/netgen4smesh) integration
 3. Support for OpenCASCADE 7.2.0
 
 Some areas that could use contributor support:

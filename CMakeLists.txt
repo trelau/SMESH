@@ -2,21 +2,21 @@
 project(SMESH C CXX)
 cmake_minimum_required(VERSION 2.8)
 
-# Options
-option(ENABLE_NETGEN "Enable NETGEN" OFF)
+# --------------------------------------------------------------------------- #
+# OPTIONS
+# --------------------------------------------------------------------------- #
+option(ENABLE_NETGEN "Enable NETGEN" ON)
 option(ENABLE_BLSURF "Enable BLSURF" OFF)
 set(CMAKE_INSTALL_PREFIX "${CMAKE_SOURCE_DIR}/install" CACHE PATH "Installation directory.")
 
-if(ENABLE_BLSURF)
-    set(MESHGEMS_INCLUDE "" CACHE PATH "MeshGems include directory.")
-    set(MESHGEMS_LIB "" CACHE FILE "MeshGems library.")
-    set(MESHGEMS_CADSURF_LIB "" CACHE FILE "MeshGems MG-CADSurf library.")
-endif(ENABLE_BLSURF)
 
+# --------------------------------------------------------------------------- #
+# SETTINGS
+# --------------------------------------------------------------------------- #
 set(SMESH_VERSION_MAJOR 8)
 set(SMESH_VERSION_MINOR 3)
 set(SMESH_VERSION_PATCH 0)
-set(SMESH_VERSION_TWEAK)
+set(SMESH_VERSION_TWEAK 0)
 
 # Build shared libraries
 set(BUILD_SHARED_LIBS ON)
@@ -24,27 +24,87 @@ set(BUILD_SHARED_LIBS ON)
 # Includes
 include_directories(inc)
 
+# --------------------------------------------------------------------------- #
 # OpenCASCADE
-find_package(OpenCASCADE REQUIRED)
+# --------------------------------------------------------------------------- #
+if(NOT DEFINED OpenCASCADE_INCLUDE_DIR OR NOT DEFINED OpenCASCADE_LIBRARY_DIR)
+    message(STATUS "Searching for OpenCASCADE...")
+    find_package(OpenCASCADE 7.2.0 REQUIRED)
+endif()
+
+if(NOT EXISTS ${OpenCASCADE_INCLUDE_DIR})
+    message(FATAL_ERROR "Failed to find OpenCASCADE include directory.")
+endif()
+
+if(NOT EXISTS ${OpenCASCADE_LIBRARY_DIR})
+    message(FATAL_ERROR "Failed to find OpenCASCADE library directory.")
+endif()
+                             
+message(STATUS "OpenCASCADE include directory: ${OpenCASCADE_INCLUDE_DIR}")
+message(STATUS "OpenCASCADE library directory: ${OpenCASCADE_LIBRARY_DIR}")                                                                                
 include_directories(${OpenCASCADE_INCLUDE_DIR})
 link_directories(${OpenCASCADE_LIBRARY_DIR})
 
+
+# --------------------------------------------------------------------------- #
 # VTK
-find_package(VTK REQUIRED)
+# --------------------------------------------------------------------------- #
+if(NOT DEFINED VTK_INCLUDE_DIRS OR NOT DEFINED VTK_LIBRARIES)
+    message(STATUS "Searching for VTK...")
+    find_package(VTK REQUIRED)
+endif()
+    
+if(NOT DEFINED VTK_INCLUDE_DIRS)
+    message(FATAL_ERROR "Failed to define VTK include directories.")
+endif()
+
+if(NOT DEFINED VTK_LIBRARIES)
+    message(FATAL_ERROR "Failed to define VTK libraries.")
+endif()
+    
+message(STATUS "VTK include directories: ${VTK_INCLUDE_DIRS}")
 include_directories(${VTK_INCLUDE_DIRS})
 
-# Boost 
-find_package(Boost REQUIRED)
+
+# --------------------------------------------------------------------------- #
+# BOOST
+# --------------------------------------------------------------------------- #
+if(NOT DEFINED Boost_INCLUDE_DIR)
+    message(STATUS "Searching for Boost...")
+    find_package(Boost REQUIRED)
+endif()
+
+if(NOT EXISTS ${Boost_INCLUDE_DIR})
+    message(FATAL_ERROR "Failed to find Boost include directory.")
+endif()
+
+message(STATUS "Boost include directory: ${Boost_INCLUDE_DIR}")
 include_directories(${Boost_INCLUDE_DIR})
 
-# pthread
-set(pthread_INCLUDE_DIRS "" CACHE PATH "Path to pthread.h")
-include_directories(${pthread_INCLUDE_DIRS})
-set(pthread_LIB_DIRS "" CACHE PATH "Path to pthread library.")
+
+# --------------------------------------------------------------------------- #
+# PTHREAD
+# --------------------------------------------------------------------------- #
+set(PTHREAD_INCLUDE_DIRS "" CACHE PATH "pthread include directory.")
+if(NOT EXISTS ${PTHREAD_INCLUDE_DIRS})
+    message(FATAL_ERROR "pthread include directory is required.")
+endif()
+message(STATUS "pthread include directory: ${PTHREAD_INCLUDE_DIRS}")
+include_directories(${PTHREAD_INCLUDE_DIRS})
+
+set(PTHREAD_LIB_DIRS "" CACHE PATH "pthread library directory.")
+if(NOT EXISTS ${PTHREAD_LIB_DIRS})
+    message(FATAL_ERROR "pthread library directory is required.")
+endif()
+message(STATUS "pthread library directory: ${PTHREAD_LIB_DIRS}")
 link_directories(${pthread_LIB_DIRS})
 
+
+# --------------------------------------------------------------------------- #
 # NETGEN
+# --------------------------------------------------------------------------- #
 if(ENABLE_NETGEN)
+    message(STATUS "Searching for Netgen...")
     find_package(Netgen REQUIRED)
     link_directories(${NETGEN_LIBRARY_DIR})
     include_directories(${NETGEN_INCLUDE_DIR})
@@ -61,7 +121,8 @@ if(ENABLE_NETGEN)
     # Set NETGEN_VERSION
     file(STRINGS ${NETGEN_INCLUDE_DIR}/mydefs.hpp NETGEN_VERSION
         REGEX "#define PACKAGE_VERSION.*"
-    )
+        )
+    
     string(REGEX MATCHALL "[0-9]+" NETGEN_VERSION ${NETGEN_VERSION})
     list(LENGTH NETGEN_VERSION NETGEN_VERSION_COUNT)
     list(GET NETGEN_VERSION 0 NETGEN_VERSION_MAJOR)
@@ -74,24 +135,34 @@ if(ENABLE_NETGEN)
     MATH(EXPR NETGEN_VERSION "(${NETGEN_VERSION_MAJOR} << 16) + (${NETGEN_VERSION_MINOR} << 8)")
     MESSAGE(STATUS "Using NETGEN version ${NETGEN_VERSION_MAJOR}.${NETGEN_VERSION_MINOR}, calculated: ${NETGEN_VERSION}")
     
-endif(ENABLE_NETGEN)
-
-# Default to release build
-if(NOT DEFINED CMAKE_BUILD_TYPE )
-  set(CMAKE_BUILD_TYPE "Release")
-endif()
-message(STATUS "Built type will be ${CMAKE_BUILD_TYPE}")
-
-# Check 32/64 bit platform
-if(${CMAKE_SIZEOF_VOID_P} MATCHES "8")
-    add_definitions(-D_OCC64)
-    message(STATUS "Build 64bit")
-    set(BIT 64)
-else()
-    message(STATUS "Build 32bit")
-    set(BIT 32)
 endif()
 
+
+# --------------------------------------------------------------------------- #
+# BLSURF
+# --------------------------------------------------------------------------- #
+if(ENABLE_BLSURF)
+    set(MESHGEMS_INCLUDE "" CACHE PATH "MeshGems include directory.")
+    if(NOT EXISTS ${MESHGEMS_INCLUDE})
+        message(FATAL_ERROR "MeshGems include directory is required.")
+    endif()
+    
+    set(MESHGEMS_LIB "" CACHE FILE "MeshGems library.")
+    if(NOT EXISTS ${MESHGEMS_LIB})
+        message(FATAL_ERROR "MeshGems library is required.")
+    endif()
+    
+    set(MESHGEMS_CADSURF_LIB "" CACHE FILE "MeshGems MG-CADSurf library.")
+    if(NOT EXISTS ${MESHGEMS_CADSURF_LIB})
+        message(FATAL_ERROR "MeshGems MG-CADSurf library is required.")
+    endif()
+    
+endif()
+
+
+# --------------------------------------------------------------------------- #
+# SMESH
+# --------------------------------------------------------------------------- #
 # Build settings according to the platform
 if(UNIX)
     # Same settings are used for both MacOSX and Unix/Linux
@@ -104,7 +175,7 @@ else(UNIX)
         add_definitions(-DWNT -DWIN32 -D_WINDOWS -DCSFDB)
     endif(MSVC)
   else(WIN32)
-    message("Unknown platform")
+    message(FATAL_ERROR "Unknown platform")
   endif(WIN32)
 endif(UNIX)
 
@@ -114,7 +185,7 @@ add_library(SMESHBasics ${Basics_SRC})
 target_link_libraries(SMESHBasics pthreads)
 if(WIN32)
     set_target_properties(SMESHBasics PROPERTIES COMPILE_FLAGS "-DBASICS_EXPORTS")
-endif(WIN32)
+endif()
 
 # Controls
 file(GLOB Controls_SRC src/Controls/*.cxx)
@@ -122,7 +193,7 @@ add_library(SMESHControls ${Controls_SRC})
 target_link_libraries(SMESHControls SMDS SMESHDS SMESHUtils TKernel TKBRep TKG3d TKTopAlgo TKGeomBase TKGeomAlgo ${VTK_LIBRARIES})
 if(WIN32)
     set_target_properties(SMESHControls PROPERTIES COMPILE_FLAGS "-DSMESHCONTROLS_EXPORTS")
-endif(WIN32)
+endif()
 
 # Driver
 file(GLOB Driver_SRC src/Driver/*.cxx)
@@ -130,7 +201,7 @@ add_library(Driver ${Driver_SRC})
 target_link_libraries(Driver SMESHMisc SMESHDS SMESHUtils TKernel TKTopAlgo)
 if(WIN32)
     set_target_properties(Driver PROPERTIES COMPILE_FLAGS "-DMESHDRIVER_EXPORTS")
-endif(WIN32)
+endif()
 
 # DriverDAT
 file(GLOB DriverDAT_SRC src/DriverDAT/*.cxx)
@@ -138,7 +209,7 @@ add_library(DriverDAT ${DriverDAT_SRC})
 target_link_libraries(DriverDAT SMESHMisc SMESHTrace SMESHBasics Driver SMDS)
 if(WIN32)
     set_target_properties(DriverDAT PROPERTIES COMPILE_FLAGS "-DMESHDRIVERDAT_EXPORTS")
-endif(WIN32)
+endif()
 
 # DriverGMF
 file(GLOB DriverGMF_SRC src/DriverGMF/*.cxx src/DriverGMF/libmesh5.c)
@@ -146,7 +217,7 @@ add_library(DriverGMF ${DriverGMF_SRC})
 target_link_libraries(DriverGMF SMESHBasics SMESHUtils Driver)
 if(WIN32)
     set_target_properties(DriverGMF PROPERTIES COMPILE_FLAGS "-DMESHDriverGMF_EXPORTS")
-endif(WIN32)
+endif()
 
 # DriverSTL
 file(GLOB DriverSTL_SRC src/DriverSTL/*.cxx)
@@ -154,7 +225,7 @@ add_library(DriverSTL ${DriverSTL_SRC})
 target_link_libraries(DriverSTL Driver SMDS SMESHUtils TKernel TKSTL TKTopAlgo TKMesh)
 if(WIN32)
     set_target_properties(DriverSTL PROPERTIES COMPILE_FLAGS "-DMESHDRIVERSTL_EXPORTS")
-endif(WIN32)
+endif()
 
 # DriverUNV
 file(GLOB DriverUNV_SRC src/DriverUNV/*.cxx)
@@ -162,7 +233,7 @@ add_library(DriverUNV ${DriverUNV_SRC})
 target_link_libraries(DriverUNV SMDS Driver SMESHMisc SMESHTrace SMESHBasics)
 if(WIN32)
     set_target_properties(DriverUNV PROPERTIES COMPILE_FLAGS "-DMESHDRIVERUNV_EXPORTS")
-endif(WIN32)
+endif()
 
 # MEFISTO2
 file(GLOB MEFISTO2_SRC src/MEFISTO2/aptrte.cxx src/MEFISTO2/trte.c)
@@ -175,7 +246,7 @@ add_library(SMESHMisc ${Misc_SRC})
 target_link_libraries(SMESHMisc SMESHTrace TKBRep TKShHealing TKMesh TKGeomAlgo TKTopAlgo TKG2d TKG3d TKV3d TKGeomBase TKBO)
 if(WIN32)
     set_target_properties(SMESHMisc PROPERTIES COMPILE_FLAGS "-DUTILS_EXPORTS")
-endif(WIN32)
+endif()
 
 # NETGENPlugin
 if(ENABLE_NETGEN)
@@ -186,8 +257,8 @@ if(ENABLE_NETGEN)
         set_target_properties(NETGENPlugin PROPERTIES COMPILE_FLAGS "-DNETGENPLUGIN_EXPORTS -DNO_PARALLEL_THREADS -DOCCGEOMETRY -DNETGEN_VERSION=${NETGEN_VERSION}")
     else()
         set_target_properties(NETGENPlugin PROPERTIES COMPILE_FLAGS "${NETGEN_CXX_FLAGS}")
-    endif(WIN32)    
-endif(ENABLE_NETGEN)
+    endif()    
+endif()
 
 # SMDS
 file(GLOB SMDS_SRC src/SMDS/*.cxx)
@@ -195,7 +266,7 @@ add_library(SMDS ${SMDS_SRC})
 target_link_libraries(SMDS SMESHMisc SMESHTrace ${VTK_LIBRARIES})
 if(WIN32)
     set_target_properties(SMDS PROPERTIES COMPILE_FLAGS "-DSMDS_EXPORTS")
-endif(WIN32)
+endif()
 
 # SMESH
 file(GLOB SMESH_SRC src/SMESH/*.cxx)
@@ -203,7 +274,7 @@ add_library(SMESH ${SMESH_SRC})
 target_link_libraries(SMESH SMESHControls SMESHMisc SMESHDS DriverDAT DriverSTL DriverUNV DriverGMF TKShHealing TKPrim TKG2d TKCDF TKMeshVS)
 if(WIN32)
     set_target_properties(SMESH PROPERTIES COMPILE_FLAGS "-DSMESHimpl_EXPORTS")
-endif(WIN32)
+endif()
 
 # SMESHDS
 file(GLOB SMESHDS_SRC src/SMESHDS/*.cxx)
@@ -211,7 +282,7 @@ add_library(SMESHDS ${SMESHDS_SRC})
 target_link_libraries(SMESHDS SMDS SMESHTrace TKBRep)
 if(WIN32)
     set_target_properties(SMESHDS PROPERTIES COMPILE_FLAGS "-DSMESHDS_EXPORTS")
-endif(WIN32)
+endif()
 
 # StdMeshers
 file(GLOB StdMeshers_SRC src/StdMeshers/*.cxx)
@@ -219,9 +290,9 @@ add_library(StdMeshers ${StdMeshers_SRC})
 target_link_libraries(StdMeshers SMESH MEFISTO2 TKOffset)
 if(WIN32)
     set_target_properties(StdMeshers PROPERTIES COMPILE_FLAGS "-DSTDMESHERS_EXPORTS")
-else(WIN32)
+else()
     set_target_properties(StdMeshers PROPERTIES COMPILE_FLAGS "${StdMeshers_CFLAGS}")
-endif(WIN32)
+endif()
 
 # Trace
 file(GLOB Trace_SRC src/Trace/*.cxx)
@@ -229,7 +300,7 @@ add_library(SMESHTrace ${Trace_SRC})
 target_link_libraries(SMESHTrace pthreads SMESHBasics)
 if(WIN32)
     set_target_properties(SMESHTrace PROPERTIES COMPILE_FLAGS "-DSALOMELOCALTRACE_EXPORTS")
-endif(WIN32)
+endif()
 
 # Utils
 file(GLOB Utils_SRC src/Utils/*.cxx)
@@ -237,41 +308,38 @@ add_library(SMESHUtils ${Utils_SRC})
 target_link_libraries(SMESHUtils SMDS TKShHealing TKPrim TKernel TKBRep TKG2d TKG3d TKGeomBase TKGeomAlgo TKTopAlgo TKMesh)
 if(WIN32)
     set_target_properties(SMESHUtils PROPERTIES COMPILE_FLAGS "-DSMESHUtils_EXPORTS")
-endif(WIN32)
+endif()
 
 # BLSURFPlugin
 if(ENABLE_BLSURF)
-    # Python requried
-    # find_package(PythonLibs)
-    # include_directories(${PYTHON_INCLUDE_PATH})
-    # Include MeshGems
     include_directories(${MESHGEMS_INCLUDE})
     file(GLOB BLSURFPlugin_SRC src/BLSURFPlugin/*.cxx)
     add_library(BLSURFPlugin ${BLSURFPlugin_SRC})
     target_link_libraries(BLSURFPlugin TKBRep TKG2d TKG3d TKGeomBase TKGeomAlgo TKShHealing SMDS SMESHDS SMESH StdMeshers ${MESHGEMS_CADSURF_LIB} ${MESHGEMS_LIB})
     if(WIN32)
         set_target_properties(BLSURFPlugin PROPERTIES COMPILE_FLAGS "-DBLSURFPLUGIN_EXPORTS")
-    endif(WIN32)
-endif(ENABLE_BLSURF)
+    endif()
+endif()
 
 # Install
 set(SMESH_LIBRARIES Driver DriverDAT DriverGMF DriverSTL DriverUNV MEFISTO2 SMDS SMESH SMESHBasics SMESHControls SMESHDS SMESHMisc SMESHTrace SMESHUtils StdMeshers)
+
 if(ENABLE_NETGEN)
     set(SMESH_LIBRARIES ${SMESH_LIBRARIES} NETGENPlugin)
-endif(ENABLE_NETGEN)
+endif()
+
 if(ENABLE_BLSURF)
     set(SMESH_LIBRARIES ${SMESH_LIBRARIES} BLSURFPlugin)
-endif(ENABLE_BLSURF)
+endif()
 
 install(TARGETS ${SMESH_LIBRARIES}
         ARCHIVE DESTINATION "lib"
         RUNTIME DESTINATION "bin")
 
-install(DIRECTORY ${CMAKE_SOURCE_DIR}/inc/
-    DESTINATION "include/smesh")
+install(DIRECTORY ${CMAKE_SOURCE_DIR}/inc/ DESTINATION "include/smesh")
 
 # Configuration file
 configure_file(${CMAKE_CURRENT_SOURCE_DIR}/cmake/SMESHConfig.cmake.in
-	${CMAKE_CURRENT_BINARY_DIR}/SMESHConfig.cmake @ONLY)
+	           ${CMAKE_CURRENT_BINARY_DIR}/SMESHConfig.cmake @ONLY)
 
 install(FILES ${CMAKE_CURRENT_BINARY_DIR}/SMESHConfig.cmake DESTINATION cmake)
