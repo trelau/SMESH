@@ -2,6 +2,12 @@
 project(SMESH C CXX)
 cmake_minimum_required(VERSION 2.8)
 
+
+if(CMAKE_COMPILER_IS_GNUCXX OR CMAKE_COMPILER_IS_CLANGXX)
+    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11")
+endif(CMAKE_COMPILER_IS_GNUCXX OR CMAKE_COMPILER_IS_CLANGXX)
+
+
 # --------------------------------------------------------------------------- #
 # OPTIONS
 # --------------------------------------------------------------------------- #
@@ -40,9 +46,9 @@ endif()
 if(NOT EXISTS ${OpenCASCADE_LIBRARY_DIR})
     message(FATAL_ERROR "Failed to find OpenCASCADE library directory.")
 endif()
-                             
+
 message(STATUS "OpenCASCADE include directory: ${OpenCASCADE_INCLUDE_DIR}")
-message(STATUS "OpenCASCADE library directory: ${OpenCASCADE_LIBRARY_DIR}")                                                                                
+message(STATUS "OpenCASCADE library directory: ${OpenCASCADE_LIBRARY_DIR}")
 include_directories(${OpenCASCADE_INCLUDE_DIR})
 link_directories(${OpenCASCADE_LIBRARY_DIR})
 
@@ -54,7 +60,7 @@ if(NOT DEFINED VTK_INCLUDE_DIRS OR NOT DEFINED VTK_LIBRARIES)
     message(STATUS "Searching for VTK...")
     find_package(VTK REQUIRED)
 endif()
-    
+
 if(NOT DEFINED VTK_INCLUDE_DIRS)
     message(FATAL_ERROR "Failed to define VTK include directories.")
 endif()
@@ -62,7 +68,7 @@ endif()
 if(NOT DEFINED VTK_LIBRARIES)
     message(FATAL_ERROR "Failed to define VTK libraries.")
 endif()
-    
+
 message(STATUS "VTK include directories: ${VTK_INCLUDE_DIRS}")
 include_directories(${VTK_INCLUDE_DIRS})
 
@@ -86,41 +92,45 @@ include_directories(${Boost_INCLUDE_DIR})
 # --------------------------------------------------------------------------- #
 # PTHREAD
 # --------------------------------------------------------------------------- #
-set(PTHREAD_INCLUDE_DIRS "" CACHE PATH "pthread include directory.")
-if(NOT EXISTS ${PTHREAD_INCLUDE_DIRS})
-    message(FATAL_ERROR "pthread include directory is required.")
-endif()
-message(STATUS "pthread include directory: ${PTHREAD_INCLUDE_DIRS}")
-include_directories(${PTHREAD_INCLUDE_DIRS})
+if(UNIX)
+    find_package(Threads REQUIRED)
+else(UNIX)
+  set(PTHREAD_INCLUDE_DIRS "" CACHE PATH "pthread include directory.")
+  if(NOT EXISTS ${PTHREAD_INCLUDE_DIRS})
+      message(FATAL_ERROR "pthread include directory is required.")
+  endif()
+  message(STATUS "pthread include directory: ${PTHREAD_INCLUDE_DIRS}")
+  include_directories(${PTHREAD_INCLUDE_DIRS})
 
-set(PTHREAD_LIB_DIRS "" CACHE PATH "pthread library directory.")
-if(NOT EXISTS ${PTHREAD_LIB_DIRS})
-    message(FATAL_ERROR "pthread library directory is required.")
-endif()
-message(STATUS "pthread library directory: ${PTHREAD_LIB_DIRS}")
-link_directories(${PTHREAD_LIB_DIRS})
+  set(PTHREAD_LIB_DIRS "" CACHE PATH "pthread library directory.")
+  if(NOT EXISTS ${PTHREAD_LIB_DIRS})
+      message(FATAL_ERROR "pthread library directory is required.")
+  endif()
+  message(STATUS "pthread library directory: ${PTHREAD_LIB_DIRS}")
+  link_directories(${PTHREAD_LIB_DIRS})
+endif(UNIX)
 
 
 # --------------------------------------------------------------------------- #
 # NETGEN
 # --------------------------------------------------------------------------- #
 if(ENABLE_NETGEN)
-    if(NOT DEFINED NETGEN_INCLUDE_DIR OR NOT DEFINED NETGEN_LIBRARY_DIR)
-        message(STATUS "Searching for Netgen...")
-        find_package(Netgen REQUIRED)
-    endif()
-    
+   if(NOT DEFINED NETGEN_INCLUDE_DIR OR NOT DEFINED NETGEN_LIBRARY_DIR)
+       message(STATUS "Searching for Netgen...")
+       find_package(Netgen REQUIRED)
+   endif()
+
     if(NOT EXISTS ${NETGEN_INCLUDE_DIR})
         message(FATAL_ERROR "Failed to find Netgen include directory.")
     endif()
-    
+
     if(NOT EXISTS ${NETGEN_LIBRARY_DIR})
         message(FATAL_ERROR "Failed to find Netgen library directory.")
     endif()
-    
+
     message(STATUS "Netgen include directory: ${NETGEN_INCLUDE_DIR}")
     message(STATUS "Netgen library directory: ${NETGEN_LIBRARY_DIR}")
-    
+
     link_directories(${NETGEN_LIBRARY_DIR})
     include_directories(${NETGEN_INCLUDE_DIR})
     include_directories(${NETGEN_INCLUDE_DIR}/occ)
@@ -132,12 +142,12 @@ if(ENABLE_NETGEN)
     include_directories(${NETGEN_INCLUDE_DIR}/gprim)
     include_directories(${NETGEN_INCLUDE_DIR}/include)
     include_directories(${NETGEN_INCLUDE_DIR}/stlgeom)
-    
+
     # Set NETGEN_VERSION
     file(STRINGS ${NETGEN_INCLUDE_DIR}/mydefs.hpp NETGEN_VERSION
         REGEX "#define PACKAGE_VERSION.*"
         )
-    
+
     if(NETGEN_VERSION)
         string(REGEX MATCHALL "[0-9]+" NETGEN_VERSION ${NETGEN_VERSION})
         list(LENGTH NETGEN_VERSION NETGEN_VERSION_COUNT)
@@ -146,7 +156,7 @@ if(ENABLE_NETGEN)
             list(GET NETGEN_VERSION 1 NETGEN_VERSION_MINOR)
         else()
             set(NETGEN_VERSION_MINOR 0)
-        endif()        
+        endif()
     else()
         # Assume version 6.2.
         message(STATUS "WARNING: Assuming Netgen 6.2.")
@@ -156,7 +166,7 @@ if(ENABLE_NETGEN)
 
     MATH(EXPR NETGEN_VERSION "(${NETGEN_VERSION_MAJOR} << 16) + (${NETGEN_VERSION_MINOR} << 8)")
     message(STATUS "Using Netgen version ${NETGEN_VERSION_MAJOR}.${NETGEN_VERSION_MINOR}, calculated: ${NETGEN_VERSION}")
-    
+
 endif()
 
 
@@ -168,17 +178,17 @@ if(ENABLE_BLSURF)
     if(NOT EXISTS ${MESHGEMS_INCLUDE})
         message(FATAL_ERROR "MeshGems include directory is required.")
     endif()
-    
+
     set(MESHGEMS_LIB "" CACHE FILE "MeshGems library.")
     if(NOT EXISTS ${MESHGEMS_LIB})
         message(FATAL_ERROR "MeshGems library is required.")
     endif()
-    
+
     set(MESHGEMS_CADSURF_LIB "" CACHE FILE "MeshGems MG-CADSurf library.")
     if(NOT EXISTS ${MESHGEMS_CADSURF_LIB})
         message(FATAL_ERROR "MeshGems MG-CADSurf library is required.")
     endif()
-    
+
 endif()
 
 
@@ -190,7 +200,7 @@ if(ENABLE_MED)
         message(STATUS "Searching for MED...")
         find_package(MED REQUIRED)
     endif()
-        
+
     if(NOT EXISTS ${MED_INCLUDE_DIR})
         message(FATAL_ERROR "Failed to find MED include directories.")
     endif()
@@ -198,7 +208,7 @@ if(ENABLE_MED)
     if(NOT EXISTS ${MED_LIBRARY_DIR})
         message(FATAL_ERROR "Failed to find MED librar directory.")
     endif()
-        
+
     message(STATUS "MED include directory: ${MED_INCLUDE_DIR}")
     message(STATUS "MED library directory: ${MED_LIBRARY_DIR}")
     include_directories(${MED_INCLUDE_DIR})
@@ -228,7 +238,11 @@ endif(UNIX)
 # Basics
 file(GLOB Basics_SRC src/Basics/*.cxx)
 add_library(SMESHBasics ${Basics_SRC})
-target_link_libraries(SMESHBasics pthreads)
+if(UNIX)
+    target_link_libraries(SMESHBasics Threads::Threads)
+else(UNIX)
+  target_link_libraries(SMESHBasics pthreads)
+endif(UNIX)
 if(WIN32)
     set_target_properties(SMESHBasics PROPERTIES COMPILE_FLAGS "-DBASICS_EXPORTS")
 endif()
@@ -314,8 +328,8 @@ if(ENABLE_NETGEN)
     if(WIN32)
         set_target_properties(NETGENPlugin PROPERTIES COMPILE_FLAGS "-DNETGENPLUGIN_EXPORTS -DNO_PARALLEL_THREADS -DOCCGEOMETRY -DNETGEN_VERSION=${NETGEN_VERSION}")
     else()
-        set_target_properties(NETGENPlugin PROPERTIES COMPILE_FLAGS "${NETGEN_CXX_FLAGS}")
-    endif()    
+        set_target_properties(NETGENPlugin PROPERTIES COMPILE_FLAGS "${NETGEN_CXX_FLAGS} -DNETGEN_VERSION=${NETGEN_VERSION}")
+    endif()
 endif()
 
 # SMDS
@@ -355,7 +369,11 @@ endif()
 # Trace
 file(GLOB Trace_SRC src/Trace/*.cxx)
 add_library(SMESHTrace ${Trace_SRC})
-target_link_libraries(SMESHTrace pthreads SMESHBasics)
+if(UNIX)
+  target_link_libraries(SMESHTrace Threads::Threads SMESHBasics)
+else(UNIX)
+  target_link_libraries(SMESHTrace pthreads SMESHBasics)
+endif(UNIX)
 if(WIN32)
     set_target_properties(SMESHTrace PROPERTIES COMPILE_FLAGS "-DSALOMELOCALTRACE_EXPORTS")
 endif()
