@@ -7,6 +7,7 @@ cmake_minimum_required(VERSION 2.8)
 # --------------------------------------------------------------------------- #
 option(ENABLE_NETGEN "Enable NETGEN" ON)
 option(ENABLE_BLSURF "Enable BLSURF" OFF)
+option(ENABLE_MED "Enable MED" OFF)
 set(CMAKE_INSTALL_PREFIX "${CMAKE_SOURCE_DIR}/install" CACHE PATH "Installation directory.")
 
 
@@ -182,6 +183,30 @@ endif()
 
 
 # --------------------------------------------------------------------------- #
+# MED
+# --------------------------------------------------------------------------- #
+if(ENABLE_MED)
+    if(NOT DEFINED MED_INCLUDE_DIR OR NOT DEFINED MED_LIBRARY_DIR)
+        message(STATUS "Searching for MED...")
+        find_package(MED REQUIRED)
+    endif()
+        
+    if(NOT EXISTS ${MED_INCLUDE_DIR})
+        message(FATAL_ERROR "Failed to find MED include directories.")
+    endif()
+
+    if(NOT EXISTS ${MED_LIBRARY_DIR})
+        message(FATAL_ERROR "Failed to find MED librar directory.")
+    endif()
+        
+    message(STATUS "MED include directory: ${MED_INCLUDE_DIR}")
+    message(STATUS "MED library directory: ${MED_LIBRARY_DIR}")
+    include_directories(${MED_INCLUDE_DIR})
+    link_directories(${MED_LIBRARY_DIR})
+endif()
+
+
+# --------------------------------------------------------------------------- #
 # SMESH
 # --------------------------------------------------------------------------- #
 # Build settings according to the platform
@@ -254,6 +279,18 @@ add_library(DriverUNV ${DriverUNV_SRC})
 target_link_libraries(DriverUNV SMDS Driver SMESHMisc SMESHTrace SMESHBasics)
 if(WIN32)
     set_target_properties(DriverUNV PROPERTIES COMPILE_FLAGS "-DMESHDRIVERUNV_EXPORTS")
+endif()
+
+# DriverMED
+if(ENABLE_MED)
+    file(GLOB DriverMED_SRC src/DriverMED/*.cxx)
+    add_library(DriverMED ${DriverMED_SRC})
+    message(FATAL_ERROR "MED integration incomplete. Need to finish.")
+    # TODO Verify linked libraries
+    target_link_libraries(DriverMED SMDS Driver SMESHMisc SMESHTrace SMESHBasics)
+    if(WIN32)
+        set_target_properties(DriverMED PROPERTIES COMPILE_FLAGS "-MESHDRIVERMED_EXPORT")
+    endif()
 endif()
 
 # MEFISTO2
@@ -353,9 +390,14 @@ if(ENABLE_BLSURF)
     set(SMESH_LIBRARIES ${SMESH_LIBRARIES} BLSURFPlugin)
 endif()
 
+if(ENABLE_MED)
+    set(SMESH_LIBRARIES ${SMESH_LIBRARIES} DriverMED)
+endif()
+
 install(TARGETS ${SMESH_LIBRARIES}
         ARCHIVE DESTINATION "lib"
-        RUNTIME DESTINATION "bin")
+        RUNTIME DESTINATION "bin"
+        LIBRARY DESTINATION "lib")
 
 install(DIRECTORY ${CMAKE_SOURCE_DIR}/inc/ DESTINATION "include/smesh")
 
