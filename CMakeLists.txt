@@ -3,17 +3,12 @@ project(SMESH C CXX)
 cmake_minimum_required(VERSION 2.8)
 
 
-if(CMAKE_COMPILER_IS_GNUCXX OR CMAKE_COMPILER_IS_CLANGXX)
-    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11")
-endif(CMAKE_COMPILER_IS_GNUCXX OR CMAKE_COMPILER_IS_CLANGXX)
-
-
 # --------------------------------------------------------------------------- #
 # OPTIONS
 # --------------------------------------------------------------------------- #
 option(ENABLE_NETGEN "Enable NETGEN" ON)
-option(ENABLE_BLSURF "Enable BLSURF" OFF)
 option(ENABLE_MED "Enable MED" OFF)
+option(ENABLE_BLSURF "Enable BLSURF" OFF)
 set(CMAKE_INSTALL_PREFIX "${CMAKE_SOURCE_DIR}/install" CACHE PATH "Installation directory.")
 
 
@@ -28,8 +23,10 @@ set(SMESH_VERSION_TWEAK 0)
 # Build shared libraries
 set(BUILD_SHARED_LIBS ON)
 
-# Includes
-include_directories(inc)
+# Compiler flags
+if(CMAKE_COMPILER_IS_GNUCXX OR CMAKE_COMPILER_IS_CLANGXX)
+    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11")
+endif(CMAKE_COMPILER_IS_GNUCXX OR CMAKE_COMPILER_IS_CLANGXX)
 
 # --------------------------------------------------------------------------- #
 # OpenCASCADE
@@ -198,7 +195,7 @@ endif()
 if(ENABLE_MED)
     if(NOT DEFINED MED_INCLUDE_DIR OR NOT DEFINED MED_LIBRARY_DIR)
         message(STATUS "Searching for MED...")
-        find_package(MED REQUIRED)
+        find_package(MEDFile REQUIRED)
     endif()
 
     if(NOT EXISTS ${MED_INCLUDE_DIR})
@@ -219,6 +216,9 @@ endif()
 # --------------------------------------------------------------------------- #
 # SMESH
 # --------------------------------------------------------------------------- #
+# Includes
+include_directories(inc)
+
 # Build settings according to the platform
 if(UNIX)
     # Same settings are used for both MacOSX and Unix/Linux
