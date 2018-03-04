@@ -45,6 +45,7 @@
 #include <Standard_Version.hxx>
 
 #include <SMESH_Mesh.hxx>
+#include <SMESH_subMesh.hxx>
 
 #if OCC_VERSION_HEX >= 0x070000
 DEFINE_STANDARD_HANDLE(SMESH_MeshVSLink, MeshVS_DataSource3D)
@@ -57,6 +58,8 @@ class SMESH_MeshVSLink : public MeshVS_DataSource3D {
 
 	//! Constructor <br>
 	SMESH_EXPORT SMESH_MeshVSLink(const SMESH_Mesh *aMesh);
+
+	SMESH_EXPORT SMESH_MeshVSLink(const SMESH_subMesh *aSubMesh);
 
 	//Not implemented yet
 	/*
@@ -105,6 +108,12 @@ class SMESH_MeshVSLink : public MeshVS_DataSource3D {
 	//! This method returns map of all groups the object contains. <br>
 	SMESH_EXPORT void GetAllGroups(TColStd_PackedMapOfInteger& Ids) const override;
 
+	// Find element from mesh element ID
+	SMESH_EXPORT const SMDS_MeshElement* FindElement(const int ID) const;
+
+	// Find node from mesh node ID
+	SMESH_EXPORT const SMDS_MeshNode* SMESH_MeshVSLink::FindNode(const int ID) const;
+
 	// Type management
 	//
 #if OCC_VERSION_HEX >= 0x070000
@@ -130,6 +139,7 @@ class SMESH_MeshVSLink : public MeshVS_DataSource3D {
 	TColStd_PackedMapOfInteger myNodes;
 	TColStd_PackedMapOfInteger myElements;
 	TColStd_PackedMapOfInteger myGroups;
+	SMESH_subMesh *mySubMesh;
 };
 #include <SMESH_MeshVSLink.ixx>
 // other Inline functions and methods (like "C++: function call" methods)
