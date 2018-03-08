@@ -24,7 +24,7 @@
 #ifndef _NETGENPlugin_NETGEN_2D_ONLY_HXX_
 #define _NETGENPlugin_NETGEN_2D_ONLY_HXX_
 
-#include "NETGENPlugin_Defs.hxx"
+#include <NETGENPlugin_Defs.hxx>
 
 #include <SMESH_Algo.hxx>
 #include <SMESH_Mesh.hxx>
