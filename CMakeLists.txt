@@ -97,7 +97,7 @@ if(NOT EXISTS ${PTHREAD_LIB_DIRS})
     message(FATAL_ERROR "pthread library directory is required.")
 endif()
 message(STATUS "pthread library directory: ${PTHREAD_LIB_DIRS}")
-link_directories(${pthread_LIB_DIRS})
+link_directories(${PTHREAD_LIB_DIRS})
 
 
 # --------------------------------------------------------------------------- #
