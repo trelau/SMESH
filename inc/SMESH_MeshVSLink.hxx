@@ -112,7 +112,7 @@ class SMESH_MeshVSLink : public MeshVS_DataSource3D {
 	SMESH_EXPORT const SMDS_MeshElement* FindElement(const int ID) const;
 
 	// Find node from mesh node ID
-	SMESH_EXPORT const SMDS_MeshNode* SMESH_MeshVSLink::FindNode(const int ID) const;
+	SMESH_EXPORT const SMDS_MeshNode* FindNode(const int ID) const;
 
 	// Type management
 	//
