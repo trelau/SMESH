@@ -209,7 +209,6 @@ if(ENABLE_MED)
     message(STATUS "MED include directory: ${MED_INCLUDE_DIR}")
     message(STATUS "MED library directory: ${MED_LIBRARY_DIR}")
     include_directories(${MEDFILE_INCLUDE_DIRS})
-    # link_directories(${MED_LIBRARY_DIR})
 endif()
 
 
@@ -299,8 +298,6 @@ endif()
 if(ENABLE_MED)
     file(GLOB DriverMED_SRC src/DriverMED/*.cxx)
     add_library(DriverMED ${DriverMED_SRC})
-    # message(FATAL_ERROR "MED integration incomplete. Need to finish.")
-    # TODO Verify linked libraries
     target_link_libraries(DriverMED SMDS Driver SMESHMisc SMESHTrace SMESHBasics ${MEDFILE_LIBRARIES})
     if(WIN32)
         set_target_properties(DriverMED PROPERTIES COMPILE_FLAGS "-MESHDRIVERMED_EXPORT")
