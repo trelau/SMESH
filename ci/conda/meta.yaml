@@ -1,0 +1,35 @@
+package:
+  name: smesh
+  version: "8.3.0"
+
+source:
+  path: ../..
+
+build:
+  number: 0
+
+requirements:
+  build:
+    - vc 14 # [win]
+    - cmake
+    - ninja
+    - occt 7.2.0
+    - vtk 8.1.0
+    - boost 1.66
+    - pthreads-win32 2.9.1 # [win]
+    - netgen4smesh 6.2.0
+
+  run:
+    - vc 14 # [win]
+    - occt 7.2.0
+    - vtk 8.1.0
+    - boost 1.66
+    - pthreads-win32 2.9.1 # [win]
+    - netgen4smesh 6.2.0
+
+about:
+  home: https://github.com/LaughlinResearch/SMESH
+  license: LGPL2.1
+  license_family: LGPL
+  summary: Mesh library from SALOME
+  description: Standalone version of the meshing library from the Salome Platform.
