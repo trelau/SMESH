@@ -8,26 +8,26 @@ source:
 build:
   number: 0
   features:
-    - vc14 [win]
+    - vc14 # [win]
 
 requirements:
   build:
-    - vc 14 [win]
+    - vc 14 # [win]
     - cmake
     - ninja
-    - occt 7.2.0
-    - vtk 8.1.0
-    - boost 1.66
-    - pthreads-win32 2.9.1 [win]
-    - netgen4smesh 6.2.0
+    - occt ==7.2.0
+    - vtk ==8.1.0
+    - boost ==1.66.0
+    - pthreads-win32 ==2.9.1 # [win]
+    - netgen4smesh ==6.2.0 # [win]
 
   run:
-    - vc 14 [win]
-    - occt 7.2.0
-    - vtk 8.1.0
-    - boost 1.66
-    - pthreads-win32 2.9.1 [win]
-    - netgen4smesh 6.2.0
+    - vc 14 # [win]
+    - occt ==7.2.0
+    - vtk ==8.1.0
+    - boost ==1.66.0
+    - pthreads-win32 ==2.9.1 # [win]
+    - netgen4smesh ==6.2.0 # [win]
 
 about:
   home: https://github.com/LaughlinResearch/SMESH
