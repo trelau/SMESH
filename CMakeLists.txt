@@ -75,7 +75,7 @@ include_directories(${VTK_INCLUDE_DIRS})
 # --------------------------------------------------------------------------- #
 if(NOT DEFINED Boost_INCLUDE_DIR)
     message(STATUS "Searching for Boost...")
-    find_package(Boost REQUIRED)
+    find_package(Boost REQUIRED COMPONENTS filesystem)
 endif()
 
 if(NOT EXISTS ${Boost_INCLUDE_DIR})
@@ -378,7 +378,7 @@ endif()
 # Utils
 file(GLOB Utils_SRC src/Utils/*.cxx)
 add_library(SMESHUtils ${Utils_SRC})
-target_link_libraries(SMESHUtils SMDS TKShHealing TKPrim TKernel TKBRep TKG2d TKG3d TKGeomBase TKGeomAlgo TKTopAlgo TKMesh)
+target_link_libraries(SMESHUtils SMDS TKShHealing TKPrim TKernel TKBRep TKG2d TKG3d TKGeomBase TKGeomAlgo TKTopAlgo TKMesh ${Boost_LIBRARIES})
 if(WIN32)
     set_target_properties(SMESHUtils PROPERTIES COMPILE_FLAGS "-DSMESHUtils_EXPORTS")
 endif()
