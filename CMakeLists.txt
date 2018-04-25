@@ -24,9 +24,9 @@ set(SMESH_VERSION_TWEAK 0)
 set(BUILD_SHARED_LIBS ON)
 
 # Compiler flags
-if(CMAKE_COMPILER_IS_GNUCXX OR CMAKE_COMPILER_IS_CLANGXX)
-    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11")
-endif(CMAKE_COMPILER_IS_GNUCXX OR CMAKE_COMPILER_IS_CLANGXX)
+# if(CMAKE_COMPILER_IS_GNUCXX OR CMAKE_COMPILER_IS_CLANGXX)
+#     set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11")
+# endif(CMAKE_COMPILER_IS_GNUCXX OR CMAKE_COMPILER_IS_CLANGXX)
 
 # --------------------------------------------------------------------------- #
 # OpenCASCADE
@@ -75,7 +75,7 @@ include_directories(${VTK_INCLUDE_DIRS})
 # --------------------------------------------------------------------------- #
 if(NOT DEFINED Boost_INCLUDE_DIR)
     message(STATUS "Searching for Boost...")
-    find_package(Boost REQUIRED COMPONENTS filesystem)
+    find_package(Boost REQUIRED COMPONENTS filesystem thread)
 endif()
 
 if(NOT EXISTS ${Boost_INCLUDE_DIR})
@@ -84,6 +84,7 @@ endif()
 
 message(STATUS "Boost include directory: ${Boost_INCLUDE_DIR}")
 include_directories(${Boost_INCLUDE_DIR})
+link_directories(${Boost_LIBRARY_DIR})
 
 
 # --------------------------------------------------------------------------- #
@@ -340,7 +341,7 @@ endif()
 # SMESH
 file(GLOB SMESH_SRC src/SMESH/*.cxx)
 add_library(SMESH ${SMESH_SRC})
-target_link_libraries(SMESH SMESHControls SMESHMisc SMESHDS DriverDAT DriverSTL DriverUNV DriverGMF TKShHealing TKPrim TKG2d TKCDF TKMeshVS)
+target_link_libraries(SMESH SMESHControls SMESHMisc SMESHDS DriverDAT DriverSTL DriverUNV DriverGMF TKShHealing TKPrim TKG2d TKCDF TKMeshVS ${Boost_LIBRARIES})
 if(WIN32)
     set_target_properties(SMESH PROPERTIES COMPILE_FLAGS "-DSMESHimpl_EXPORTS")
 endif()
