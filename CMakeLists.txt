@@ -9,6 +9,7 @@ cmake_minimum_required(VERSION 2.8)
 option(ENABLE_NETGEN "Enable NETGEN" ON)
 option(ENABLE_MED "Enable MED" OFF)
 option(ENABLE_BLSURF "Enable BLSURF" OFF)
+option(ENABLE_LIB_NAMING "Enable additional library naming" OFF)
 set(CMAKE_INSTALL_PREFIX "${CMAKE_SOURCE_DIR}/install" CACHE PATH "Installation directory.")
 
 
@@ -86,6 +87,14 @@ message(STATUS "Boost include directory: ${Boost_INCLUDE_DIR}")
 include_directories(${Boost_INCLUDE_DIR})
 link_directories(${Boost_LIBRARY_DIR})
 
+if (MSVC)
+    # find the shared boost libs
+    add_definitions(-DBOOST_ALL_DYN_LINK)
+    # set postfix for debug libs
+    if(NOT CMAKE_DEBUG_POSTFIX)
+        set(CMAKE_DEBUG_POSTFIX d)
+    endif()
+endif()
 
 # --------------------------------------------------------------------------- #
 # PTHREAD
@@ -309,6 +318,7 @@ endif()
 file(GLOB MEFISTO2_SRC src/MEFISTO2/aptrte.cxx src/MEFISTO2/trte.c)
 add_library(MEFISTO2 ${MEFISTO2_SRC})
 set_target_properties(MEFISTO2 PROPERTIES COMPILE_FLAGS "-DMEFISTO2D_EXPORTS")
+target_link_libraries(MEFISTO2 SMESHTrace TKernel)
 
 # Misc
 file(GLOB Misc_SRC src/Misc/*.cxx)
@@ -322,7 +332,11 @@ endif()
 if(ENABLE_NETGEN)
     file(GLOB NETGENPlugin_SRC src/NETGENPlugin/*.cxx)
     add_library(NETGENPlugin ${NETGENPlugin_SRC})
-    target_link_libraries(NETGENPlugin StdMeshers nglib)
+    if (NETGEN_LIBRARY)
+        target_link_libraries(NETGENPlugin StdMeshers TKIGES TKXDEIGES ${NETGEN_LIBRARY})
+    else (NETGEN_LIBRARY)
+        target_link_libraries(NETGENPlugin StdMeshers nglib)
+    endif (NETGEN_LIBRARY)
     if(WIN32)
         set_target_properties(NETGENPlugin PROPERTIES COMPILE_FLAGS "-DNETGENPLUGIN_EXPORTS -DNO_PARALLEL_THREADS -DOCCGEOMETRY -DNETGEN_VERSION=${NETGEN_VERSION}")
     else()
@@ -409,6 +423,15 @@ endif()
 if(ENABLE_MED)
     set(SMESH_LIBRARIES ${SMESH_LIBRARIES} DriverMED)
 endif()
+
+if (MSVC AND ENABLE_LIB_NAMING)
+    foreach(it ${SMESH_LIBRARIES})
+        LIST(APPEND SMESH_LIBS "optimized ${it}")
+        LIST(APPEND SMESH_LIBS "debug ${it}${CMAKE_DEBUG_POSTFIX}")
+    endforeach()
+else(MSVC AND ENABLE_LIB_NAMING)
+    set (SMESH_LIBS ${SMESH_LIBRARIES})
+endif(MSVC AND ENABLE_LIB_NAMING)
 
 install(TARGETS ${SMESH_LIBRARIES}
         ARCHIVE DESTINATION "lib"

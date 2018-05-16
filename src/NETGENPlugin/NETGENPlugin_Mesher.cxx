@@ -2586,7 +2586,9 @@ bool NETGENPlugin_Mesher::Compute()
     catch (netgen::NgException & ex)
     {
       comment << text(ex);
+#if NETGEN_VERSION >= NETGEN_VERSION_STRING(6,2)
       if ( mparams.meshsizefilename.size() > 0 )
+#endif
         throw SMESH_ComputeError(COMPERR_BAD_PARMETERS, comment );
     }
     err = 0; //- MESHCONST_ANALYSE isn't so important step
