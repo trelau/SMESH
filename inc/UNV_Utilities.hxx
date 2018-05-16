@@ -25,8 +25,8 @@
 
 #include "SMESH_DriverUNV.hxx"
 
-#include <iostream>
-#include <sstream>
+#include <iostream>     
+#include <sstream>      
 #include <fstream>
 #include <string>
 #include <stdexcept>
@@ -60,7 +60,7 @@ namespace UNV{
     std::string olds, news;
 
     in_file.seekg(0);
-    while(!in_file.eof() && !in_file.fail())
+    while(true)
     {
       in_file >> olds >> news;
       /*
@@ -81,9 +81,7 @@ namespace UNV{
       if (news == ds_name)
         return true;
     }
-    // We didn't found the card
-    // Let's rewind the file handler and return an error
-    in_file.clear();
+    // should never end up here
     return false;
   }
 

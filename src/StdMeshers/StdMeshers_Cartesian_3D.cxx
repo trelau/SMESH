@@ -1660,7 +1660,7 @@ namespace
         case 3: // at a corner
         {
           _Node& node = _hexNodes[ subEntity - SMESH_Block::ID_FirstV ];
-          if ( node.Node() != NULL )
+          if ( node.Node() > 0 )
           {
             if ( node._intPoint )
               node._intPoint->Add( _eIntPoints[ iP ]->_faceIDs, _eIntPoints[ iP ]->_node );
