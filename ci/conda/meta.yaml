@@ -19,7 +19,7 @@ requirements:
     - vtk ==8.1.0
     - boost ==1.66.0
     - pthreads-win32 ==2.9.1 # [win]
-    - netgen4smesh ==6.2.0 # [win]
+    - netgen ==6.2.1804
 
   run:
     - vc 14 # [win]
@@ -27,7 +27,7 @@ requirements:
     - vtk ==8.1.0
     - boost ==1.66.0
     - pthreads-win32 ==2.9.1 # [win]
-    - netgen4smesh ==6.2.0 # [win]
+    - netgen ==6.2.1804
 
 about:
   home: https://github.com/LaughlinResearch/SMESH
