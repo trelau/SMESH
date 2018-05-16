@@ -9,7 +9,7 @@ cmake_minimum_required(VERSION 2.8)
 option(ENABLE_NETGEN "Enable NETGEN" ON)
 option(ENABLE_MED "Enable MED" OFF)
 option(ENABLE_BLSURF "Enable BLSURF" OFF)
-option(ENABLE_LIB_NAMING "enable additional lib naming" ON)
+option(ENABLE_LIB_NAMING "enable additional lib naming" OFF)
 set(CMAKE_INSTALL_PREFIX "${CMAKE_SOURCE_DIR}/install" CACHE PATH "Installation directory.")
 
 
