@@ -1,6 +1,6 @@
 package:
   name: smesh
-  version: "8.3.0.1"
+  version: "8.3.0.2"
 
 source:
   path: ../..
@@ -15,17 +15,17 @@ requirements:
     - vc 14 # [win]
     - cmake
     - ninja
-    - occt ==7.2.0
-    - vtk ==8.1.0
-    - boost ==1.66.0
+    - occt ==7.3
+    - vtk ==8.1.1
+    - boost ==1.67
     - pthreads-win32 ==2.9.1 # [win]
     - netgen ==6.2.1804
 
   run:
     - vc 14 # [win]
-    - occt ==7.2.0
-    - vtk ==8.1.0
-    - boost ==1.66.0
+    - occt ==7.3
+    - vtk ==8.1.1
+    - boost ==1.67
     - pthreads-win32 ==2.9.1 # [win]
     - netgen ==6.2.1804
 
