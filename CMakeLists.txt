@@ -34,7 +34,7 @@ set(BUILD_SHARED_LIBS ON)
 # --------------------------------------------------------------------------- #
 if(NOT DEFINED OpenCASCADE_INCLUDE_DIR OR NOT DEFINED OpenCASCADE_LIBRARY_DIR)
     message(STATUS "Searching for OpenCASCADE...")
-    find_package(OpenCASCADE 7.2.0 REQUIRED)
+    find_package(OpenCASCADE REQUIRED)
 endif()
 
 if(NOT EXISTS ${OpenCASCADE_INCLUDE_DIR})
