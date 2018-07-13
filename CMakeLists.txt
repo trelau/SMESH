@@ -342,6 +342,10 @@ if(ENABLE_NETGEN)
     else()
         set_target_properties(NETGENPlugin PROPERTIES COMPILE_FLAGS "${NETGEN_CXX_FLAGS} -DNETGEN_VERSION=${NETGEN_VERSION}")
     endif()
+    if(${CMAKE_SYSTEM_NAME} MATCHES "Darwin")
+        # For Netgen OSX support
+        set_target_properties(NETGENPlugin PROPERTIES CXX_STANDARD 14)
+    endif()
 endif()
 
 # SMDS
