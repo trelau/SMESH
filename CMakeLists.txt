@@ -11,6 +11,7 @@ option(ENABLE_MED "Enable MED" OFF)
 option(ENABLE_BLSURF "Enable BLSURF" OFF)
 option(ENABLE_LIB_NAMING "Enable additional library naming" OFF)
 set(CMAKE_INSTALL_PREFIX "${CMAKE_SOURCE_DIR}/install" CACHE PATH "Installation directory.")
+set(CMAKE_INSTALL_LIBDIR lib CACHE PATH "Output directory for libraries")
 
 
 # --------------------------------------------------------------------------- #
@@ -440,7 +441,7 @@ endif(MSVC AND ENABLE_LIB_NAMING)
 install(TARGETS ${SMESH_LIBRARIES}
         ARCHIVE DESTINATION "lib"
         RUNTIME DESTINATION "bin"
-        LIBRARY DESTINATION "lib")
+        LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR})
 
 install(DIRECTORY ${CMAKE_SOURCE_DIR}/inc/ DESTINATION "include/smesh")
 
