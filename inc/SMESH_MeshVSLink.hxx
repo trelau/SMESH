@@ -46,6 +46,7 @@
 
 #include <SMESH_Mesh.hxx>
 #include <SMESH_subMesh.hxx>
+#include <SMESH_Group.hxx>
 
 #if OCC_VERSION_HEX >= 0x070000
 DEFINE_STANDARD_HANDLE(SMESH_MeshVSLink, MeshVS_DataSource3D)
@@ -60,6 +61,8 @@ class SMESH_MeshVSLink : public MeshVS_DataSource3D {
 	SMESH_EXPORT SMESH_MeshVSLink(const SMESH_Mesh *aMesh);
 
 	SMESH_EXPORT SMESH_MeshVSLink(const SMESH_subMesh *aSubMesh);
+
+	SMESH_EXPORT SMESH_MeshVSLink(const SMESH_Mesh *aMesh, const SMESH_Group *aGroup);
 
 	//Not implemented yet
 	/*
@@ -140,6 +143,7 @@ class SMESH_MeshVSLink : public MeshVS_DataSource3D {
 	TColStd_PackedMapOfInteger myElements;
 	TColStd_PackedMapOfInteger myGroups;
 	SMESH_subMesh *mySubMesh;
+	SMESH_Group *myGroup;
 };
 #include <SMESH_MeshVSLink.ixx>
 // other Inline functions and methods (like "C++: function call" methods)
