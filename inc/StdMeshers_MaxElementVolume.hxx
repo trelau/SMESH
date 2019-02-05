@@ -42,7 +42,7 @@ public:
   virtual ~StdMeshers_MaxElementVolume();
 
   void SetMaxVolume(double maxVolume)
-    throw (SALOME_Exception);
+    noexcept(false);
 
   double GetMaxVolume() const;
 

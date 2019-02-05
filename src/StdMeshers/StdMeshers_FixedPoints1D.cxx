@@ -62,7 +62,7 @@ StdMeshers_FixedPoints1D::~StdMeshers_FixedPoints1D()
 //=============================================================================
 
 void StdMeshers_FixedPoints1D::SetPoints(std::vector<double>& listParams)
-  throw(SALOME_Exception)
+  noexcept(false)
 {
   _params = listParams;
   NotifySubMeshesHypothesisModification();
@@ -75,7 +75,7 @@ void StdMeshers_FixedPoints1D::SetPoints(std::vector<double>& listParams)
 //=============================================================================
 
 void StdMeshers_FixedPoints1D::SetNbSegments(std::vector<int>& listNbSeg) 
-  throw(SALOME_Exception)
+  noexcept(false)
 {
   _nbsegs = listNbSeg;
   NotifySubMeshesHypothesisModification();

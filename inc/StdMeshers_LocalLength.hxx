@@ -40,8 +40,8 @@ class STDMESHERS_EXPORT StdMeshers_LocalLength: public SMESH_Hypothesis
   StdMeshers_LocalLength(int hypId, int studyId, SMESH_Gen * gen);
   virtual ~ StdMeshers_LocalLength();
 
-  void SetLength(double length) throw(SALOME_Exception);
-  void SetPrecision(double precision) throw(SALOME_Exception);
+  void SetLength(double length) noexcept(false);
+  void SetPrecision(double precision) noexcept(false);
 
   double GetLength() const;
   double GetPrecision() const;

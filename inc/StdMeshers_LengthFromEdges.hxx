@@ -42,7 +42,7 @@ public:
   virtual ~StdMeshers_LengthFromEdges();
 
   void SetMode(int mode)
-    throw (SALOME_Exception);
+    noexcept(false);
 
   int GetMode();
 

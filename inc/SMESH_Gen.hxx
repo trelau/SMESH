@@ -67,7 +67,7 @@ public:
   ~SMESH_Gen();
 
   SMESH_Mesh* CreateMesh(int theStudyId, bool theIsEmbeddedMode)
-    throw(SALOME_Exception);
+    noexcept(false);
 
   enum ComputeFlags
   {
