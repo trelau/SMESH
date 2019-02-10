@@ -118,8 +118,6 @@ else(UNIX)
   link_directories(${PTHREAD_LIB_DIRS})
 endif(UNIX)
 
-
-# --------------------------------------------------------------------------- #
 # NETGEN
 # --------------------------------------------------------------------------- #
 if(ENABLE_NETGEN)
@@ -342,10 +340,6 @@ if(ENABLE_NETGEN)
         set_target_properties(NETGENPlugin PROPERTIES COMPILE_FLAGS "-DNETGENPLUGIN_EXPORTS -DNO_PARALLEL_THREADS -DOCCGEOMETRY -DNETGEN_VERSION=${NETGEN_VERSION}")
     else()
         set_target_properties(NETGENPlugin PROPERTIES COMPILE_FLAGS "${NETGEN_CXX_FLAGS} -DNETGEN_VERSION=${NETGEN_VERSION}")
-    endif()
-    if(${CMAKE_SYSTEM_NAME} MATCHES "Darwin")
-        # For Netgen OSX support
-        set_target_properties(NETGENPlugin PROPERTIES CXX_STANDARD 14)
     endif()
 endif()
 
