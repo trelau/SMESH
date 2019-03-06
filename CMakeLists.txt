@@ -1,7 +1,6 @@
 # SMESH cmake build file
+cmake_minimum_required(VERSION 3.3)
 project(SMESH C CXX)
-cmake_minimum_required(VERSION 3.10)
-
 
 # --------------------------------------------------------------------------- #
 # OPTIONS
