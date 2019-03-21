@@ -49,15 +49,15 @@ public:
   virtual ~StdMeshers_NumberOfSegments();
 
   // Builds point distribution according to passed function
-  const std::vector<double>& BuildDistributionExpr( const char*, int, int ) throw ( SALOME_Exception );
-  const std::vector<double>& BuildDistributionTab( const std::vector<double>&, int, int ) throw ( SALOME_Exception );
+  const std::vector<double>& BuildDistributionExpr( const char*, int, int ) noexcept(false);
+  const std::vector<double>& BuildDistributionTab( const std::vector<double>&, int, int ) noexcept(false);
 
   /*!
    * \brief Set the number of segments
     * \param segmentsNumber - must be greater than zero
    */
   void SetNumberOfSegments(int segmentsNumber)
-    throw (SALOME_Exception);
+    noexcept(false);
 
   /*!
    * \brief Get the number of segments
@@ -79,7 +79,7 @@ public:
    * \brief Set distribution type
    */
   void SetDistrType(DistrType typ)
-    throw (SALOME_Exception);
+    noexcept(false);
 
   /*!
    * \brief Get distribution type
@@ -94,7 +94,7 @@ public:
    * or scaleFactor is not a positive value different from 1
    */
   virtual void SetScaleFactor(double scaleFactor)
-    throw (SALOME_Exception);
+    noexcept(false);
 
   /*!
    * \brief Get scale factor for scale distribution
@@ -102,7 +102,7 @@ public:
    * Throws SALOME_Exception if distribution type is not DT_Scale
    */
   double GetScaleFactor() const
-    throw (SALOME_Exception);
+    noexcept(false);
 
   /*!
    * \brief Set table function for distribution DT_TabFunc
@@ -114,7 +114,7 @@ public:
    * Throws SALOME_Exception if distribution type is not DT_TabFunc
    */
   void SetTableFunction(const std::vector<double>& table)
-    throw (SALOME_Exception);
+    noexcept(false);
 
   /*!
    * \brief Get table function for distribution DT_TabFunc
@@ -122,7 +122,7 @@ public:
    * Throws SALOME_Exception if distribution type is not DT_TabFunc
    */
   const std::vector<double>& GetTableFunction() const
-    throw (SALOME_Exception);
+    noexcept(false);
 
   /*!
    * \brief Set expression function for distribution DT_ExprFunc
@@ -132,7 +132,7 @@ public:
    * Throws SALOME_Exception if distribution type is not DT_ExprFunc
    */
   void SetExpressionFunction( const char* expr)
-    throw (SALOME_Exception);
+    noexcept(false);
 
   /*!
    * \brief Get expression function for distribution DT_ExprFunc
@@ -140,7 +140,7 @@ public:
    * Throws SALOME_Exception if distribution type is not DT_ExprFunc
    */
   const char* GetExpressionFunction() const
-    throw (SALOME_Exception);
+    noexcept(false);
 
   /*!
    * \brief Checks validity of  the expression of the function f(t), e.g. "sin(t)".
@@ -149,7 +149,7 @@ public:
    */
   static std::string CheckExpressionFunction( const std::string& expr,
                                               const int          convMode)
-    throw (SALOME_Exception);
+    noexcept(false);
 
   /*!
    * \brief Set conversion mode. When it is 0, it means "exponent mode":
@@ -161,7 +161,7 @@ public:
    * Throws SALOME_Exception if distribution type is not functional
    */
   void SetConversionMode( int conv )
-    throw (SALOME_Exception);
+    noexcept(false);
 
   /*!
    * \brief Returns conversion mode
@@ -169,7 +169,7 @@ public:
    * Throws SALOME_Exception if distribution type is not functional
    */
   int ConversionMode() const
-    throw (SALOME_Exception);
+    noexcept(false);
 
   void SetReversedEdges( std::vector<int>& ids);
 

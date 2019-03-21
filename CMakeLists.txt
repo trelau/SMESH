@@ -1,7 +1,6 @@
 # SMESH cmake build file
+cmake_minimum_required(VERSION 3.3)
 project(SMESH C CXX)
-cmake_minimum_required(VERSION 2.8)
-
 
 # --------------------------------------------------------------------------- #
 # OPTIONS
@@ -318,7 +317,9 @@ endif()
 # MEFISTO2
 file(GLOB MEFISTO2_SRC src/MEFISTO2/aptrte.cxx src/MEFISTO2/trte.c)
 add_library(MEFISTO2 ${MEFISTO2_SRC})
-set_target_properties(MEFISTO2 PROPERTIES COMPILE_FLAGS "-DMEFISTO2D_EXPORTS")
+if (WIN32)
+    set_target_properties(MEFISTO2 PROPERTIES COMPILE_FLAGS "-DMEFISTO2D_EXPORTS")
+endif()
 target_link_libraries(MEFISTO2 SMESHTrace TKernel)
 
 # Misc
@@ -342,10 +343,6 @@ if(ENABLE_NETGEN)
         set_target_properties(NETGENPlugin PROPERTIES COMPILE_FLAGS "-DNETGENPLUGIN_EXPORTS -DNO_PARALLEL_THREADS -DOCCGEOMETRY -DNETGEN_VERSION=${NETGEN_VERSION}")
     else()
         set_target_properties(NETGENPlugin PROPERTIES COMPILE_FLAGS "${NETGEN_CXX_FLAGS} -DNETGEN_VERSION=${NETGEN_VERSION}")
-    endif()
-    if(${CMAKE_SYSTEM_NAME} MATCHES "Darwin")
-        # For Netgen OSX support
-        set_target_properties(NETGENPlugin PROPERTIES CXX_STANDARD 14)
     endif()
 endif()
 

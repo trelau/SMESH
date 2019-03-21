@@ -75,7 +75,7 @@ StdMeshers_StartEndLength::~StdMeshers_StartEndLength()
 //=============================================================================
 
 void StdMeshers_StartEndLength::SetLength(double length, bool isStartLength)
-     throw(SALOME_Exception)
+     noexcept(false)
 {
   if ( (isStartLength ? _begLength : _endLength) != length ) {
     if (length <= 0)

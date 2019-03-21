@@ -57,7 +57,7 @@ StdMeshers_Geometric1D::StdMeshers_Geometric1D(int hypId, int studyId, SMESH_Gen
 //=============================================================================
 
 void StdMeshers_Geometric1D::SetStartLength(double length)
-  throw(SALOME_Exception)
+  noexcept(false)
 {
   if ( _begLength != length )
   {
@@ -75,7 +75,7 @@ void StdMeshers_Geometric1D::SetStartLength(double length)
 //=============================================================================
 
 void StdMeshers_Geometric1D::SetCommonRatio(double factor)
-  throw(SALOME_Exception)
+  noexcept(false)
 {
   if ( _ratio != factor )
   {

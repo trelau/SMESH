@@ -56,13 +56,13 @@ public:
    * \brief Computes segment for a given edge
    */
   double GetLength(const SMESH_Mesh* aMesh, const TopoDS_Shape& anEdge)
-    throw(SALOME_Exception);
+    noexcept(false);
 
   /*!
    * \brief Computes segment length for an edge of given length
    */
   double GetLength(const SMESH_Mesh* aMesh, const double edgeLength)
-    throw(SALOME_Exception);
+    noexcept(false);
 
   /*!
    * \brief Set Fineness
@@ -75,7 +75,7 @@ public:
    * is divided by (0.5 + 4.5 x theFineness)
    */
   void SetFineness(double theFineness)
-    throw(SALOME_Exception);
+    noexcept(false);
 
   /*!
    * \brief Return mesh Fineness

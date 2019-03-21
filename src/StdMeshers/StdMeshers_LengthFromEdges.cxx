@@ -63,7 +63,7 @@ StdMeshers_LengthFromEdges::~StdMeshers_LengthFromEdges()
 //=============================================================================
 
 void StdMeshers_LengthFromEdges::SetMode(int mode)
-  throw (SALOME_Exception)
+  noexcept(false)
 {
   int oldMode = _mode;
   if (mode <= 0) 

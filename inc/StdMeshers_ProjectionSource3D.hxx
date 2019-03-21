@@ -57,7 +57,7 @@ public:
    * Sets a source <shape> to take a mesh pattern from
    */
   void SetSource3DShape(const TopoDS_Shape& shape)
-    throw ( SALOME_Exception );
+    noexcept(false);
 
   /*!
    * Returns the source shape
@@ -83,19 +83,19 @@ public:
                             const TopoDS_Shape& sourceVertex2,
                             const TopoDS_Shape& targetVertex1,
                             const TopoDS_Shape& targetVertex2)
-    throw ( SALOME_Exception );
+    noexcept(false);
 
   /*!
    * Returns the <i>-th source vertex associated with the <i>-th target vertex.
    * Result may be nil if association not set.
    */
-  TopoDS_Vertex GetSourceVertex(int i) const throw ( SALOME_Exception );
+  TopoDS_Vertex GetSourceVertex(int i) const noexcept(false);
 
   /*!
    * Returns the <i>-th target vertex associated with the <i>-th source vertex.
    * Result may be nil if association not set.
    */
-  TopoDS_Vertex GetTargetVertex(int i) const throw ( SALOME_Exception );
+  TopoDS_Vertex GetTargetVertex(int i) const noexcept(false);
 
   /*!
    * \brief Test if vertex association defined

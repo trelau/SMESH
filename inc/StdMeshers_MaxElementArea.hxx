@@ -40,7 +40,7 @@ public:
   StdMeshers_MaxElementArea(int hypId, int studyId, SMESH_Gen * gen);
   virtual ~ StdMeshers_MaxElementArea();
 
-  void SetMaxArea(double maxArea) throw(SALOME_Exception);
+  void SetMaxArea(double maxArea) noexcept(false);
 
   double GetMaxArea() const;
 
