@@ -56,7 +56,9 @@ link_directories(${OpenCASCADE_LIBRARY_DIR})
 # --------------------------------------------------------------------------- #
 if(NOT DEFINED VTK_INCLUDE_DIRS OR NOT DEFINED VTK_LIBRARIES)
     message(STATUS "Searching for VTK...")
-    find_package(VTK REQUIRED)
+    find_package(VTK REQUIRED COMPONENTS
+                                vtkCommonCore
+                                vtkCommonDataModel)
 endif()
 
 if(NOT DEFINED VTK_INCLUDE_DIRS)
