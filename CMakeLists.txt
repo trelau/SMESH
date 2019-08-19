@@ -74,18 +74,8 @@ include_directories(${VTK_INCLUDE_DIRS})
 # --------------------------------------------------------------------------- #
 # BOOST
 # --------------------------------------------------------------------------- #
-if(NOT DEFINED Boost_INCLUDE_DIR)
-    message(STATUS "Searching for Boost...")
-    find_package(Boost REQUIRED COMPONENTS filesystem thread)
-endif()
-
-if(NOT EXISTS ${Boost_INCLUDE_DIR})
-    message(FATAL_ERROR "Failed to find Boost include directory.")
-endif()
-
-message(STATUS "Boost include directory: ${Boost_INCLUDE_DIR}")
-include_directories(${Boost_INCLUDE_DIR})
-link_directories(${Boost_LIBRARY_DIR})
+message(STATUS "Searching for Boost...")
+find_package(Boost REQUIRED COMPONENTS filesystem thread)
 
 if (MSVC)
     # find the shared boost libs
