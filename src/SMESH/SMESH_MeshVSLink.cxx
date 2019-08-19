@@ -175,6 +175,34 @@ SMESH_MeshVSLink::SMESH_MeshVSLink(const SMESH_subMesh *aSubMesh)
 }
 
 //================================================================
+// Function : Constructor
+// Purpose  : For group
+//================================================================
+SMESH_MeshVSLink::SMESH_MeshVSLink(const SMESH_Mesh *aMesh, const SMESH_Group *aGroup)
+{
+	myMesh = (SMESH_Mesh*)aMesh;
+	myGroup = (SMESH_Group*)aGroup;
+
+	// add elements
+	SMDS_ElemIteratorPtr anElemIter = myGroup->GetGroupDS()->GetElements();
+	for (; anElemIter->more();) {
+		const SMDS_MeshElement *elm = anElemIter->next();
+		if (const SMDS_MeshNode* anElem = dynamic_cast<const SMDS_MeshNode*>(elm)) {
+			myNodes.Add(anElem->GetID());
+		}
+		else if (const SMDS_MeshEdge* anElem = dynamic_cast<const SMDS_MeshEdge*>(elm)) {
+			myElements.Add(anElem->GetID());
+		}
+		else if (const SMDS_MeshFace* anElem = dynamic_cast<const SMDS_MeshFace*>(elm)) {
+			myElements.Add(anElem->GetID());
+		}
+		else if (const SMDS_MeshVolume* anElem = dynamic_cast<const SMDS_MeshVolume*>(elm)) {
+			myElements.Add(anElem->GetID());
+		}
+	}
+}
+
+//================================================================
 // Function : GetGeom
 // Purpose  :
 //================================================================
