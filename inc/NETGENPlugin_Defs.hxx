@@ -27,6 +27,8 @@
 #ifndef _NETGENPlugin_DEFS_HXX_
 #define _NETGENPlugin_DEFS_HXX_
 
+#undef NETGEN_PYTHON
+
 #ifdef WIN32
   #if defined NETGENPLUGIN_EXPORTS || defined NETGENEngine_EXPORTS
     #define NETGENPLUGIN_EXPORT __declspec( dllexport )
