@@ -70,8 +70,12 @@
 #ifndef OCCGEOMETRY
 #define OCCGEOMETRY
 #endif
+
 #include <occgeom.hpp>
-#include <ngexception.hpp>
+//#if defined(DLL_HEADER)
+//#undef DLL_HEADER
+//#endif
+
 namespace nglib {
 #include <nglib.h>
 }
@@ -88,6 +92,16 @@ namespace netgen {
 	DLL_HEADER extern MeshingParameters mparam;
 	DLL_HEADER extern volatile multithreadt multithread;
 }
+
+#if NETGEN_VERSION >= NETGEN_VERSION_STRING(6,2)
+namespace netgen {
+    #include <core/exception.hpp>
+    typedef ngcore::Exception NgException;
+}
+#else
+#include <ngexception.hpp>
+#endif
+
 using namespace nglib;
 using namespace std;
 

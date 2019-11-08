@@ -24,10 +24,18 @@ set(SMESH_VERSION_TWEAK 3)
 # Build shared libraries
 set(BUILD_SHARED_LIBS ON)
 
-# Compiler flags
-# if(CMAKE_COMPILER_IS_GNUCXX OR CMAKE_COMPILER_IS_CLANGXX)
-#     set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11")
-# endif(CMAKE_COMPILER_IS_GNUCXX OR CMAKE_COMPILER_IS_CLANGXX)
+# you ccache is installed, use it
+find_program(CCACHE_PROGRAM ccache)
+if(CCACHE_PROGRAM)
+    set_property(GLOBAL PROPERTY RULE_LAUNCH_COMPILE "${CCACHE_PROGRAM}")
+endif()
+
+# Compiler flags, c++11 is essential for OCCT 7.3
+# netget 6.2 also need G++6, using `export CXX=g++6` to select compiler
+# is that possible to detect OpenCASCADE_VERSION by cmake?
+if(CMAKE_COMPILER_IS_GNUCXX OR CMAKE_COMPILER_IS_CLANGXX)
+     set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++14")
+endif(CMAKE_COMPILER_IS_GNUCXX OR CMAKE_COMPILER_IS_CLANGXX)
 
 # --------------------------------------------------------------------------- #
 # OpenCASCADE
@@ -149,6 +157,10 @@ if(ENABLE_NETGEN)
     include_directories(${NETGEN_INCLUDE_DIR}/gprim)
     include_directories(${NETGEN_INCLUDE_DIR}/include)
     include_directories(${NETGEN_INCLUDE_DIR}/stlgeom)
+    
+    #netgen 6.2 has more subfolder for headers
+    include_directories(${NETGEN_INCLUDE_DIR}/core)
+    remove_definitions("-DNETGEN_PYTHON")
 
     # Set NETGEN_VERSION
     file(STRINGS ${NETGEN_INCLUDE_DIR}/mydefs.hpp NETGEN_VERSION
@@ -336,6 +348,7 @@ if(ENABLE_NETGEN)
     add_library(NETGENPlugin ${NETGENPlugin_SRC})
     if (NETGEN_LIBRARY)
         target_link_libraries(NETGENPlugin StdMeshers TKIGES TKXDEIGES ${NETGEN_LIBRARY})
+        message(STATUS "NETGEN_LIBRARY= ${NETGEN_LIBRARY}")
     else (NETGEN_LIBRARY)
         target_link_libraries(NETGENPlugin StdMeshers nglib)
     endif (NETGEN_LIBRARY)
@@ -343,6 +356,7 @@ if(ENABLE_NETGEN)
         set_target_properties(NETGENPlugin PROPERTIES COMPILE_FLAGS "-DNETGENPLUGIN_EXPORTS -DNO_PARALLEL_THREADS -DOCCGEOMETRY -DNETGEN_VERSION=${NETGEN_VERSION}")
     else()
         set_target_properties(NETGENPlugin PROPERTIES COMPILE_FLAGS "${NETGEN_CXX_FLAGS} -DNETGEN_VERSION=${NETGEN_VERSION}")
+        message(STATUS "NETGEN_CXX_FLAGS= ${NETGEN_CXX_FLAGS}")
     endif()
 endif()
 
