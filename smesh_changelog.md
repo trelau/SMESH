@@ -2,15 +2,20 @@
 
 ## Overview
 
-netgen license?  GNU Lesser General Public License v2.1
-
-salome 9.3 stills use the netgen 5.5 version
 
 
+### subfolders extracted from salome 
+
++ Trace: Kernel `SalomeLocalTrace`
++ Utils: `SMESHUtils`
++ Basics: come from Kernel module of Salome
++ Misc: 
++ the other subfolders: mesh  module of Salome
++ swig interfacing and GUI related code are dropped
 
 ### C++ standard version must support C++14
 
-C++11 is reequried by OCCT 7.3 
+C++11 is reequired by OCCT 7.3 
 
 while  netgen 6.2dev requires C++14,   `std::enable_if_t` is not available on g++ 5.x
 
@@ -37,12 +42,22 @@ while  netgen 6.2dev requires C++14,   `std::enable_if_t` is not available on g+
 
 ### Migration to C++17
 
-Salome code is not yet C++17 ready, esp, the breaking  exception declearation change in C++17
+Salome code is C++17 ready, except from some plugin suppressed. , 
+
+esp, the breaking  exception declearation change in C++17
 
 *looo* has started working on `c++17: dynamic exception specification -> noexcept(false)`
 https://github.com/LaughlinResearch/SMESH/pull/13
 
-However, it seems has not completed
+
+
+### netgen must be patched
+
+netgen license?  GNU Lesser General Public License v2.1
+
+salome 9.3 stills use the netgen 5.5 version
+
+why there is no gmsh plugin? built-in?
 
 ### Python binding for salomesmesh
 
@@ -51,11 +66,21 @@ PyOCCT has the binding for salomesmesh, using generated pybind11 wrapping.
 
 
 
-## Changelog
+
+
+## Changelog for this fork
 
 ### missing dependencies
 libmetis.so is needed
 libtbb-dev is needed, added to *conda*, but it is not mentioned in readme.
+
+### CGNS mesh format added
+
+`libcgns-dev` on debian-like systems,  `libcgns-devel`
+
+`FindCGNS.cmake` is downloaded from paraview project
+
+windows system is not clear, perhaps just disable it.
 
 
 ### smesh cmake failed on windows for `pthread`
@@ -70,7 +95,7 @@ CMake Error at src/3rdParty/salomesmesh/CMakeLists.txt:150 (message):
 pthread detect can be removed for windows?
 in CMake,  `UNIX` cover Linux, MacOS?
 
-*src file, has projection preprocessor*, but it is also used by several headers
+*src file, has C preprocessor*, but it is also used by several headers
 
 qingfeng@qingfeng-ubuntu:/opt/SMESH/inc$ grep -rnw ./ -e "pthread"
 ./BaseTraceCollector.hxx:33:#include <pthread.h>
