@@ -2,13 +2,16 @@
 cmake_minimum_required(VERSION 3.3)
 project(SMESH C CXX)
 
+set(CMAKE_MODULE_PATH "${PROJECT_SOURCE_DIR}/cmake" ${CMAKE_MODULE_PATH})
 # --------------------------------------------------------------------------- #
 # OPTIONS
 # --------------------------------------------------------------------------- #
-option(ENABLE_NETGEN "Enable NETGEN" ON)
-option(ENABLE_MED "Enable MED" OFF)
-option(ENABLE_BLSURF "Enable BLSURF" OFF)
+option(ENABLE_NETGEN "Enable NETGEN mesher" ON)
+option(ENABLE_MED "Enable MED mesh format IO" OFF)
+option(ENABLE_CGNS "Enable CGNS mesh format input and output " ON)
+option(ENABLE_BLSURF "Enable BLSURF mesher" OFF)
 option(ENABLE_LIB_NAMING "Enable additional library naming" OFF)
+
 set(CMAKE_INSTALL_PREFIX "${CMAKE_SOURCE_DIR}/install" CACHE PATH "Installation directory.")
 set(CMAKE_INSTALL_LIBDIR lib CACHE PATH "Output directory for libraries")
 
@@ -34,7 +37,7 @@ endif()
 # netget 6.2 also need G++6, using `export CXX=g++6` to select compiler
 # is that possible to detect OpenCASCADE_VERSION by cmake?
 if(CMAKE_COMPILER_IS_GNUCXX OR CMAKE_COMPILER_IS_CLANGXX)
-     set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++14")
+    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11")
 endif(CMAKE_COMPILER_IS_GNUCXX OR CMAKE_COMPILER_IS_CLANGXX)
 
 # --------------------------------------------------------------------------- #
@@ -224,13 +227,32 @@ if(ENABLE_MED)
         message(FATAL_ERROR "Failed to find MED include directories.")
     endif()
 
-    if(NOT EXISTS ${MEDFILE_INCLUDE_DIRS})
-        message(FATAL_ERROR "Failed to find MED librar directory.")
-    endif()
-
     message(STATUS "MED include directory: ${MED_INCLUDE_DIR}")
     message(STATUS "MED library directory: ${MED_LIBRARY_DIR}")
     include_directories(${MEDFILE_INCLUDE_DIRS})
+endif()
+
+
+# --------------------------------------------------------------------------- #
+# CGNS
+# --------------------------------------------------------------------------- #
+if(ENABLE_CGNS)
+    if(NOT DEFINED CGNS_INCLUDE_DIRS OR NOT DEFINED CGNS_LIBRARY_DIR)
+        message(STATUS "Searching for CGNS...")
+        find_package(CGNS) # REQUIRED
+    endif()
+
+    if(NOT EXISTS ${CGNS_INCLUDE_DIRS})
+        message(FATAL_ERROR "Failed to find CGNS include directories.")
+    endif()
+
+    if(NOT EXISTS ${CGNS_INCLUDE_DIRS})
+        message(FATAL_ERROR "Failed to find CGNS librar directory.")
+    endif()
+
+    message(STATUS "CGNS include directory: ${CGNS_INCLUDE_DIR}")
+    message(STATUS "CGNS library directory: ${CGNS_LIBRARY_DIR}")
+    include_directories(${CGNS_INCLUDE_DIRS})
 endif()
 
 
@@ -326,6 +348,18 @@ if(ENABLE_MED)
     endif()
 endif()
 
+# DriverCGNS
+if(UNIX)
+if(ENABLE_CGNS)
+    file(GLOB DriverCGNS_SRC src/DriverCGNS/*.cxx)
+    add_library(DriverCGNS ${DriverCGNS_SRC})
+    target_link_libraries(DriverCGNS SMDS Driver SMESHMisc SMESHTrace SMESHBasics ${CGNSFILE_LIBRARIES})
+    if(WIN32)
+        set_target_properties(DriverCGNS PROPERTIES COMPILE_FLAGS "-MESHDRIVERCGNS_EXPORT")
+    endif()
+endif()
+endif()
+
 # MEFISTO2
 file(GLOB MEFISTO2_SRC src/MEFISTO2/aptrte.cxx src/MEFISTO2/trte.c)
 add_library(MEFISTO2 ${MEFISTO2_SRC})
@@ -402,7 +436,7 @@ else()
     set_target_properties(StdMeshers PROPERTIES COMPILE_FLAGS "${StdMeshers_CFLAGS}")
 endif()
 
-# Trace
+# Salome kernel's Trace
 file(GLOB Trace_SRC src/Trace/*.cxx)
 add_library(SMESHTrace ${Trace_SRC})
 if(UNIX)
@@ -414,8 +448,8 @@ if(WIN32)
     set_target_properties(SMESHTrace PROPERTIES COMPILE_FLAGS "-DSALOMELOCALTRACE_EXPORTS")
 endif()
 
-# Utils
-file(GLOB Utils_SRC src/Utils/*.cxx)
+# SMESHUtils
+file(GLOB Utils_SRC src/SMESHUtils/*.cxx)
 add_library(SMESHUtils ${Utils_SRC})
 target_link_libraries(SMESHUtils SMDS TKShHealing TKPrim TKernel TKBRep TKG2d TKG3d TKGeomBase TKGeomAlgo TKTopAlgo TKMesh ${Boost_LIBRARIES})
 if(WIN32)
@@ -446,6 +480,10 @@ endif()
 
 if(ENABLE_MED)
     set(SMESH_LIBRARIES ${SMESH_LIBRARIES} DriverMED)
+endif()
+
+if(ENABLE_CGNS)
+    set(SMESH_LIBRARIES ${SMESH_LIBRARIES} DriverCGNS)
 endif()
 
 if (MSVC AND ENABLE_LIB_NAMING)

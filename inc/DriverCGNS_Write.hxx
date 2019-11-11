@@ -19,22 +19,35 @@
 //
 // See http://www.salome-platform.org/ or email : webmaster.salome@opencascade.com
 //
+// File      : DriverCGNS_Write.hxx
+// Created   : Thu Jun 30 10:25:09 2011
+// Author    : Edward AGAPOV (eap)
 
-//  File   : SMESH_DriverCGNS.hxx
-//  Author : Alexander A. BORODIN
-//  Module : SMESH
-//
-#ifndef _SMESH_DriverCGNS_HXX_
-#define _SMESH_DriverCGNS_HXX_
+#ifndef __DriverCGNS_Write_HXX__
+#define __DriverCGNS_Write_HXX__
 
-#ifdef WIN32
- #if defined MESHDriverCGNS_EXPORTS || defined MeshDriverCGNS_EXPORTS
-  #define MESHDriverCGNS_EXPORT __declspec( dllexport )
- #else
-  #define MESHDriverCGNS_EXPORT __declspec( dllimport )
- #endif
-#else
- #define MESHDriverCGNS_EXPORT
-#endif
+#include "SMESH_DriverCGNS.hxx"
+
+#include "Driver_SMESHDS_Mesh.h"
+
+#include <vector>
+#include <string>
+
+/*!
+ * \brief Driver writinging a mesh into the CGNS file.
+ */
+class MESHDriverCGNS_EXPORT DriverCGNS_Write : public Driver_SMESHDS_Mesh
+{
+public:
+
+  DriverCGNS_Write();
+  ~DriverCGNS_Write();
+
+  virtual Status Perform();
+
+private:
+
+  int _fn; //!< file index
+};
 
 #endif
