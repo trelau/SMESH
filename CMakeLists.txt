@@ -346,6 +346,14 @@ endif()
 if(ENABLE_NETGEN)
     file(GLOB NETGENPlugin_SRC src/NETGENPlugin/*.cxx)
     add_library(NETGENPlugin ${NETGENPlugin_SRC})
+    # the latest netget 6.2 need C++14
+    if (${NETGEN_VERSION} VERSION_GREATER_EQUAL 6.2)
+        set_target_properties(NETGENPlugin PROPERTIES
+            CXX_STANDARD 14
+            CXX_STANDARD_REQUIRED YES
+            CXX_EXTENSIONS NO
+        )
+    endif()
     if (NETGEN_LIBRARY)
         target_link_libraries(NETGENPlugin StdMeshers TKIGES TKXDEIGES ${NETGEN_LIBRARY})
         message(STATUS "NETGEN_LIBRARY= ${NETGEN_LIBRARY}")
