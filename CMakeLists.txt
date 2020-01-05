@@ -7,7 +7,6 @@ project(SMESH C CXX)
 # --------------------------------------------------------------------------- #
 option(ENABLE_NETGEN "Enable NETGEN" ON)
 option(ENABLE_MED "Enable MED" OFF)
-option(ENABLE_BLSURF "Enable BLSURF" OFF)
 option(ENABLE_LIB_NAMING "Enable additional library naming" OFF)
 set(CMAKE_INSTALL_PREFIX "${CMAKE_SOURCE_DIR}/install" CACHE PATH "Installation directory.")
 set(CMAKE_INSTALL_LIBDIR lib CACHE PATH "Output directory for libraries")
@@ -163,28 +162,6 @@ if(ENABLE_NETGEN)
 
     MATH(EXPR NETGEN_VERSION "(${NETGEN_VERSION_MAJOR} << 16) + (${NETGEN_VERSION_MINOR} << 8)")
     message(STATUS "Using Netgen version ${NETGEN_VERSION_MAJOR}.${NETGEN_VERSION_MINOR}, calculated: ${NETGEN_VERSION}")
-
-endif()
-
-
-# --------------------------------------------------------------------------- #
-# BLSURF
-# --------------------------------------------------------------------------- #
-if(ENABLE_BLSURF)
-    set(MESHGEMS_INCLUDE "" CACHE PATH "MeshGems include directory.")
-    if(NOT EXISTS ${MESHGEMS_INCLUDE})
-        message(FATAL_ERROR "MeshGems include directory is required.")
-    endif()
-
-    set(MESHGEMS_LIB "" CACHE FILE "MeshGems library.")
-    if(NOT EXISTS ${MESHGEMS_LIB})
-        message(FATAL_ERROR "MeshGems library is required.")
-    endif()
-
-    set(MESHGEMS_CADSURF_LIB "" CACHE FILE "MeshGems MG-CADSurf library.")
-    if(NOT EXISTS ${MESHGEMS_CADSURF_LIB})
-        message(FATAL_ERROR "MeshGems MG-CADSurf library is required.")
-    endif()
 
 endif()
 
@@ -390,26 +367,11 @@ if(WIN32)
     set_target_properties(SMESHUtils PROPERTIES COMPILE_FLAGS "-DSMESHUtils_EXPORTS")
 endif()
 
-# BLSURFPlugin
-if(ENABLE_BLSURF)
-    include_directories(${MESHGEMS_INCLUDE})
-    file(GLOB BLSURFPlugin_SRC src/BLSURFPlugin/*.cxx)
-    add_library(BLSURFPlugin ${BLSURFPlugin_SRC})
-    target_link_libraries(BLSURFPlugin TKBRep TKG2d TKG3d TKGeomBase TKGeomAlgo TKShHealing SMDS SMESHDS SMESH StdMeshers ${MESHGEMS_CADSURF_LIB} ${MESHGEMS_LIB})
-    if(WIN32)
-        set_target_properties(BLSURFPlugin PROPERTIES COMPILE_FLAGS "-DBLSURFPLUGIN_EXPORTS")
-    endif()
-endif()
-
 # Install
 set(SMESH_LIBRARIES Driver DriverDAT DriverGMF DriverSTL DriverUNV MEFISTO2 SMDS SMESH SMESHBasics SMESHControls SMESHDS SMESHMisc SMESHTrace SMESHUtils StdMeshers)
 
 if(ENABLE_NETGEN)
     set(SMESH_LIBRARIES ${SMESH_LIBRARIES} NETGENPlugin)
-endif()
-
-if(ENABLE_BLSURF)
-    set(SMESH_LIBRARIES ${SMESH_LIBRARIES} BLSURFPlugin)
 endif()
 
 if(ENABLE_MED)
