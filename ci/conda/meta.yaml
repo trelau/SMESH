@@ -24,7 +24,7 @@ requirements:
 
   run:
     - vc 14 # [win]
-    - occt == 7.4.0
+    - occt ==7.4.0
     - vtk ==8.2.0
     - boost-cpp
     - pthreads-win32 # [win]
