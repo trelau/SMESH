@@ -15,20 +15,21 @@ requirements:
     - vc 14 # [win]
     - cmake
     - ninja
-    - occt ==7.3
-    - vtk ==8.1.1
-    - boost ==1.67
-    - pthreads-win32 ==2.9.1 # [win]
-    - netgen ==6.2.1804
+    - occt ==7.4.0
+    - vtk ==8.2.0
+    - boost-cpp ==1.67
+    - pthreads-win32 # [win]
+    - netgen ==6.2.1808
     - tbb-devel
+    - catch2
 
   run:
     - vc 14 # [win]
-    - occt ==7.3
-    - vtk ==8.1.1
-    - boost ==1.67
-    - pthreads-win32 ==2.9.1 # [win]
-    - netgen ==6.2.1804
+    - occt ==7.4.0
+    - vtk ==8.2.0
+    - boost-cpp ==1.67
+    - pthreads-win32 # [win]
+    - netgen ==6.2.1808
 
 about:
   home: https://github.com/LaughlinResearch/SMESH

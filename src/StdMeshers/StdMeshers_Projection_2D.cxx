@@ -67,6 +67,8 @@
 #include <gp_Ax2.hxx>
 #include <gp_Ax3.hxx>
 #include <gp_GTrsf.hxx>
+#include <TColStd_ListOfInteger.hxx>
+#include <IMeshData_Types.hxx>
 
 
 using namespace std;
@@ -1209,6 +1211,23 @@ namespace {
     }
   }
 
+  // Auxiliary function since BRepMesh_DataStructureOfDelaun::IndexOf() appears to
+  // be missing from OCCT 7.4.0.
+  int findTriangleIndex(const BRepMesh_Triangle* bmTria,
+	                    const Handle(BRepMesh_DataStructureOfDelaun)& triaDS)
+  {
+	  // Iterate through all the triangles and compare to the input triangle
+	  // and if a match is found return that index.
+	  Standard_Integer nTri = triaDS->NbElements();
+	  for (int i = 1; nTri; i++) {
+		  if (bmTria->IsEqual(triaDS->GetElement(i))) {
+			  return i;
+		  }
+	  }
+	  // Raise error is the triangle is not found for some reason
+	  Standard_RangeError::Raise("Unable to find the triangle index.");
+  }
+
   //================================================================================
   /*!
    * \brief Find a delauney triangle containing a given 2D point and return
@@ -1251,7 +1270,9 @@ namespace {
       gp_XY seg = uv - gc;
 
       bmTria->Edges( linkIDs, ori );
-      int triaID = triaDS->IndexOf( *bmTria );
+      // int triaID = triaDS->IndexOf( *bmTria );
+	  int triaID = findTriangleIndex(bmTria, triaDS);
+	  triaDS->AddElement(*bmTria);
       bmTria = 0;
 
       for ( int i = 0; i < 3; ++i )
@@ -1310,7 +1331,7 @@ namespace {
       nbP += srcWires[iW]->NbPoints() - 1; // 1st and last points coincide
 
     // fill boundary points
-    BRepMesh::Array1OfVertexOfDelaun srcVert( 1, 1 + nbP ), tgtVert( 1, 1 + nbP );
+    IMeshData::Array1OfVertexOfDelaun srcVert( 1, 1 + nbP ), tgtVert( 1, 1 + nbP );
     vector< const SMDS_MeshNode* > bndSrcNodes( nbP + 1 ); bndSrcNodes[0] = 0;
     BRepMesh_Vertex v( 0, 0, BRepMesh_Frontier );
     for ( size_t iW = 0; iW < srcWires.size(); ++iW )
@@ -1353,7 +1374,7 @@ namespace {
     for ( ; iBndSrcN < bndSrcNodes.size() &&  noTriQueue.empty();  ++iBndSrcN )
     {
       // get a triangle
-      const BRepMesh::ListOfInteger & linkIds = triaDS->LinksConnectedTo( iBndSrcN );
+      const TColStd_ListOfInteger & linkIds = triaDS->LinksConnectedTo( iBndSrcN );
       const BRepMesh_PairOfIndex &    triaIds = triaDS->ElementsConnectedTo( linkIds.First() );
       const BRepMesh_Triangle&           tria = triaDS->GetElement( triaIds.Index(1) );
 
@@ -1403,7 +1424,7 @@ namespace {
       // assure that all src nodes are visited
       for ( ; iBndSrcN < bndSrcNodes.size() &&  noTriQueue.empty();  ++iBndSrcN )
       {
-        const BRepMesh::ListOfInteger & linkIds = triaDS->LinksConnectedTo( iBndSrcN );
+        const TColStd_ListOfInteger & linkIds = triaDS->LinksConnectedTo( iBndSrcN );
         const BRepMesh_PairOfIndex &    triaIds = triaDS->ElementsConnectedTo( linkIds.First() );
         const BRepMesh_Triangle&           tria = triaDS->GetElement( triaIds.Index(1) );
         addCloseNodes( bndSrcNodes[ iBndSrcN ], &tria, srcFaceID, noTriQueue );

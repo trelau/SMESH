@@ -13,6 +13,8 @@ platform:
 
 install:
   - cmd: rmdir C:\cygwin /s /q
+  - cmd: rmdir C:\QT /s /q
+  - cmd: rmdir C:\MSYS64 /s /q
   - cmd: call %CONDA_INSTALL_LOCN%\Scripts\activate.bat
   - cmd: conda.exe update --yes --quiet conda
   - cmd: set PYTHONUNBUFFERED=1
@@ -22,7 +24,6 @@ install:
   - cmd: conda.exe config --remove channels defaults
   - cmd: conda.exe config --add channels defaults
   - cmd: conda.exe config --add channels conda-forge
-  - cmd: conda.exe config --add channels trelau
 
 build: off
 

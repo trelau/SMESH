@@ -114,7 +114,7 @@ double StdMeshers_Geometric1D::GetCommonRatio() const
  */
 //=============================================================================
 
-ostream & StdMeshers_Geometric1D::SaveTo(ostream & save)
+std::ostream & StdMeshers_Geometric1D::SaveTo(std::ostream & save)
 {
   save << _begLength << " " << _ratio << " ";
 
@@ -129,7 +129,7 @@ ostream & StdMeshers_Geometric1D::SaveTo(ostream & save)
  */
 //=============================================================================
 
-istream & StdMeshers_Geometric1D::LoadFrom(istream & load)
+std::istream & StdMeshers_Geometric1D::LoadFrom(std::istream & load)
 {
   bool isOK = true;
   isOK = static_cast<bool>(load >> _begLength);
