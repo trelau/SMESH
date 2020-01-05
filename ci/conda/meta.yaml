@@ -21,6 +21,7 @@ requirements:
     - pthreads-win32 # [win]
     - netgen ==6.2.1808
     - tbb-devel
+    - catch2
 
   run:
     - vc 14 # [win]

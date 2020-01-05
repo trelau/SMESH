@@ -8,6 +8,7 @@ project(SMESH C CXX)
 option(ENABLE_NETGEN "Enable NETGEN" ON)
 option(ENABLE_MED "Enable MED" OFF)
 option(ENABLE_LIB_NAMING "Enable additional library naming" OFF)
+option(ENABLE_TESTS "Build and run unit tests" ON)
 set(CMAKE_INSTALL_PREFIX "${CMAKE_SOURCE_DIR}/install" CACHE PATH "Installation directory.")
 set(CMAKE_INSTALL_LIBDIR lib CACHE PATH "Output directory for libraries")
 
@@ -403,6 +404,24 @@ install(DIRECTORY ${CMAKE_SOURCE_DIR}/inc/ DESTINATION "include/smesh")
 
 # Configuration file
 configure_file(${CMAKE_CURRENT_SOURCE_DIR}/cmake/SMESHConfig.cmake.in
-	           ${CMAKE_CURRENT_BINARY_DIR}/SMESHConfig.cmake @ONLY)
+               ${CMAKE_CURRENT_BINARY_DIR}/SMESHConfig.cmake @ONLY)
 
 install(FILES ${CMAKE_CURRENT_BINARY_DIR}/SMESHConfig.cmake DESTINATION cmake)
+
+
+# --------------------------------------------------------------------------- #
+# TEST
+# --------------------------------------------------------------------------- #
+if (ENABLE_TESTS)
+    find_package(Catch2 REQUIRED)
+    include(CTest)
+    include(Catch)
+
+    if (ENABLE_NETGEN)
+        add_executable(test_Netgen test/Netgen.t.cpp)
+        target_include_directories(test_Netgen PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/inc)
+        target_link_libraries(test_Netgen Catch2::Catch2 ${SMESH_LIBRARIES} TKPRim)
+        catch_discover_tests(test_Netgen)
+    endif()
+
+endif()
