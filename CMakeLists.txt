@@ -8,7 +8,7 @@ project(SMESH C CXX)
 option(ENABLE_NETGEN "Enable NETGEN" ON)
 option(ENABLE_MED "Enable MED" OFF)
 option(ENABLE_LIB_NAMING "Enable additional library naming" OFF)
-option(ENABLE_TESTS "Build and run unit tests" ON)
+option(BUILD_TESTS "Build unit tests" OFF)
 set(CMAKE_INSTALL_PREFIX "${CMAKE_SOURCE_DIR}/install" CACHE PATH "Installation directory.")
 set(CMAKE_INSTALL_LIBDIR lib CACHE PATH "Output directory for libraries")
 
@@ -412,7 +412,7 @@ install(FILES ${CMAKE_CURRENT_BINARY_DIR}/SMESHConfig.cmake DESTINATION cmake)
 # --------------------------------------------------------------------------- #
 # TEST
 # --------------------------------------------------------------------------- #
-if (ENABLE_TESTS)
+if (BUILD_TESTS)
     find_package(Catch2 REQUIRED)
     include(CTest)
     include(Catch)

@@ -13,28 +13,28 @@
 
 TEST_CASE("Mesh a box with tetrahedral elements.", "[netgen][solid]") {
 
-	TopoDS_Solid box = BRepPrimAPI_MakeBox(10.0, 10.0, 10.0).Solid();
+    TopoDS_Solid box = BRepPrimAPI_MakeBox(10.0, 10.0, 10.0).Solid();
 
-	SMESH_Gen* gen = new SMESH_Gen();
-	SMESH_Mesh* mesh = gen->CreateMesh(0, true);
+    SMESH_Gen* gen = new SMESH_Gen();
+    SMESH_Mesh* mesh = gen->CreateMesh(0, true);
 
-	NETGENPlugin_SimpleHypothesis_3D* hyp = new NETGENPlugin_SimpleHypothesis_3D(0, 0, gen);
-	hyp->SetLocalLength(1.0);
+    NETGENPlugin_SimpleHypothesis_3D* hyp = new NETGENPlugin_SimpleHypothesis_3D(0, 0, gen);
+    hyp->SetLocalLength(1.0);
 
-	NETGENPlugin_NETGEN_2D3D* algo = new NETGENPlugin_NETGEN_2D3D(1, 0, gen);
+    NETGENPlugin_NETGEN_2D3D* algo = new NETGENPlugin_NETGEN_2D3D(1, 0, gen);
 
-	mesh->ShapeToMesh(box);
-	mesh->AddHypothesis(box, 0);
-	mesh->AddHypothesis(box, 1);
+    mesh->ShapeToMesh(box);
+    mesh->AddHypothesis(box, 0);
+    mesh->AddHypothesis(box, 1);
 
-	bool success = gen->Compute(*mesh, box);
-	REQUIRE(success == true);
+    bool success = gen->Compute(*mesh, box);
+    REQUIRE(success == true);
 
-	REQUIRE(mesh->NbTetras() == 4767);
-	REQUIRE(mesh->NbNodes() == 1189);
+    REQUIRE(mesh->NbTetras() == 4767);
+    REQUIRE(mesh->NbNodes() == 1189);
 
-	delete hyp;
-	delete algo;
-	delete mesh;
-	delete gen;
+    delete hyp;
+    delete algo;
+    delete mesh;
+    delete gen;
 }
