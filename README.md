@@ -1,5 +1,5 @@
 # SMESH
-[![Anaconda-Server Badge](https://anaconda.org/conda-forge/smesh/badges/installer/conda.svg)](https://conda.anaconda.org/conda-forge)
+[![Anaconda-Server Badge](https://anaconda.org/conda-forge/smesh/badges/installer/conda.svg)](https://anaconda.org/conda-forge/smesh)
 [![Anaconda-Server Badge](https://anaconda.org/conda-forge/smesh/badges/platforms.svg)](https://anaconda.org/conda-forge/smesh)
 [![Anaconda-Server Badge](https://anaconda.org/conda-forge/smesh/badges/downloads.svg)](https://anaconda.org/conda-forge/smesh)
 [![Anaconda-Server Badge](https://anaconda.org/conda-forge/smesh/badges/latest_release_date.svg)](https://anaconda.org/conda-forge/smesh)
