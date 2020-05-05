@@ -10,7 +10,11 @@ option(ENABLE_MED "Enable MED" OFF)
 option(ENABLE_LIB_NAMING "Enable additional library naming" OFF)
 option(BUILD_TESTS "Build unit tests" OFF)
 set(CMAKE_INSTALL_PREFIX "${CMAKE_SOURCE_DIR}/install" CACHE PATH "Installation directory.")
-set(CMAKE_INSTALL_LIBDIR lib CACHE PATH "Output directory for libraries")
+#set(CMAKE_INSTALL_LIBDIR lib CACHE PATH "Output directory for libraries")
+
+include(GNUInstallDirs)
+mark_as_advanced(CLEAR CMAKE_INSTALL_LIBDIR)
+mark_as_advanced(CLEAR CMAKE_INSTALL_INCLUDEDIR)
 
 
 # --------------------------------------------------------------------------- #
@@ -396,17 +400,17 @@ set_target_properties(${SMESH_LIBRARIES} PROPERTIES SOVERSION
 endif()
 
 install(TARGETS ${SMESH_LIBRARIES}
-        ARCHIVE DESTINATION "lib"
+	ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR}
         RUNTIME DESTINATION "bin"
         LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR})
 
-install(DIRECTORY ${CMAKE_SOURCE_DIR}/inc/ DESTINATION "include/smesh")
+install(DIRECTORY ${CMAKE_SOURCE_DIR}/inc/ DESTINATION "${CMAKE_INSTALL_INCLUDEDIR}/smesh")
 
 # Configuration file
 configure_file(${CMAKE_CURRENT_SOURCE_DIR}/cmake/SMESHConfig.cmake.in
                ${CMAKE_CURRENT_BINARY_DIR}/SMESHConfig.cmake @ONLY)
 
-install(FILES ${CMAKE_CURRENT_BINARY_DIR}/SMESHConfig.cmake DESTINATION cmake)
+install(FILES ${CMAKE_CURRENT_BINARY_DIR}/SMESHConfig.cmake DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake)
 
 
 # --------------------------------------------------------------------------- #
