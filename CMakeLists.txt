@@ -9,6 +9,7 @@ option(ENABLE_NETGEN "Enable NETGEN" ON)
 option(ENABLE_MED "Enable MED" OFF)
 option(ENABLE_LIB_NAMING "Enable additional library naming" OFF)
 option(BUILD_TESTS "Build unit tests" OFF)
+option(NEW_NETGEN_INTERFACE "netgen >= 6.2.2004" OFF)
 set(CMAKE_INSTALL_PREFIX "${CMAKE_SOURCE_DIR}/install" CACHE PATH "Installation directory.")
 set(CMAKE_INSTALL_LIBDIR lib CACHE PATH "Output directory for libraries")
 
@@ -163,7 +164,6 @@ if(ENABLE_NETGEN)
 
     MATH(EXPR NETGEN_VERSION "(${NETGEN_VERSION_MAJOR} << 16) + (${NETGEN_VERSION_MINOR} << 8)")
     message(STATUS "Using Netgen version ${NETGEN_VERSION_MAJOR}.${NETGEN_VERSION_MINOR}, calculated: ${NETGEN_VERSION}")
-
 endif()
 
 
@@ -312,6 +312,10 @@ if(ENABLE_NETGEN)
         set_target_properties(NETGENPlugin PROPERTIES COMPILE_FLAGS "-DNETGENPLUGIN_EXPORTS -DNO_PARALLEL_THREADS -DOCCGEOMETRY -DNETGEN_VERSION=${NETGEN_VERSION}")
     else()
         set_target_properties(NETGENPlugin PROPERTIES COMPILE_FLAGS "${NETGEN_CXX_FLAGS} -DNETGEN_VERSION=${NETGEN_VERSION}")
+    endif()
+    if (NEW_NETGEN_INTERFACE)
+        MESSAGE("using new netgen interface")
+        set_property(TARGET NETGENPlugin PROPERTY COMPILE_DEFINITIONS NEW_NETGEN_INTERFACE)
     endif()
 endif()
 

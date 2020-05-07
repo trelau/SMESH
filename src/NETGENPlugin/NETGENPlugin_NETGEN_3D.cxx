@@ -71,22 +71,30 @@
 #define OCCGEOMETRY
 #endif
 #include <occgeom.hpp>
-#include <ngexception.hpp>
+// #include <ngexception.hpp>
 namespace nglib {
 #include <nglib.h>
 }
-namespace netgen {
-#if NETGEN_VERSION >= NETGEN_VERSION_STRING(6,2)
-	DLL_HEADER extern int OCCGenerateMesh(OCCGeometry&, shared_ptr<Mesh>&, MeshingParameters&);
-#elif NETGEN_VERSION >= NETGEN_VERSION_STRING(6,0)
-	DLL_HEADER extern int OCCGenerateMesh(OCCGeometry&, shared_ptr<Mesh>&, MeshingParameters&, int, int);
-#elif NETGEN_VERSION >= NETGEN_VERSION_STRING(5,0)
-	DLL_HEADER extern int OCCGenerateMesh(OCCGeometry&, Mesh*&, MeshingParameters&, int, int);
+
+namespace netgen{
+  DLL_HEADER extern MeshingParameters mparam;
+  DLL_HEADER extern volatile multithreadt multithread;
+
+#ifdef NEW_NETGEN_INTERFACE
+  int OCCGenerateMesh(OCCGeometry& geo, shared_ptr<Mesh>& mesh, MeshingParameters& params);
 #else
-	DLL_HEADER extern int OCCGenerateMesh(OCCGeometry&, Mesh*&, int, int, char*);
+
+#if NETGEN_VERSION >= NETGEN_VERSION_STRING(6,2)
+  DLL_HEADER extern int OCCGenerateMesh(OCCGeometry&, shared_ptr<Mesh>&, MeshingParameters&);
+#elif NETGEN_VERSION >= NETGEN_VERSION_STRING(6,0)
+  DLL_HEADER extern int OCCGenerateMesh(OCCGeometry&, shared_ptr<Mesh>&, MeshingParameters&, int, int);
+#elif NETGEN_VERSION >= NETGEN_VERSION_STRING(5,0)
+  DLL_HEADER extern int OCCGenerateMesh(OCCGeometry&, Mesh*&, MeshingParameters&, int, int);
+#else
+  DLL_HEADER extern int OCCGenerateMesh(OCCGeometry&, Mesh*&, int, int, char*);
 #endif
-	DLL_HEADER extern MeshingParameters mparam;
-	DLL_HEADER extern volatile multithreadt multithread;
+
+#endif
 }
 using namespace nglib;
 using namespace std;

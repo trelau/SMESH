@@ -54,31 +54,43 @@
   Netgen include files
 */
 namespace nglib {
-#include <nglib.h>
 }
 #ifndef OCCGEOMETRY
 #define OCCGEOMETRY
 #endif
 #include <occgeom.hpp>
 #include <meshing.hpp>
+#include <nglib.h>
 //#include <meshtype.hpp>
-namespace netgen {
-#if NETGEN_VERSION >= NETGEN_VERSION_STRING(6,2)
-	DLL_HEADER extern int OCCGenerateMesh(OCCGeometry&, shared_ptr<Mesh>&, MeshingParameters&);
-#elif NETGEN_VERSION >= NETGEN_VERSION_STRING(6,0)
-	DLL_HEADER extern int OCCGenerateMesh(OCCGeometry&, shared_ptr<Mesh>&, MeshingParameters&, int, int);
-#elif NETGEN_VERSION >= NETGEN_VERSION_STRING(5,0)
-	DLL_HEADER extern int OCCGenerateMesh(OCCGeometry&, Mesh*&, MeshingParameters&, int, int);
-#else
-	DLL_HEADER extern int OCCGenerateMesh(OCCGeometry&, Mesh*&, int, int, char*);
-#endif
-	DLL_HEADER extern MeshingParameters mparam;
-	DLL_HEADER extern void OCCSetLocalMeshSize(OCCGeometry & geom, Mesh & mesh);
-}
 
 using namespace std;
 using namespace netgen;
 using namespace nglib;
+
+
+namespace netgen{
+  DLL_HEADER extern MeshingParameters mparam;
+  DLL_HEADER extern volatile multithreadt multithread;
+  DLL_HEADER extern OCCParameters occparam;
+  DLL_HEADER extern void OCCSetLocalMeshSize(const OCCGeometry & geom, Mesh & mesh, const MeshingParameters & mparam,
+                                             const OCCParameters& occparam);
+
+#ifdef NEW_NETGEN_INTERFACE
+  int OCCGenerateMesh(OCCGeometry& geo, shared_ptr<Mesh>& mesh, MeshingParameters& params);
+#else
+
+#if NETGEN_VERSION >= NETGEN_VERSION_STRING(6,2)
+  DLL_HEADER extern int OCCGenerateMesh(OCCGeometry&, shared_ptr<Mesh>&, MeshingParameters&);
+#elif NETGEN_VERSION >= NETGEN_VERSION_STRING(6,0)
+  DLL_HEADER extern int OCCGenerateMesh(OCCGeometry&, shared_ptr<Mesh>&, MeshingParameters&, int, int);
+#elif NETGEN_VERSION >= NETGEN_VERSION_STRING(5,0)
+  DLL_HEADER extern int OCCGenerateMesh(OCCGeometry&, Mesh*&, MeshingParameters&, int, int);
+#else
+  DLL_HEADER extern int OCCGenerateMesh(OCCGeometry&, Mesh*&, int, int, char*);
+#endif
+
+#endif
+}
 
 //=============================================================================
 /*!
@@ -293,15 +305,16 @@ bool NETGENPlugin_NETGEN_2D_ONLY::Compute(SMESH_Mesh&         aMesh,
       netgen::mparam.minh = aMesher.GetDefaultMinSize( aShape, netgen::mparam.maxh );
     }
     // set local size depending on curvature and NOT closeness of EDGEs
-    netgen::occparam.resthcloseedgeenable = false;
+    // netgen::occparam.resthcloseedgeenable = false;
     //netgen::occparam.resthcloseedgefac = 1.0 + netgen::mparam.grading;
+    // netgen::OCCParameters occparam;
     occgeoComm.face_maxh = netgen::mparam.maxh;
-    netgen::OCCSetLocalMeshSize( occgeoComm, *ngMeshes[0] );
+    netgen::OCCSetLocalMeshSize( occgeoComm, *ngMeshes[0], netgen::mparam, netgen::occparam );
     occgeoComm.emap.Clear();
     occgeoComm.vmap.Clear();
 
     // set local size according to size of existing segments
-    const double factor = netgen::occparam.resthcloseedgefac;
+    const double factor = 1.0 + netgen::mparam.grading;
     TopTools_IndexedMapOfShape edgeMap;
     TopExp::MapShapes( aMesh.GetShapeToMesh(), TopAbs_EDGE, edgeMap );
     for ( int iE = 1; iE <= edgeMap.Extent(); ++iE )

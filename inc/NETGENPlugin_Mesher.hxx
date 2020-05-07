@@ -40,6 +40,10 @@
 
 #include <TopTools_IndexedMapOfShape.hxx>
 
+#ifndef OCCGEOMETRY
+#define OCCGEOMETRY
+#endif
+
 namespace nglib {
 #include <nglib.h>
 }

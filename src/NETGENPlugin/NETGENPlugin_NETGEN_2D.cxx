@@ -41,6 +41,10 @@
 
 #include <list>
 
+#ifndef OCCGEOMETRY
+#define OCCGEOMETRY
+#endif
+
 namespace nglib {
 #include <nglib.h>
 }

@@ -74,21 +74,38 @@
 #endif
 #include <occgeom.hpp>
 #include <meshing.hpp>
+#include <nglib.h>
 //#include <ngexception.hpp>
 namespace netgen {
-#if NETGEN_VERSION >= NETGEN_VERSION_STRING(6,2)
-	DLL_HEADER extern int OCCGenerateMesh(OCCGeometry&, shared_ptr<Mesh>&, MeshingParameters&);
-#elif NETGEN_VERSION >= NETGEN_VERSION_STRING(6,0)
-	DLL_HEADER extern int OCCGenerateMesh(OCCGeometry&, shared_ptr<Mesh>&, MeshingParameters&, int, int);
-#elif NETGEN_VERSION >= NETGEN_VERSION_STRING(5,0)
-	DLL_HEADER extern int OCCGenerateMesh(OCCGeometry&, Mesh*&, MeshingParameters&, int, int);
+  DLL_HEADER extern MeshingParameters mparam;
+  DLL_HEADER extern volatile multithreadt multithread;
+  DLL_HEADER extern bool merge_solids;
+  DLL_HEADER extern OCCParameters occparam;
+
+#ifdef NEW_NETGEN_INTERFACE
+int OCCGenerateMesh(OCCGeometry& geo, shared_ptr<Mesh>& mesh, MeshingParameters& params)
+    {
+      shared_ptr<OCCGeometry> geo_ptr{&geo, [](OCCGeometry *) {}/*No-Op Deleter*/};
+      geo_ptr->SetOCCParameters(occparam);
+      auto result = geo_ptr->GenerateMesh(mesh, params);
+      mesh->SetGeometry(geo_ptr);
+      return result;
+    }
 #else
-	DLL_HEADER extern int OCCGenerateMesh(OCCGeometry&, Mesh*&, int, int, char*);
+
+#ifdef NETGEN_VERSION >= NETGEN_VERSION_STRING(6,2)
+  DLL_HEADER extern int OCCGenerateMesh(OCCGeometry&, shared_ptr<Mesh>&, MeshingParameters&);
+#elif NETGEN_VERSION >= NETGEN_VERSION_STRING(6,0)
+  DLL_HEADER extern int OCCGenerateMesh(OCCGeometry&, shared_ptr<Mesh>&, MeshingParameters&, int, int);
+#elif NETGEN_VERSION >= NETGEN_VERSION_STRING(5,0)
+  DLL_HEADER extern int OCCGenerateMesh(OCCGeometry&, Mesh*&, MeshingParameters&, int, int);
+#else
+  DLL_HEADER extern int OCCGenerateMesh(OCCGeometry&, Mesh*&, int, int, char*);
 #endif
-	//extern void OCCSetLocalMeshSize(OCCGeometry & geom, Mesh & mesh);
-	DLL_HEADER extern MeshingParameters mparam;
-	DLL_HEADER extern volatile multithreadt multithread;
-	DLL_HEADER extern bool merge_solids;
+
+#endif
+
+
 }
 
 #include <vector>
@@ -3055,8 +3072,9 @@ bool NETGENPlugin_Mesher::Compute()
           _ngMesh->Compress();
         }
         // convert to quadratic
-        netgen::OCCRefinementSurfaces ref (occgeo);
-        ref.MakeSecondOrder (*_ngMesh);
+        // netgen::OCCRefinementSurfaces ref (occgeo);
+        // ref.MakeSecondOrder (*_ngMesh);
+        occgeo.GetRefinement().MakeSecondOrder(*(netgen::Mesh*) _ngMesh.get());
 
         // care of elements already loaded to SMESH
         // if ( initState._nbSegments > 0 )
@@ -4178,12 +4196,16 @@ std::string NETGENPlugin_NetgenLibWrapper::getOutputFileName()
 void NETGENPlugin_NetgenLibWrapper::RemoveTmpFiles()
 {
   bool rm =  SMESH_File("test.out").remove() ;
+#ifdef NEW_NETGEN_INTERFACE
+  netgen::testout = new std::ostream(nullptr);
+#else
 #ifndef WIN32
   if ( rm && netgen::testout && instanceCounter() == 0 )
   {
     delete netgen::testout;
     netgen::testout = 0;
   }
+#endif
 #endif
   SMESH_File("problemfaces").remove();
   SMESH_File("occmesh.rep").remove();
