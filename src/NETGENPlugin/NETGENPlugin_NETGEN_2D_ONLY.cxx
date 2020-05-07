@@ -305,11 +305,14 @@ bool NETGENPlugin_NETGEN_2D_ONLY::Compute(SMESH_Mesh&         aMesh,
       netgen::mparam.minh = aMesher.GetDefaultMinSize( aShape, netgen::mparam.maxh );
     }
     // set local size depending on curvature and NOT closeness of EDGEs
-    // netgen::occparam.resthcloseedgeenable = false;
-    //netgen::occparam.resthcloseedgefac = 1.0 + netgen::mparam.grading;
-    // netgen::OCCParameters occparam;
     occgeoComm.face_maxh = netgen::mparam.maxh;
+#ifndef NEW_NETGEN_INTERFACE
+    netgen::occparam.resthcloseedgeenable = false;
+    //netgen::occparam.resthcloseedgefac = 1.0 + netgen::mparam.grading;
+    netgen::OCCSetLocalMeshSize( occgeoComm, *ngMeshes[0] );
+#else
     netgen::OCCSetLocalMeshSize( occgeoComm, *ngMeshes[0], netgen::mparam, netgen::occparam );
+#endif
     occgeoComm.emap.Clear();
     occgeoComm.vmap.Clear();
 

@@ -3072,9 +3072,12 @@ bool NETGENPlugin_Mesher::Compute()
           _ngMesh->Compress();
         }
         // convert to quadratic
-        // netgen::OCCRefinementSurfaces ref (occgeo);
-        // ref.MakeSecondOrder (*_ngMesh);
+#ifndef NEW_NETGEN_INTERFACE
+        netgen::OCCRefinementSurfaces ref (occgeo);
+        ref.MakeSecondOrder (*_ngMesh);
+#else
         occgeo.GetRefinement().MakeSecondOrder(*(netgen::Mesh*) _ngMesh.get());
+#endif
 
         // care of elements already loaded to SMESH
         // if ( initState._nbSegments > 0 )
