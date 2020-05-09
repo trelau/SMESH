@@ -85,10 +85,12 @@ namespace netgen {
 #ifdef NEW_NETGEN_INTERFACE
 int OCCGenerateMesh(OCCGeometry& geo, shared_ptr<Mesh>& mesh, MeshingParameters& params)
     {
-      shared_ptr<OCCGeometry> geo_ptr{&geo, [](OCCGeometry *) {}/*No-Op Deleter*/};
-      geo_ptr->SetOCCParameters(occparam);
-      auto result = geo_ptr->GenerateMesh(mesh, params);
-      mesh->SetGeometry(geo_ptr);
+      // shared_ptr<OCCGeometry> geo_ptr{&geo, [](OCCGeometry *) {}/*No-Op Deleter*/};
+      // geo_ptr->SetOCCParameters(occparam);
+      geo.SetOCCParameters(occparam);
+      // auto result = geo_ptr->GenerateMesh(mesh, params);
+      auto result = geo.GenerateMesh(mesh, params);
+      // mesh->SetGeometry(geo_ptr);
       return result;
     }
 #else
