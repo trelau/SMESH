@@ -32,6 +32,7 @@
 #include "SALOME_Utils.hxx"
 
 #include <stdexcept>
+#include <exception>
 
 typedef void (*PVF)();
 
