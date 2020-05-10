@@ -25,10 +25,9 @@ set(SMESH_VERSION_TWEAK 3)
 # Build shared libraries
 set(BUILD_SHARED_LIBS ON)
 
-# Compiler flags
-# if(CMAKE_COMPILER_IS_GNUCXX OR CMAKE_COMPILER_IS_CLANGXX)
-#     set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11")
-# endif(CMAKE_COMPILER_IS_GNUCXX OR CMAKE_COMPILER_IS_CLANGXX)
+if (NEW_NETGEN_INTERFACE)
+    set(CMAKE_CXX_STANDARD 17)
+endif()
 
 # --------------------------------------------------------------------------- #
 # OpenCASCADE
