@@ -22,7 +22,7 @@ requirements:
     - occt ==7.4.0
     - boost-cpp
     - pthreads-win32  # [win]
-    - netgen ==6.2.1808
+    - netgen ==6.2.2004
     - tbb-devel
     - catch2
 
@@ -31,7 +31,7 @@ requirements:
     - vtk
     - boost-cpp
     - pthreads-win32 # [win]
-    - netgen ==6.2.1808
+    - {{ pin_compatible('netgen', max_pin='x.x.x') }}
 
 about:
   home: https://github.com/LaughlinResearch/SMESH
