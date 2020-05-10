@@ -295,6 +295,7 @@ file(GLOB Misc_SRC src/Misc/*.cxx)
 add_library(SMESHMisc ${Misc_SRC})
 target_link_libraries(SMESHMisc SMESHTrace TKBRep TKShHealing TKMesh TKGeomAlgo TKTopAlgo TKG2d TKG3d TKV3d TKGeomBase TKBO)
 if(WIN32)
+    target_link_libraries(SMESHMisc ws2_32)
     set_target_properties(SMESHMisc PROPERTIES COMPILE_FLAGS "-DUTILS_EXPORTS")
 endif()
 
