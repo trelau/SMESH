@@ -7,27 +7,26 @@ source:
 
 build:
   number: 0
-  features:
-    - vc14 # [win]
 
 requirements:
   build:
-    - vc 14 # [win]
+    - {{ compiler('cxx') }}
+    - {{ compiler('c') }}
     - cmake
     - ninja
+
+  host:
     - occt ==7.4.0
-    - vtk ==8.2.0
-    - boost-cpp ==1.67
-    - pthreads-win32 # [win]
+    - boost-cpp
+    - pthreads-win32  # [win]
     - netgen ==6.2.1808
     - tbb-devel
     - catch2
 
   run:
-    - vc 14 # [win]
     - occt ==7.4.0
-    - vtk ==8.2.0
-    - boost-cpp ==1.67
+    - vtk
+    - boost-cpp
     - pthreads-win32 # [win]
     - netgen ==6.2.1808
 
