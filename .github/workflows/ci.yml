@@ -23,7 +23,7 @@ jobs:
       - name: "Fix dependencies"
         run: |
           sudo apt-get install libxext-dev
-          ln -s /usr/lib/x86_64-linux-gnu/ /usr/lib64
+          sudo ln -s /usr/lib/x86_64-linux-gnu/ /usr/lib64
 
       - name: "Install conda build"
         shell: pwsh
