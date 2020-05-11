@@ -32,7 +32,6 @@
 #include "SALOME_Utils.hxx"
 
 #include <stdexcept>
-#include <exception>
 
 typedef void (*PVF)();
 
@@ -41,12 +40,12 @@ class UTILS_EXPORT Unexpect { //save / retrieve unexpected exceptions treatment
   public :
 #ifndef WIN32
     Unexpect( PVF f ) 
-      { old = std::set_unexpected(f); }
-  ~Unexpect() { std::set_unexpected(old); }
+      { old = std::set_terminate(f); }
+  ~Unexpect() { std::set_terminate(old); }
 #else
     Unexpect( PVF f ) 
-      { old = ::set_unexpected(f); }
-  ~Unexpect() { ::set_unexpected(old); }
+      { old = ::set_terminate(f); }
+  ~Unexpect() { ::set_terminate(old); }
 #endif
 };
 
