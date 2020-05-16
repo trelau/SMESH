@@ -18,6 +18,7 @@ cmake -G "Ninja" \
       -D ENABLE_MED:BOOL=OFF \
       -D ENABLE_NETGEN:BOOL=ON \
       -D NEW_NETGEN_INTERFACE:BOOL=ON \
+      -D BUILD_TESTS:BOOL=ON \
       ..
 
 ninja install
