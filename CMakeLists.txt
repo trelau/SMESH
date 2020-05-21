@@ -77,7 +77,7 @@ include_directories(${VTK_INCLUDE_DIRS})
 message(STATUS "Searching for Boost...")
 find_package(Boost REQUIRED COMPONENTS filesystem thread)
 
-if (MSVC)
+if (MSVC AND ENABLE_LIB_NAMING)
     # find the shared boost libs
     add_definitions(-DBOOST_ALL_DYN_LINK)
     # set postfix for debug libs
