@@ -421,7 +421,7 @@ if (BUILD_TESTS)
     if (ENABLE_NETGEN)
         add_executable(test_Netgen test/Netgen.t.cpp)
         target_include_directories(test_Netgen PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/inc)
-        target_link_libraries(test_Netgen Catch2::Catch2 ${SMESH_LIBRARIES} TKPRim)
+        target_link_libraries(test_Netgen Catch2::Catch2 ${SMESH_LIBRARIES} TKPrim)
         catch_discover_tests(test_Netgen)
     endif()
 
