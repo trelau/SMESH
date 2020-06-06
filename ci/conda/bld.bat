@@ -10,7 +10,7 @@ cmake -G "Ninja" ^
     -D PTHREAD_LIB_DIRS:FILEPATH="%LIBRARY_PREFIX%/lib" ^
     -D Boost_NO_BOOST_CMAKE:BOOL=ON ^
     -D ENABLE_LIB_NAMING:BOOL=OFF ^
-    -D BUILD_TESTS:BOOL=ON ^
+    -D BUILD_TESTS:BOOL=OFF ^
     ..
 
 if errorlevel 1 exit 1
