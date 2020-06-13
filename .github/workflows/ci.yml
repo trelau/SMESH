@@ -39,7 +39,7 @@ jobs:
         shell: pwsh
         run: |
           mkdir conda
-          conda build  ci/conda -c conda-forge --output-folder conda
+          conda build  ci/conda -c conda-forge -c trelau --output-folder conda
 
       - name: "Upload conda package"
         uses: actions/upload-artifact@v2
@@ -78,7 +78,7 @@ jobs:
         run: |
           mkdir conda
           source activate
-          conda build  ci/conda -c conda-forge --output-folder conda
+          conda build  ci/conda -c conda-forge -c trelau --output-folder conda
 
       - name: "Upload conda package"
         uses: actions/upload-artifact@v2

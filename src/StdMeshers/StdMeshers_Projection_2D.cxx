@@ -68,7 +68,11 @@
 #include <gp_Ax3.hxx>
 #include <gp_GTrsf.hxx>
 #include <TColStd_ListOfInteger.hxx>
-#include <IMeshData_Types.hxx>
+#include <Standard_Version.hxx>
+
+#if OCC_VERSION_MAJOR >= 7 && OCC_VERSION_MINOR >= 4
+    #include <IMeshData_Types.hxx>
+#endif
 
 
 using namespace std;
@@ -1331,7 +1335,12 @@ namespace {
       nbP += srcWires[iW]->NbPoints() - 1; // 1st and last points coincide
 
     // fill boundary points
-    IMeshData::Array1OfVertexOfDelaun srcVert( 1, 1 + nbP ), tgtVert( 1, 1 + nbP );
+#if OCC_VERSION_MAJOR == 7 && OCC_VERSION_MINOR >= 4
+	IMeshData::Array1OfVertexOfDelaun srcVert(1, 1 + nbP), tgtVert(1, 1 + nbP);
+#else
+	BRepMesh::Array1OfVertexOfDelaun srcVert(1, 1 + nbP), tgtVert(1, 1 + nbP);
+#endif
+
     vector< const SMDS_MeshNode* > bndSrcNodes( nbP + 1 ); bndSrcNodes[0] = 0;
     BRepMesh_Vertex v( 0, 0, BRepMesh_Frontier );
     for ( size_t iW = 0; iW < srcWires.size(); ++iW )

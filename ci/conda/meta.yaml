@@ -1,5 +1,5 @@
 package:
-  name: smesh
+  name: smesh4pyocct
   version: "8.3.0.3"
 
 source:
@@ -22,16 +22,17 @@ requirements:
     - occt ==7.4.0
     - boost-cpp
     - pthreads-win32  # [win]
-    - netgen ==6.2.1808
+    - netgen4smesh ==6.2.1804
     - tbb-devel
+    - vtk ==8.2.0
     - catch2
 
   run:
     - occt ==7.4.0
-    - vtk
+    - vtk ==8.2.0
     - boost-cpp
     - pthreads-win32 # [win]
-    - netgen ==6.2.1808
+    - netgen4smesh ==6.2.1804
 
 about:
   home: https://github.com/LaughlinResearch/SMESH
