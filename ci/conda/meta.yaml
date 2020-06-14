@@ -35,7 +35,7 @@ requirements:
     - netgen4smesh ==6.2.1804
 
 about:
-  home: https://github.com/LaughlinResearch/SMESH
+  home: https://github.com/trelau/SMESH
   license: LGPL2.1
   license_family: LGPL
   summary: Mesh library from SALOME
