@@ -140,29 +140,33 @@ if(ENABLE_NETGEN)
     include_directories(${NETGEN_INCLUDE_DIR}/include)
     include_directories(${NETGEN_INCLUDE_DIR}/stlgeom)
 
-    # Set NETGEN_VERSION
-    file(STRINGS ${NETGEN_INCLUDE_DIR}/mydefs.hpp NETGEN_VERSION
-        REGEX "#define PACKAGE_VERSION.*"
-        )
+    if(NOT NETGEN_VERSION_MAJOR)
+        # Set NETGEN_VERSION
+        file(STRINGS ${NETGEN_INCLUDE_DIR}/mydefs.hpp NETGEN_VERSION
+            REGEX "#define PACKAGE_VERSION.*"
+            )
 
-    if(NETGEN_VERSION)
-        string(REGEX MATCHALL "[0-9]+" NETGEN_VERSION ${NETGEN_VERSION})
-        list(LENGTH NETGEN_VERSION NETGEN_VERSION_COUNT)
-        list(GET NETGEN_VERSION 0 NETGEN_VERSION_MAJOR)
-        if(NETGEN_VERSION_COUNT GREATER 1)
-            list(GET NETGEN_VERSION 1 NETGEN_VERSION_MINOR)
+        if(NETGEN_VERSION)
+            string(REGEX MATCHALL "[0-9]+" NETGEN_VERSION ${NETGEN_VERSION})
+            list(LENGTH NETGEN_VERSION NETGEN_VERSION_COUNT)
+            list(GET NETGEN_VERSION 0 NETGEN_VERSION_MAJOR)
+            if(NETGEN_VERSION_COUNT GREATER 1)
+                list(GET NETGEN_VERSION 1 NETGEN_VERSION_MINOR)
+            else()
+                set(NETGEN_VERSION_MINOR 0)
+            endif()
         else()
-            set(NETGEN_VERSION_MINOR 0)
+            # Assume version 6.2.
+            message(STATUS "WARNING: Assuming Netgen 6.2.")
+            set(NETGEN_VERSION_MAJOR 6)
+            set(NETGEN_VERSION_MINOR 2)
         endif()
-    else()
-        # Assume version 6.2.
-        message(STATUS "WARNING: Assuming Netgen 6.2.")
-        set(NETGEN_VERSION_MAJOR 6)
-        set(NETGEN_VERSION_MINOR 2)
+        set(NETGEN_VERSION_PATCH 0)
     endif()
 
-    MATH(EXPR NETGEN_VERSION "(${NETGEN_VERSION_MAJOR} << 16) + (${NETGEN_VERSION_MINOR} << 8)")
-    message(STATUS "Using Netgen version ${NETGEN_VERSION_MAJOR}.${NETGEN_VERSION_MINOR}, calculated: ${NETGEN_VERSION}")
+    MATH(EXPR NETGEN_VERSION "(${NETGEN_VERSION_MAJOR} << 16) + (${NETGEN_VERSION_MINOR} << 8) + (${NETGEN_VERSION_PATCH})")
+    MATH(EXPR NETGEN_VERSION_62_2004 "(6 << 16) + (2 << 8) + (2004)")
+    message(STATUS "Using Netgen version ${NETGEN_VERSION_MAJOR}.${NETGEN_VERSION_MINOR}.${NETGEN_VERSION_PATCH}, calculated: ${NETGEN_VERSION}")
 
 endif()
 
@@ -304,14 +308,18 @@ if(ENABLE_NETGEN)
     file(GLOB NETGENPlugin_SRC src/NETGENPlugin/*.cxx)
     add_library(NETGENPlugin ${NETGENPlugin_SRC})
     if (NETGEN_LIBRARY)
-        target_link_libraries(NETGENPlugin StdMeshers TKIGES TKXDEIGES ${NETGEN_LIBRARY})
+        target_link_libraries(NETGENPlugin StdMeshers TKIGES TKXDEIGES TKLCAF ${NETGEN_LIBRARY})
     else (NETGEN_LIBRARY)
-        target_link_libraries(NETGENPlugin StdMeshers nglib)
+        target_link_libraries(NETGENPlugin StdMeshers TKIGES TKXDEIGES TKLCAF nglib)
     endif (NETGEN_LIBRARY)
     if(WIN32)
         set_target_properties(NETGENPlugin PROPERTIES COMPILE_FLAGS "-DNETGENPLUGIN_EXPORTS -DNO_PARALLEL_THREADS -DOCCGEOMETRY -DNETGEN_VERSION=${NETGEN_VERSION}")
     else()
         set_target_properties(NETGENPlugin PROPERTIES COMPILE_FLAGS "${NETGEN_CXX_FLAGS} -DNETGEN_VERSION=${NETGEN_VERSION}")
+    endif()
+    if (NOT NETGEN_VERSION LESS NETGEN_VERSION_62_2004) # Version >= 6.2.2004
+        set_target_properties(NETGENPlugin PROPERTIES CXX_STANDARD_REQUIRED ON)
+        set_target_properties(NETGENPlugin PROPERTIES CXX_STANDARD 17) # Standard std=c++1y could work aswell
     endif()
 endif()
 
