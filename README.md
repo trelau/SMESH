@@ -4,7 +4,7 @@
 [![Anaconda-Server Badge](https://anaconda.org/conda-forge/smesh/badges/downloads.svg)](https://anaconda.org/conda-forge/smesh)
 [![Anaconda-Server Badge](https://anaconda.org/conda-forge/smesh/badges/latest_release_date.svg)](https://anaconda.org/conda-forge/smesh)
 
-A stand-alone library of the mesh framework from the [Salome Platform](www.salome-platform.org).
+A stand-alone library of the mesh framework from the [Salome Platform](https://www.salome-platform.org/).
 
 For now, the sources are manually copied from the specified Salome Platform
 release which at the time of this writing is 8.3.0. Modifications were applied
