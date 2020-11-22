@@ -6,7 +6,7 @@ source:
   path: ../..
 
 build:
-  number: 0
+  number: 1
 
 requirements:
   build:
@@ -19,7 +19,7 @@ requirements:
     - ninja
 
   host:
-    - occt ==7.4.0
+    - occt ==7.5.0
     - boost-cpp
     - pthreads-win32  # [win]
     - netgen4smesh ==6.2.1804
@@ -28,7 +28,7 @@ requirements:
     - catch2
 
   run:
-    - occt ==7.4.0
+    - occt ==7.5.0
     - vtk ==8.2.0
     - boost-cpp
     - pthreads-win32 # [win]
