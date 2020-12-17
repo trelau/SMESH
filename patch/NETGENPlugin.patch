@@ -1,0 +1,60 @@
+diff --git a/src/NETGENPlugin/NETGENPlugin_Mesher.cxx b/src/NETGENPlugin/NETGENPlugin_Mesher.cxx
+--- a/src/NETGENPlugin/NETGENPlugin_Mesher.cxx
++++ b/src/NETGENPlugin/NETGENPlugin_Mesher.cxx
+@@ -41,14 +41,14 @@
+ #include <SMESH_ComputeError.hxx>
+ #include <SMESH_ControlPnt.hxx>
+ #include <SMESH_File.hxx>
+-#include <SMESH_Gen_i.hxx>
++#include <SMESH_Gen.hxx>
+ #include <SMESH_Mesh.hxx>
+ #include <SMESH_MesherHelper.hxx>
+ #include <SMESH_subMesh.hxx>
+ #include <StdMeshers_QuadToTriaAdaptor.hxx>
+ #include <StdMeshers_ViscousLayers2D.hxx>
+ 
+-#include <SALOMEDS_Tool.hxx>
++// #include <SALOMEDS_Tool.hxx>
+ 
+ #include <utilities.h>
+ 
+@@ -646,6 +646,7 @@ void NETGENPlugin_Mesher::SetParameters(const NETGENPlugin_Hypothesis* hyp)
+     // mesh size file
+     mparams.meshsizefilename= hyp->GetMeshSizeFile().empty() ? 0 : hyp->GetMeshSizeFile().c_str();
+ 
++	/*
+     const NETGENPlugin_Hypothesis::TLocalSize& localSizes = hyp->GetLocalSizesAndEntries();
+     if ( !localSizes.empty() )
+     {
+@@ -667,6 +668,7 @@ void NETGENPlugin_Mesher::SetParameters(const NETGENPlugin_Hypothesis* hyp)
+         setLocalSize(S, val);
+       }
+     }
++	*/
+   }
+ }
+ 
+@@ -4430,7 +4432,8 @@ void NETGENPlugin_NetgenLibWrapper::setMesh( Ng_Mesh* mesh )
+ 
+ std::string NETGENPlugin_NetgenLibWrapper::getOutputFileName()
+ {
+-  std::string aTmpDir = SALOMEDS_Tool::GetTmpDir();
++  // std::string aTmpDir = SALOMEDS_Tool::GetTmpDir();
++	std::string aTmpDir = "/tmp";
+ 
+   TCollection_AsciiString aGenericName = (char*)aTmpDir.c_str();
+   aGenericName += "NETGEN_";
+@@ -4474,6 +4477,7 @@ void NETGENPlugin_NetgenLibWrapper::RemoveTmpFiles()
+ 
+ void NETGENPlugin_NetgenLibWrapper::removeOutputFile()
+ {
++	/*
+   if ( !_outputFileName.empty() )
+   {
+     if ( _ngcout )
+@@ -4491,4 +4495,5 @@ void NETGENPlugin_NetgenLibWrapper::removeOutputFile()
+ 
+     SALOMEDS_Tool::RemoveTemporaryFiles( tmpDir.c_str(), aFiles, true );
+   }
++  */
+ }

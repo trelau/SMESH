@@ -1,3 +1,4 @@
+cd test
 mkdir build
 cd build
 
@@ -11,8 +12,11 @@ cmake -G "Ninja" \
       ${CMAKE_PLATFORM_FLAGS[@]} \
       -D CMAKE_INSTALL_PREFIX:FILEPATH=$PREFIX \
       -D CMAKE_PREFIX_PATH:FILEPATH=$PREFIX \
-      -D Boost_NO_BOOST_CMAKE:BOOL=ON \
       -D CMAKE_CXX_STANDARD=14 \
       ..
 
 ninja install
+
+cd ..
+cd tests
+./test_Netgen

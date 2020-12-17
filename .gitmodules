@@ -1,0 +1,16 @@
+[submodule "external/Netgen"]
+	path = external/Netgen
+	url = https://github.com/NGSolve/netgen.git
+    branch = netgen-5.3
+[submodule "external/NETGENPlugin"]
+	path = external/NETGENPlugin
+	url = https://git.salome-platform.org/gitpub/plugins/netgenplugin.git
+[submodule "external/SMESH"]
+	path = external/SMESH
+	url = https://git.salome-platform.org/gitpub/modules/smesh.git
+[submodule "external/Kernel"]
+	path = external/Kernel
+	url = https://git.salome-platform.org/gitpub/modules/kernel.git
+[submodule "external/Geom"]
+	path = external/Geom
+	url = https://git.salome-platform.org/gitpub/modules/geom.git
