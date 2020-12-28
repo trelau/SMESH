@@ -6,7 +6,6 @@ project(SMESH C CXX)
 # --------------------------------------------------------------------------- #
 set(CMAKE_INSTALL_PREFIX "${CMAKE_SOURCE_DIR}/install" CACHE PATH "Installation directory.")
 set(CMAKE_INSTALL_LIBDIR lib CACHE PATH "Output directory for libraries")
-# option(ENABLE_MED "Enable MED" OFF)
 
 
 # --------------------------------------------------------------------------- #
@@ -92,29 +91,6 @@ else(UNIX)
   endif()
   link_directories(${PTHREAD_LIB_DIRS})
 endif(UNIX)
-
-
-# --------------------------------------------------------------------------- #
-# MED
-# --------------------------------------------------------------------------- #
-# if(ENABLE_MED)
-    # if(NOT DEFINED MED_INCLUDE_DIR OR NOT DEFINED MED_LIBRARY_DIR)
-        # message(STATUS "Searching for MED...")
-        # find_package(MEDFile CONFIG REQUIRED)
-    # endif()
-
-    # if(NOT EXISTS ${MEDFILE_INCLUDE_DIRS})
-        # message(FATAL_ERROR "Failed to find MED include directories.")
-    # endif()
-
-    # if(NOT EXISTS ${MEDFILE_INCLUDE_DIRS})
-        # message(FATAL_ERROR "Failed to find MED librar directory.")
-    # endif()
-
-    # message(STATUS "MED include directory: ${MED_INCLUDE_DIR}")
-    # message(STATUS "MED library directory: ${MED_LIBRARY_DIR}")
-    # include_directories(${MEDFILE_INCLUDE_DIRS})
-# endif()
 
 
 # --------------------------------------------------------------------------- #
