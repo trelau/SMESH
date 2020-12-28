@@ -14,7 +14,12 @@ and the submodules with:
 
     git clone --recurse-submodules https://github.com/trelau/SMESH.git
 
-After cloning the repository and submodules:
+After cloning the repository and submodules, the source files from the external submodules need to
+be prepared using the provided Python script:
+
+    python prepare.py
+
+With the sources prepared, a CMake build process can be initiated by:
 
     mkdir build
     cd build
