@@ -94,6 +94,9 @@ def prepare_smesh():
     shutil.copytree('extra/MeshVSLink',
                     'src/SMESH/src/MeshVSLink', dirs_exist_ok=True)
 
+    # Copy MEFISTO2 trte.c source
+    shutil.copyfile('extra/MEFISTO2/trte.c', 'src/SMESH/src/MEFISTO2/trte.c')
+
 
 def prepare_netgen_plugin():
     """

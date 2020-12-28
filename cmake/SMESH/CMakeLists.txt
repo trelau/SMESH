@@ -78,6 +78,21 @@ set(SMESH_LIBRARIES ${SMESH_LIBRARIES} DriverUNV)
 file(GLOB DriverUNV_INCLUDES ${SMESH_SRC_DIR}/DriverUNV/*.h*)
 install(FILES ${DriverUNV_INCLUDES} DESTINATION "include/smesh/DriverUNV")
 
+# MEFISTO2
+file(GLOB MEFISTO2_SRC ${SMESH_SRC_DIR}/MEFISTO2/aptrte.cxx ${SMESH_SRC_DIR}/MEFISTO2/trte.c)
+add_library(MEFISTO2 ${MEFISTO2_SRC})
+target_link_libraries(MEFISTO2 Kernel)
+target_include_directories(MEFISTO2 PUBLIC
+  $<BUILD_INTERFACE:${SMESH_SRC_DIR}/MEFISTO2>
+  $<INSTALL_INTERFACE:include/smesh/MEFISTO2>
+)
+if (WIN32)
+    set_target_properties(MEFISTO2 PROPERTIES COMPILE_FLAGS "-DMEFISTO2D_EXPORTS")
+endif()
+set(SMESH_LIBRARIES ${SMESH_LIBRARIES} MEFISTO2)
+file(GLOB MEFISTO2_INCLUDES ${SMESH_SRC_DIR}/MEFISTO2/*.h*)
+install(FILES ${MEFISTO2_INCLUDES} DESTINATION "include/smesh/MEFISTO2")
+
 # Controls
 file(GLOB Controls_SRC ${SMESH_SRC_DIR}/Controls/*.cxx)
 add_library(Controls ${Controls_SRC})
@@ -140,11 +155,8 @@ install(FILES ${SMESHDS_INCLUDES} DESTINATION "include/smesh/SMESHDS")
 
 # StdMeshers
 file(GLOB StdMeshers_SRC ${SMESH_SRC_DIR}/StdMeshers/*.cxx)
-if(NOT ENABLE_MEFISTO)
-    list(REMOVE_ITEM StdMeshers_SRC "${CMAKE_CURRENT_SOURCE_DIR}/src/StdMeshers/StdMeshers_MEFISTO_2D.cxx")
-endif()
 add_library(StdMeshers ${StdMeshers_SRC})
-target_link_libraries(StdMeshers SMESH TKOffset ${Boost_LIBRARIES})
+target_link_libraries(StdMeshers SMESH MEFISTO2 TKOffset ${Boost_LIBRARIES})
 target_include_directories(StdMeshers PUBLIC
   $<BUILD_INTERFACE:${SMESH_SRC_DIR}/StdMeshers>
   $<INSTALL_INTERFACE:include/smesh/StdMeshers>

@@ -6,7 +6,6 @@ project(SMESH C CXX)
 # --------------------------------------------------------------------------- #
 set(CMAKE_INSTALL_PREFIX "${CMAKE_SOURCE_DIR}/install" CACHE PATH "Installation directory.")
 set(CMAKE_INSTALL_LIBDIR lib CACHE PATH "Output directory for libraries")
-# option(ENABLE_MEFISTO "Enable MEFISTO" OFF)
 # option(ENABLE_MED "Enable MED" OFF)
 
 
