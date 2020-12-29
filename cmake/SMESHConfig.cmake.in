@@ -1,15 +1,15 @@
 # - Config file for the SMESH package
 # It defines the following variables
-#  SMESH_INCLUDE_PATH - include directory for SMESH
-#  SMESH_LIB_PATH - path to SMESH libraries
-#  SMESH_LIBRARIES - Available SMESH libraries
+# SMESH_LIBRARIES     - Available SMESH libraries
+# SMESH_VERSION_MAJOR - Major version
+# SMESH_VERSION_MINOR - Minor version
+# SMESH_VERSION_PATCH - Patch version
+# SMESH_VERSION_TWEAK - Tweak version
 
-get_filename_component(SELF_DIR "${CMAKE_CURRENT_LIST_FILE}" PATH)
-
-set(SMESH_INCLUDE_PATH "${SELF_DIR}/../include/smesh")
-set(SMESH_LIB_PATH "${SELF_DIR}/../lib")
-set(SMESH_LIBRARIES @SMESH_LIBS@)
+set(SMESH_LIBRARIES @SMESH_LIBRARIES@)
 set(SMESH_VERSION_MAJOR @SMESH_VERSION_MAJOR@)
 set(SMESH_VERSION_MINOR @SMESH_VERSION_MINOR@)
 set(SMESH_VERSION_PATCH @SMESH_VERSION_PATCH@)
 set(SMESH_VERSION_TWEAK @SMESH_VERSION_TWEAK@)
+
+include("${CMAKE_CURRENT_LIST_DIR}/SMESH-targets.cmake")

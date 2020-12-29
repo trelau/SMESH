@@ -4,19 +4,26 @@
 [![Anaconda-Server Badge](https://anaconda.org/conda-forge/smesh/badges/downloads.svg)](https://anaconda.org/conda-forge/smesh)
 [![Anaconda-Server Badge](https://anaconda.org/conda-forge/smesh/badges/latest_release_date.svg)](https://anaconda.org/conda-forge/smesh)
 
-A stand-alone library of the mesh framework from the [Salome Platform](https://www.salome-platform.org/).
+A stand-alone library of the mesh framework from the [Salome Platform](www.salome-platform.org).
+This repository primary copies upstream sources and builds a library that be linked to other
+programs.
 
-For now, the sources are manually copied from the specified Salome Platform
-release which at the time of this writing is 8.3.0. Modifications were applied
-to enable:
+## Build from sources
+This repository makes use of submodules so to build from sources you must clone this repository
+and the submodules with:
 
-1. Functionality independent of the other Salome Platform libraries
-2. Netgen 6.2 integration
-3. Support for OpenCASCADE 7.X.X
+    git clone --recurse-submodules https://github.com/trelau/SMESH.git
 
-Some areas that could use contributor support:
+After cloning the repository and submodules, the source files from the external submodules need to
+be prepared using the provided Python script:
 
-* Improve robustness of CMake build process and add support for targeting other
-  platforms and architectures
-* Leverage CI via Azure Pipelines
-* Tests and benchmarks
+    python prepare.py
+
+With the sources prepared, a CMake build process can be initiated by:
+
+    mkdir build
+    cd build
+    cmake ..
+
+Note that for Windows systems `PTHREAD_INCLUDE_DIR`  and `PTHREAD_LIB_DIRS` will likely need
+defined manually since they cannot typically be automatically found by CMake.
