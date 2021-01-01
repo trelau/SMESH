@@ -214,7 +214,7 @@ SET(STLGEOM_SOURCES
 
 # NGLIB
 SET(NGLIB_SOURCES ${NETGEN_ROOT_DIR}/nglib/nglib.cpp)
-ADD_LIBRARY(nglib SHARED 
+ADD_LIBRARY(nglib4smesh SHARED
             ${NGLIB_SOURCES}
             ${CGS_SOURCES} 
             ${GENERAL_SOURCES}
@@ -231,13 +231,17 @@ SET(OCCLIBS TKernel TKGeomBase TKMath TKG2d TKG3d TKXSBase TKOffset TKFillet TKS
 SET(OCCLIBS ${OCCLIBS} TKMesh TKMeshVS TKTopAlgo TKGeomAlgo TKBool TKPrim TKBO TKIGES TKBRep)
 SET(OCCLIBS ${OCCLIBS} TKSTEPBase TKSTEP TKSTL TKSTEPAttr TKSTEP209 TKXDESTEP TKXDEIGES TKXCAF TKLCAF)
 
-TARGET_LINK_LIBRARIES(nglib PUBLIC ${OCCLIBS} ${ZLIB_LIBRARIES} ${PLATFORM_LIBADD})
-target_include_directories(nglib PUBLIC
+TARGET_LINK_LIBRARIES(nglib4smesh PUBLIC ${OCCLIBS} ${ZLIB_LIBRARIES} ${PLATFORM_LIBADD})
+target_include_directories(nglib4smesh PUBLIC
   $<BUILD_INTERFACE:${NETGEN_ROOT_DIR}/libsrc/include>
   $<BUILD_INTERFACE:${NETGEN_ROOT_DIR}/nglib>
   $<BUILD_INTERFACE:${NETGEN_ROOT_DIR}/libsrc/general>
   $<INSTALL_INTERFACE:include/smesh/Netgen>
 )
+
+if(WIN32)
+    set_target_properties(nglib4smesh PROPERTIES COMPILE_FLAGS "-DNGLIB_EXPORTS")
+endif()
 
 # Install
 install(FILES ${GENERAL_INCLUDES} DESTINATION "include/smesh/Netgen")
@@ -248,4 +252,4 @@ install(FILES ${MESHING_INCLUDES} DESTINATION "include/smesh/netgen")
 install(FILES ${OCC_INCLUDES} DESTINATION "include/smesh/Netgen")
 install(FILES ${NETGEN_ROOT_DIR}/nglib/nglib.h DESTINATION "include/smesh/Netgen")
 
-set(Netgen_LIBRARIES nglib)
+set(Netgen_LIBRARIES nglib4smesh)
