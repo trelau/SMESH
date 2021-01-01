@@ -193,7 +193,7 @@ list(REMOVE_ITEM NETGENPlugin_SRC ${NETGENPlugin_Remesher_2D_SRC})
 file(GLOB NETGENPlugin_SRC_i ${NETGENPlugin_SRC_DIR}/*_i.cxx)
 list(REMOVE_ITEM NETGENPlugin_SRC ${NETGENPlugin_SRC_i})
 add_library(NETGENPlugin ${NETGENPlugin_SRC})
-target_link_libraries(NETGENPlugin StdMeshers nglib)
+target_link_libraries(NETGENPlugin StdMeshers nglib4smesh)
 target_include_directories(NETGENPlugin PUBLIC
   $<BUILD_INTERFACE:${NETGENPlugin_SRC_DIR}>
   $<INSTALL_INTERFACE:include/smesh/NETGENPlugin>
