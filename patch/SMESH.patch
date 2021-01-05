@@ -62,3 +62,15 @@ diff --git a/src/SMESH/SMESH_Mesh.cxx b/src/SMESH/SMESH_Mesh.cxx
  }
  
  //================================================================================
+diff --git a/src/StdMeshers/StdMeshers_Cartesian_3D.cxx b/src/StdMeshers/StdMeshers_Cartesian_3D.cxx
+--- a/src/StdMeshers/StdMeshers_Cartesian_3D.cxx
++++ b/src/StdMeshers/StdMeshers_Cartesian_3D.cxx
+@@ -2561,7 +2561,7 @@ namespace
+         case 3: // at a corner
+         {
+           _Node& node = _hexNodes[ subEntity - SMESH_Block::ID_FirstV ];
+-          if ( node.Node() > 0 )
++          if ( node.Node() != nullptr )
+           {
+             if ( node._intPoint )
+               node._intPoint->Add( _eIntPoints[ iP ]->_faceIDs, _eIntPoints[ iP ]->_node );
