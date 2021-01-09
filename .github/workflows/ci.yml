@@ -76,6 +76,13 @@ jobs:
         with:
           submodules: 'recursive'
 
+      - name: "MacOS fix"
+        run: |
+          sudo chown -R $USER $CONDA
+          curl -o  MacOSX10.9.sdk.tar.xz -L https://github.com/phracker/MacOSX-SDKs/releases/download/10.15/MacOSX10.9.sdk.tar.xz
+          tar xf MacOSX10.9.sdk.tar.xz
+          sudo mv -v MacOSX10.9.sdk /opt/
+
       - name: "Add conda to PATH"
         shell: bash -l {0}
         run: echo "$CONDA/Scripts" >> $GITHUB_PATH
