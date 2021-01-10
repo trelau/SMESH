@@ -22,9 +22,6 @@ set(BUILD_SHARED_LIBS TRUE)
 # Force C++ 11
 set(CMAKE_CXX_STANDARD 11)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
-if(UNIX)
-    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11")
-endif()
 
 # Warning and errors
 if(MSVC)
