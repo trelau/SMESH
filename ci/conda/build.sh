@@ -12,7 +12,6 @@ cmake -G "Ninja" \
       -D CMAKE_INSTALL_PREFIX:FILEPATH=$PREFIX \
       -D CMAKE_PREFIX_PATH:FILEPATH=$PREFIX \
       -D Boost_NO_BOOST_CMAKE:BOOL=ON \
-      -D CMAKE_CXX_STANDARD=14 \
       ..
 
 ninja install

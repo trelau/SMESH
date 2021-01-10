@@ -19,6 +19,10 @@ set(SMESH_VERSION_TWEAK 0)
 # Build shared libraries
 set(BUILD_SHARED_LIBS TRUE)
 
+# Force C++ 11
+set(CMAKE_CXX_STANDARD 11)
+set(CMAKE_CXX_STANDARD_REQUIRED ON)
+
 if(UNIX)
   # Same settings are used for both MacOSX and Unix/Linux
   add_definitions(-DHAVE_LIMITS_H -DCSFDB -DLIN -DOCC_CONVERT_SIGNALS)
