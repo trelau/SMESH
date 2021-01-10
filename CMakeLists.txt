@@ -28,7 +28,7 @@ if(MSVC)
     add_compile_options(/W1)
     add_compile_options(/wd4715 /wd4091 /wd4503 /wd4805 /wd4267 /wd4477 /wd4138 /wd4273 /wd4311 /wd4806)
 else()
-    add_compile_options(-Wno-deprecated)
+    add_compile_options(-Wno-deprecated -std=c++11)
 endif()
 
 # Definitions
