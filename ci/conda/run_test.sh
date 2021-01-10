@@ -12,11 +12,10 @@ cmake -G "Ninja" \
       ${CMAKE_PLATFORM_FLAGS[@]} \
       -D CMAKE_INSTALL_PREFIX:FILEPATH=$PREFIX \
       -D CMAKE_PREFIX_PATH:FILEPATH=$PREFIX \
-      -D CMAKE_CXX_STANDARD=14 \
       ..
 
 ninja install
 
 cd ..
 cd tests
-./test_Netgen
+./test_SMESH

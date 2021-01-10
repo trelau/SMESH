@@ -19,6 +19,21 @@ set(SMESH_VERSION_TWEAK 0)
 # Build shared libraries
 set(BUILD_SHARED_LIBS TRUE)
 
+# Force C++ 11
+set(CMAKE_CXX_STANDARD 11)
+set(CMAKE_CXX_STANDARD_REQUIRED ON)
+
+# Warning and errors
+if(MSVC)
+    add_compile_options(/W1)
+    add_compile_options(/wd4715 /wd4091 /wd4503 /wd4805 /wd4267 /wd4477 /wd4138 /wd4273 /wd4311 /wd4806)
+else()
+    add_compile_options(-Wno-deprecated)
+endif()
+
+message(STATUS "CXX FLAGS:" ${CMAKE_CXX_FLAGS})
+
+# Definitions
 if(UNIX)
   # Same settings are used for both MacOSX and Unix/Linux
   add_definitions(-DHAVE_LIMITS_H -DCSFDB -DLIN -DOCC_CONVERT_SIGNALS)
@@ -26,7 +41,6 @@ else(UNIX)
   if(WIN32)
       if(MSVC)
           add_definitions(-DWNT -DWIN32 -D_WINDOWS -DCSFDB -DUSE_CLOCK -DMSDOS -DNO_ONEXIT -DNO_My_ctype -DNO_ISATTY -DNO_FPINIT)
-          add_definitions(/wd4290 /wd4251 /wd4018 /wd4800 /wd4996 /wd4244 /wd4805 /wd4806 /wd4275 /wd4005 /wd4099 /wd4101 /wd4146 /wd4267 /wd4390 /wd4503 /wd4436 /wd4091 /wd4138 /wd4302 /wd4309 /wd4311 /wd4477)
       else(MSVC)
           add_definitions(-DWNT -DWIN32 -D_WINDOWS -DCSFDB)
       endif(MSVC)
