@@ -49,6 +49,7 @@ TEST_CASE("Mesh a box with tetrahedral elements.", "[netgen][solid]") {
     delete mesh;
     delete gen;
 }
+*/
 
 TEST_CASE("Mesh a box with tetrahedral elements and a local edge length.", "[netgen][local]") {
 
@@ -87,4 +88,3 @@ TEST_CASE("Mesh a box with tetrahedral elements and a local edge length.", "[net
 	delete mesh;
 	delete gen;
 }
-*/
