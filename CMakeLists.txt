@@ -31,6 +31,8 @@ else()
     add_compile_options(-Wno-deprecated -std=c++11)
 endif()
 
+message(STATUS "CXX FLAGS:" ${CMAKE_CXX_FLAGS})
+
 # Definitions
 if(UNIX)
   # Same settings are used for both MacOSX and Unix/Linux
