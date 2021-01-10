@@ -32,8 +32,8 @@ TEST_CASE("Mesh an edge of a box.", "[StdMeshers][LocalLength]") {
 	mesh->ShapeToMesh(box);
 	mesh->AddHypothesis(edge, 0);
 	mesh->AddHypothesis(edge, 1);
-	/*
 	bool success = gen->Compute(*mesh, box);
+	/*
 	REQUIRE(success == true);
 
 	REQUIRE(mesh->NbNodes() == 107);
