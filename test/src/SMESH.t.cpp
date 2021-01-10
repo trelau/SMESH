@@ -44,7 +44,7 @@ TEST_CASE("Mesh an edge of a box.", "[StdMeshers][LocalLength]") {
 	delete mesh;
 	delete gen;
 }
-/*
+
 TEST_CASE("Mesh a box with tetrahedral elements.", "[NETGENPlugin]") {
 
     TopoDS_Solid box = BRepPrimAPI_MakeBox(10.0, 10.0, 10.0).Solid();
@@ -110,4 +110,3 @@ TEST_CASE("Mesh a box with tetrahedral elements and a local edge length.", "[NET
 	delete mesh;
 	delete gen;
 }
-*/

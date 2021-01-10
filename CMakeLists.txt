@@ -24,14 +24,11 @@ set(CMAKE_CXX_STANDARD 11)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
 # Warning and errors
-if (MSVC)
-    # warning level 1 and all warnings as errors
-    add_compile_options(/W1 /WX)
+if(MSVC)
+    add_compile_options(/W1)
     add_compile_options(/wd4715 /wd4091 /wd4503 /wd4805 /wd4267 /wd4477 /wd4138 /wd4273 /wd4311 /wd4806)
 else()
-    # All warnings as errors
-    add_compile_options(-Werror -Wno-deprecated)
-    add_compile_options(-Wno-error=constant-logical-operator)
+    add_compile_options(-Wno-deprecated)
 endif()
 
 # Definitions
