@@ -15,14 +15,36 @@
 #include <StdMeshers_LocalLength.hxx>
 #include <StdMeshers_Regular_1D.hxx>
 
-TEST_CASE("Test case.", "[netgen][debug]") {
+TEST_CASE("Mesh an edge of a box.", "[StdMeshers][LocalLength]") {
 
-    bool success = true;
-    REQUIRE(success == true);
+	TopoDS_Solid box = BRepPrimAPI_MakeBox(10.0, 10.0, 10.0).Solid();
+
+	TopExp_Explorer exp = TopExp_Explorer(box, TopAbs_EDGE);
+	const TopoDS_Shape& edge = exp.Current();
+
+	SMESH_Gen* gen = new SMESH_Gen();
+	SMESH_Mesh* mesh = gen->CreateMesh(true);
+
+	StdMeshers_LocalLength* hyp1d = new StdMeshers_LocalLength(0, gen);
+	hyp1d->SetLength(0.1);
+	StdMeshers_Regular_1D* algo1d = new StdMeshers_Regular_1D(1, gen);
+
+	mesh->ShapeToMesh(box);
+	mesh->AddHypothesis(edge, 0);
+	mesh->AddHypothesis(edge, 1);
+
+	bool success = gen->Compute(*mesh, box);
+	REQUIRE(success == true);
+
+	REQUIRE(mesh->NbNodes() == 107);
+
+	delete hyp1d;
+	delete algo1d;
+	delete mesh;
+	delete gen;
 }
-
 /*
-TEST_CASE("Mesh a box with tetrahedral elements.", "[netgen][solid]") {
+TEST_CASE("Mesh a box with tetrahedral elements.", "[NETGENPlugin]") {
 
     TopoDS_Solid box = BRepPrimAPI_MakeBox(10.0, 10.0, 10.0).Solid();
 
@@ -49,9 +71,8 @@ TEST_CASE("Mesh a box with tetrahedral elements.", "[netgen][solid]") {
     delete mesh;
     delete gen;
 }
-*/
 
-TEST_CASE("Mesh a box with tetrahedral elements and a local edge length.", "[netgen][local]") {
+TEST_CASE("Mesh a box with tetrahedral elements and a local edge length.", "[NETGENPlugin]") {
 
 	TopoDS_Solid box = BRepPrimAPI_MakeBox(10.0, 10.0, 10.0).Solid();
 
@@ -88,3 +109,4 @@ TEST_CASE("Mesh a box with tetrahedral elements and a local edge length.", "[net
 	delete mesh;
 	delete gen;
 }
+*/

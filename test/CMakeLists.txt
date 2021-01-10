@@ -19,6 +19,22 @@ include(Catch)
 
 
 # --------------------------------------------------------------------------- #
+# BOOST
+# --------------------------------------------------------------------------- #
+message(STATUS "Searching for Boost...")
+find_package(Boost REQUIRED COMPONENTS filesystem thread serialization)
+
+if (MSVC)
+  # find the shared boost libs
+  add_definitions(-DBOOST_ALL_DYN_LINK)
+  # set postfix for debug libs
+  if(NOT CMAKE_DEBUG_POSTFIX)
+      set(CMAKE_DEBUG_POSTFIX d)
+  endif()
+endif()
+
+
+# --------------------------------------------------------------------------- #
 # PTHREAD
 # --------------------------------------------------------------------------- #
 if(UNIX)
@@ -59,12 +75,12 @@ find_package(SMESH REQUIRED)
 
 
 # --------------------------------------------------------------------------- #
-# Test NETGENPlugin
+# Test SMESH
 # --------------------------------------------------------------------------- #
-add_executable(test_Netgen src/Netgen.t.cpp)
-target_link_libraries(test_Netgen Catch2::Catch2 ${SMESH_LIBRARIES})
-catch_discover_tests(test_Netgen)
+add_executable(test_SMESH src/SMESH.t.cpp)
+target_link_libraries(test_SMESH Catch2::Catch2 ${SMESH_LIBRARIES})
+catch_discover_tests(test_SMESH)
 
-install(TARGETS test_Netgen
+install(TARGETS test_SMESH
         RUNTIME DESTINATION ${CMAKE_SOURCE_DIR}/tests
 )

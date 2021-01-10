@@ -16,4 +16,4 @@ if errorlevel 1 exit 1
 
 cd ..
 cd tests
-test_Netgen.exe
+test_SMESH.exe
