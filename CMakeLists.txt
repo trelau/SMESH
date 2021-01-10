@@ -31,6 +31,7 @@ if (MSVC)
 else()
     # All warnings as errors
     add_compile_options(-Werror -Wno-deprecated)
+    add_compile_options(-Wno-error=constant-logical-operator)
 endif()
 
 # Definitions
