@@ -8,6 +8,9 @@ A stand-alone library of the mesh framework from the [Salome Platform](www.salom
 This repository primary copies upstream sources and builds a library that be linked to other
 programs.
 
+If you are looking to use this functionality in a Python application, check out
+[pySMESH](https://github.com/trelau/pySMESH). 
+
 ## Build from sources
 This repository makes use of submodules so to build from sources you must clone this repository
 and the submodules with:
