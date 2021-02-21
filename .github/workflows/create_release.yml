@@ -1,0 +1,38 @@
+name: create release
+
+on:
+  create:
+    tags:
+      - v*
+      
+jobs:
+  create-release:
+    runs-on: ubuntu-latest
+ 
+  steps:
+
+  - uses: actions/checkout@v2
+    name: Checkout
+    submodules: true
+    
+  - name: Set output
+    id: vars
+    run: echo ::set-output name=tag::${GITHUB_REF#refs/*/}
+ 
+  - name: prepare
+    run: |
+      python prepare.py
+  
+  - uses: papeloto/action-zip@v1
+      with:
+        files: dist/ manifest.json
+        dest: SMESH_${{ steps.vars.outputs.tag }}.zip
+  
+  - name: Upload binaries to release
+        uses: svenstaro/upload-release-action@v2
+        with:
+          repo_token: ${{ secrets.GITHUB_TOKEN }}
+          file: SMESH_${{ steps.vars.outputs.tag }}.zip
+          tag: ${{ steps.vars.outputs.tag }}
+          overwrite: true
+          file_glob: true
