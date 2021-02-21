@@ -241,7 +241,7 @@ target_include_directories(nglib4smesh PUBLIC
 
 if(WIN32)
     set_target_properties(nglib4smesh PROPERTIES COMPILE_FLAGS "-DNGLIB_EXPORTS")
-endif()
+endif(WIN32)
 
 # Install
 install(FILES ${GENERAL_INCLUDES} DESTINATION "include/smesh/Netgen")

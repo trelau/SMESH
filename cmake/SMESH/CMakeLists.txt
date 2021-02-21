@@ -184,28 +184,30 @@ file(GLOB SMESHUtils_INCLUDES ${SMESH_SRC_DIR}/SMESHUtils/*.h*)
 install(FILES ${SMESHUtils_INCLUDES} DESTINATION "include/smesh/SMESHUtils")
 
 # NETGENPlugin
-set(NETGENPlugin_SRC_DIR ${SMESH_SRC_DIR}/NETGENPlugin/src/NETGENPlugin)
+if(ENABLE_NETGEN)
+    set(NETGENPlugin_SRC_DIR ${SMESH_SRC_DIR}/NETGENPlugin/src/NETGENPlugin)
 
-# Get sources and remove unsupported ones
-file(GLOB NETGENPlugin_SRC ${NETGENPlugin_SRC_DIR}/*.cxx)
-file(GLOB NETGENPlugin_Remesher_2D_SRC ${NETGENPlugin_SRC_DIR}/*Remesher_2D.cxx)
-list(REMOVE_ITEM NETGENPlugin_SRC ${NETGENPlugin_Remesher_2D_SRC})
-file(GLOB NETGENPlugin_SRC_i ${NETGENPlugin_SRC_DIR}/*_i.cxx)
-list(REMOVE_ITEM NETGENPlugin_SRC ${NETGENPlugin_SRC_i})
-add_library(NETGENPlugin ${NETGENPlugin_SRC})
-target_link_libraries(NETGENPlugin StdMeshers nglib4smesh)
-target_include_directories(NETGENPlugin PUBLIC
-  $<BUILD_INTERFACE:${NETGENPlugin_SRC_DIR}>
-  $<INSTALL_INTERFACE:include/smesh/NETGENPlugin>
-)
-if(WIN32)
-    set_target_properties(NETGENPlugin PROPERTIES COMPILE_FLAGS "-DNETGENPLUGIN_EXPORTS -DNO_PARALLEL_THREADS -DOCCGEOMETRY -DNETGEN_V5")
-else()
-    set_target_properties(NETGENPlugin PROPERTIES COMPILE_FLAGS "${NETGEN_CXX_FLAGS} -DNO_PARALLEL_THREADS -DOCCGEOMETRY -DNETGEN_V5")
-endif()
-set(SMESH_LIBRARIES ${SMESH_LIBRARIES} NETGENPlugin)
-file(GLOB NETGENPlugin_INCLUDES ${NETGENPlugin_SRC_DIR}/*.h*)
-install(FILES ${NETGENPlugin_INCLUDES} DESTINATION "include/smesh/NETGENPlugin")
+    # Get sources and remove unsupported ones
+    file(GLOB NETGENPlugin_SRC ${NETGENPlugin_SRC_DIR}/*.cxx)
+    file(GLOB NETGENPlugin_Remesher_2D_SRC ${NETGENPlugin_SRC_DIR}/*Remesher_2D.cxx)
+    list(REMOVE_ITEM NETGENPlugin_SRC ${NETGENPlugin_Remesher_2D_SRC})
+    file(GLOB NETGENPlugin_SRC_i ${NETGENPlugin_SRC_DIR}/*_i.cxx)
+    list(REMOVE_ITEM NETGENPlugin_SRC ${NETGENPlugin_SRC_i})
+    add_library(NETGENPlugin ${NETGENPlugin_SRC})
+    target_link_libraries(NETGENPlugin StdMeshers nglib4smesh)
+    target_include_directories(NETGENPlugin PUBLIC
+      $<BUILD_INTERFACE:${NETGENPlugin_SRC_DIR}>
+      $<INSTALL_INTERFACE:include/smesh/NETGENPlugin>
+    )
+    if(WIN32)
+        set_target_properties(NETGENPlugin PROPERTIES COMPILE_FLAGS "-DNETGENPLUGIN_EXPORTS -DNO_PARALLEL_THREADS -DOCCGEOMETRY -DNETGEN_V5")
+    else()
+        set_target_properties(NETGENPlugin PROPERTIES COMPILE_FLAGS "${NETGEN_CXX_FLAGS} -DNO_PARALLEL_THREADS -DOCCGEOMETRY -DNETGEN_V5")
+    endif()
+    set(SMESH_LIBRARIES ${SMESH_LIBRARIES} NETGENPlugin)
+    file(GLOB NETGENPlugin_INCLUDES ${NETGENPlugin_SRC_DIR}/*.h*)
+    install(FILES ${NETGENPlugin_INCLUDES} DESTINATION "include/smesh/NETGENPlugin")
+endif(ENABLE_NETGEN)
 
 # MeshVSLink
 file(GLOB MeshVSLink_SRC ${SMESH_SRC_DIR}/MeshVSLink/*.cxx)

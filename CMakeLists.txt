@@ -4,7 +4,8 @@ project(SMESH C CXX)
 # --------------------------------------------------------------------------- #
 # OPTIONS
 # --------------------------------------------------------------------------- #
-set(CMAKE_INSTALL_PREFIX "${CMAKE_SOURCE_DIR}/install" CACHE PATH "Installation directory.")
+option(ENABLE_NETGEN "Enable Netgen" ON)
+set(CMAKE_INSTALL_PREFIX "${CMAKE_SOURCE_DIR}/install" CACHE PATH "Installation directory")
 set(CMAKE_INSTALL_LIBDIR lib CACHE PATH "Output directory for libraries")
 
 
@@ -22,6 +23,7 @@ set(BUILD_SHARED_LIBS TRUE)
 # Force C++ 11
 set(CMAKE_CXX_STANDARD 11)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
+set(CMAKE_CXX_EXTENSIONS OFF)
 
 # Warning and errors
 if(MSVC)
@@ -30,8 +32,6 @@ if(MSVC)
 else()
     add_compile_options(-Wno-deprecated)
 endif()
-
-message(STATUS "CXX FLAGS:" ${CMAKE_CXX_FLAGS})
 
 # Definitions
 if(UNIX)
@@ -118,16 +118,23 @@ set(Kernel_SRC_DIR ${CMAKE_CURRENT_SOURCE_DIR}/src/Kernel/src)
 set(Geom_SRC_DIR ${CMAKE_CURRENT_SOURCE_DIR}/src/Geom/src)
 
 # Netgen
-set(NETGEN_ROOT_DIR ${CMAKE_CURRENT_SOURCE_DIR}/src/Netgen)
+if(ENABLE_NETGEN)
+    set(NETGEN_ROOT_DIR ${CMAKE_CURRENT_SOURCE_DIR}/src/Netgen)
+endif(ENABLE_NETGEN)
 
 # Add subdirectories
 add_subdirectory(src)
 
 # Retrieve variables
-get_directory_property(Netgen_LIBRARIES
-  DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/src/Netgen
-  DEFINITION Netgen_LIBRARIES
-)
+if(ENABLE_NETGEN)
+    get_directory_property(Netgen_LIBRARIES
+      DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/src/Netgen
+      DEFINITION Netgen_LIBRARIES
+    )
+else()
+    set(Netgen_LIBRARIES)
+    message(STATUS "Netgen is not enabled and will not be available in the resulting library.")
+endif(ENABLE_NETGEN)
 
 get_directory_property(Kernel_LIBRARIES
   DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/src/Kernel
