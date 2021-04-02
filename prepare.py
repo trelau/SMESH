@@ -100,7 +100,7 @@ def prepare_smesh():
 
 def prepare_netgen_plugin():
     """
-    Prepare sources for NETGENPlugin.
+    Prepare sources for NETGENPlugin
     """
     # Delete source directories if they exist
     if os.path.exists('src/SMESH/src/NETGENPlugin'):
@@ -115,9 +115,23 @@ def prepare_netgen_plugin():
     pset.apply(strip=0, root='src/SMESH/src/NETGENPlugin')
 
 
+def prepare_noexcept():
+    """
+    change throw to noexcept to align with c++17
+    """
+    os.system("grep -rl 'throw(SALOME_Exception)' ./src | xargs sed -i 's/throw(SALOME_Exception)/noexcept(false)/g'")
+    os.system("grep -rl 'throw( SALOME_Exception )' ./src | xargs sed -i 's/throw( SALOME_Exception )/noexcept(false)/g'")
+    os.system("grep -rl 'throw (SALOME_Exception)' ./src | xargs sed -i 's/throw (SALOME_Exception)/noexcept(false)/g'")
+    os.system("grep -rl 'throw ( SALOME_Exception )' ./src | xargs sed -i 's/throw ( SALOME_Exception )/noexcept(false)/g'")
+    os.system("grep -rl 'throw (std::bad_alloc)' ./src | xargs sed -i 's/throw (std::bad_alloc)/noexcept(false)/g'")
+
+
 if __name__ == '__main__':
     prepare_netgen()
     prepare_kernel()
     prepare_geom()
     prepare_smesh()
     prepare_netgen_plugin()
+    prepare_noexcept()
+
+
