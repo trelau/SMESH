@@ -14,7 +14,7 @@ set(CMAKE_INSTALL_LIBDIR lib CACHE PATH "Output directory for libraries")
 set(SMESH_VERSION_MAJOR 9)
 set(SMESH_VERSION_MINOR 6)
 set(SMESH_VERSION_PATCH 0)
-set(SMESH_VERSION_TWEAK 0)
+set(SMESH_VERSION_TWEAK 1)
 
 # Build shared libraries
 set(BUILD_SHARED_LIBS TRUE)
