@@ -24,5 +24,6 @@ if [[ ${HOST} =~ .*apple.* ]]
 then
     echo "Skipping NETGENPlugin tests on OSX until they are fixed..."
 else
+    echo "Running NETGENPlugin tests..."
     ./test_NETGENPlugin
 fi
