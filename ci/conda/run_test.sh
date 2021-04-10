@@ -22,7 +22,7 @@ cd tests
 ./test_StdMeshers
 if [[ ${HOST} =~ .*apple.* ]]
 then
-    ./test_NETGENPlugin
-else
     echo "Skipping NETGENPlugin tests on OSX until they are fixed..."
+else
+    ./test_NETGENPlugin
 fi
