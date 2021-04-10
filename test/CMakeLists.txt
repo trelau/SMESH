@@ -3,11 +3,18 @@ project(test_SMESH CXX)
 
 
 # --------------------------------------------------------------------------- #
+# OPTIONS
+# --------------------------------------------------------------------------- #
+option(ENABLE_NETGEN "Enable Netgen" ON)
+
+
+# --------------------------------------------------------------------------- #
 # SETTINGS
 # --------------------------------------------------------------------------- #
 # Force C++ 11
 set(CMAKE_CXX_STANDARD 11)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
+set(CMAKE_CXX_EXTENSIONS OFF)
 
 
 # --------------------------------------------------------------------------- #
@@ -73,14 +80,44 @@ find_package(VTK REQUIRED COMPONENTS CommonCore CommonDataModel FiltersVerdict)
 # --------------------------------------------------------------------------- #
 find_package(SMESH REQUIRED)
 
+set(test_Execs)
+# --------------------------------------------------------------------------- #
+# Test CATCH
+# --------------------------------------------------------------------------- #
+add_executable(test_Catch src/Catch.t.cpp)
+target_link_libraries(test_Catch Catch2::Catch2)
+catch_discover_tests(test_Catch)
+
+set(test_Execs ${test_Execs} test_Catch)
+
 
 # --------------------------------------------------------------------------- #
-# Test SMESH
+# Test StdMeshers
 # --------------------------------------------------------------------------- #
-add_executable(test_SMESH src/SMESH.t.cpp)
-target_link_libraries(test_SMESH Catch2::Catch2 ${SMESH_LIBRARIES})
-catch_discover_tests(test_SMESH)
+add_executable(test_StdMeshers src/StdMeshers.t.cpp)
+target_link_libraries(test_StdMeshers Catch2::Catch2 ${SMESH_LIBRARIES})
+catch_discover_tests(test_StdMeshers)
 
-install(TARGETS test_SMESH
+set(test_Execs ${test_Execs} test_StdMeshers)
+
+
+# --------------------------------------------------------------------------- #
+# Test NETGENPlugin
+# --------------------------------------------------------------------------- #
+if(ENABLE_NETGEN)
+    add_executable(test_NETGENPlugin src/NETGENPlugin.t.cpp)
+    target_link_libraries(test_NETGENPlugin Catch2::Catch2 ${SMESH_LIBRARIES})
+    catch_discover_tests(test_NETGENPlugin)
+
+    set(test_Execs ${test_Execs} test_NETGENPlugin)
+else()
+    message(STATUS "Skipping NETGENPlugin tests.")
+endif(ENABLE_NETGEN)
+
+
+# --------------------------------------------------------------------------- #
+# INSTALL
+# --------------------------------------------------------------------------- #
+install(TARGETS ${test_Execs}
         RUNTIME DESTINATION ${CMAKE_SOURCE_DIR}/tests
 )

@@ -1,4 +1,6 @@
-add_subdirectory(Netgen)
+if(ENABLE_NETGEN)
+    add_subdirectory(Netgen)
+endif(ENABLE_NETGEN)
 add_subdirectory(Kernel)
 add_subdirectory(Geom)
 add_subdirectory(SMESH)
