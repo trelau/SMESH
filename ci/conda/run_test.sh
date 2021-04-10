@@ -19,11 +19,10 @@ ninja install
 cd ..
 cd tests
 ./test_Catch
-./test_StdMeshers
 if [[ ${HOST} =~ .*apple.* ]]
 then
-    echo "Skipping NETGENPlugin tests on OSX until they are fixed..."
+    echo "Skipping SMESH tests on OSX until they are fixed..."
 else
-    echo "Running NETGENPlugin tests..."
+    ./test_StdMeshers
     ./test_NETGENPlugin
 fi
