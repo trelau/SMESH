@@ -22,6 +22,15 @@ be prepared using the provided Python script:
 
     python prepare.py
 
+In order to run the script above, you'll need to have
+[python-patch](https://github.com/techtonik/python-patch/) installed. This can be installed using
+
+    conda install -c conda-forge python-patch
+
+or
+
+    pip intall "patch==1.*"
+
 With the sources prepared, a CMake build process can be initiated by:
 
     mkdir build
