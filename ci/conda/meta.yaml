@@ -16,7 +16,6 @@ requirements:
     - {{ cdt('libxi-devel') }}       # [linux]
     - cmake
     - ninja
-    - git
     - python
     - python-patch
 
