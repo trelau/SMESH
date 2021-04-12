@@ -48,6 +48,7 @@ jobs:
         shell: pwsh
         run: |
           conda activate
+          conda install -c conda-forge python-patch
           python prepare.py
 
       - name: "Run conda build"
@@ -99,6 +100,7 @@ jobs:
         shell: bash -l {0}
         run: |
           conda activate
+          conda install -c conda-forge python-patch
           python prepare.py
 
       - name: "Run conda build"
@@ -154,6 +156,7 @@ jobs:
         shell: pwsh
         run: |
           conda activate
+          conda install -c conda-forge python-patch
           python prepare.py
 
       - name: "Run conda build"

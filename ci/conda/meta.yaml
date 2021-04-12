@@ -16,10 +16,8 @@ requirements:
     - {{ cdt('libxi-devel') }}       # [linux]
     - cmake
     - ninja
-    - python
 
   host:
-    - python-patch
     - occt ==7.5.*
     - boost-cpp
     - tbb-devel
