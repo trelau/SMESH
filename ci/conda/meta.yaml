@@ -17,9 +17,9 @@ requirements:
     - cmake
     - ninja
     - python
-    - python-patch
 
   host:
+    - python-patch
     - occt ==7.5.*
     - boost-cpp
     - tbb-devel
