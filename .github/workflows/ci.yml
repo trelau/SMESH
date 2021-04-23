@@ -36,7 +36,7 @@ jobs:
 
       - name: "Install conda build"
         shell: pwsh
-        run: conda install -c conda-forge conda-build python-patch
+        run: conda install -c conda-forge conda-build
 
       - name: "Check conda"
         shell: pwsh
@@ -48,6 +48,7 @@ jobs:
         shell: pwsh
         run: |
           conda activate
+          conda install -c conda-forge python-patch
           python prepare.py
 
       - name: "Run conda build"
@@ -87,7 +88,7 @@ jobs:
 
       - name: "Install conda build"
         shell: bash -l {0}
-        run: conda install -c conda-forge conda-build python-patch
+        run: conda install -c conda-forge conda-build
 
       - name: "Check conda"
         shell: bash -l {0}
@@ -99,6 +100,7 @@ jobs:
         shell: bash -l {0}
         run: |
           conda activate
+          conda install -c conda-forge python-patch
           python prepare.py
 
       - name: "Run conda build"
@@ -142,7 +144,7 @@ jobs:
 
       - name: "Install conda build"
         shell: pwsh
-        run: conda install -c conda-forge conda-build python-patch
+        run: conda install -c conda-forge conda-build
 
       - name: "Check conda"
         shell: pwsh
@@ -154,6 +156,7 @@ jobs:
         shell: pwsh
         run: |
           conda activate
+          conda install -c conda-forge python-patch
           python prepare.py
 
       - name: "Run conda build"

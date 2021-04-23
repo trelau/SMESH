@@ -16,10 +16,9 @@ requirements:
     - {{ cdt('libxi-devel') }}       # [linux]
     - cmake
     - ninja
-    - python
 
   host:
-    - occt ==7.5
+    - occt ==7.5.*
     - boost-cpp
     - tbb-devel
     - vtk
@@ -27,7 +26,7 @@ requirements:
     - pthreads-win32  # [win]
 
   run:
-    - occt ==7.5
+    - occt ==7.5.*
     - vtk
     - boost-cpp
     - zlib
@@ -47,6 +46,7 @@ test:
     - {{ cdt('libxdamage') }}         # [linux]
     - {{ cdt('libxfixes') }}          # [linux]
     - {{ cdt('libxxf86vm') }}         # [linux]
+    - cmake
     - ninja
     - catch2
 
