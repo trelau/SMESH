@@ -10,8 +10,8 @@ fi
 cmake -G "Ninja" \
       -D CMAKE_BUILD_TYPE:STRING="Release" \
       ${CMAKE_PLATFORM_FLAGS[@]} \
-      -D CMAKE_INSTALL_PREFIX:FILEPATH=$PREFIX \
-      -D CMAKE_PREFIX_PATH:FILEPATH=$PREFIX \
+      -D CMAKE_INSTALL_PREFIX:FILEPATH="$PREFIX" \
+      -D CMAKE_PREFIX_PATH:FILEPATH="$PREFIX" \
       ..
 
 ninja install

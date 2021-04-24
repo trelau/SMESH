@@ -74,3 +74,17 @@ diff --git a/src/StdMeshers/StdMeshers_Cartesian_3D.cxx b/src/StdMeshers/StdMesh
            {
              if ( node._intPoint )
                node._intPoint->Add( _eIntPoints[ iP ]->_faceIDs, _eIntPoints[ iP ]->_node );
+
+ //================================================================================
+diff --git a/src/SMDS/SMDS_ElementFactory.hxx b/src/SMDS/SMDS_ElementFactory.hxx
+--- a/src/SMDS/SMDS_ElementFactory.hxx
++++ b/src/SMDS/SMDS_ElementFactory.hxx
+@@ -382,7 +382,7 @@ class SMDS_ElementChunk
+ public:
+ 
+   SMDS_ElementChunk( SMDS_ElementFactory* factory = 0, int id0 = 0 );
+-  ~SMDS_ElementChunk();
++  virtual ~SMDS_ElementChunk();
+ 
+   //! Return an element by an index [0,ChunkSize()]
+   SMDS_MeshElement* Element(int index) { return & myElements[index]; }
