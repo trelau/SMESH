@@ -90,6 +90,10 @@ def prepare_smesh():
     pset = patch.fromfile('patch/SMESH.patch')
     pset.apply(strip=0, root='src/SMESH')
 
+    # Patch sources
+    pset = patch.fromfile('patch/mefisto.patch')
+    pset.apply(strip=0, root='src/SMESH')
+
     # Copy MeshVSLink sources
     shutil.copytree('extra/MeshVSLink',
                     'src/SMESH/src/MeshVSLink', dirs_exist_ok=True)
