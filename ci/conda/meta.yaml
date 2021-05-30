@@ -18,7 +18,7 @@ requirements:
     - ninja
 
   host:
-    - occt ==7.5.1
+    - occt ==7.5.2
     - boost-cpp
     - tbb-devel
     - vtk
@@ -26,7 +26,7 @@ requirements:
     - pthreads-win32  # [win]
 
   run:
-    - occt ==7.5.1
+    - occt ==7.5.2
     - vtk
     - boost-cpp
     - zlib
