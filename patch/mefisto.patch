@@ -2,7 +2,7 @@ diff --git a/src/MEFISTO2/aptrte.cxx b/src/MEFISTO2/aptrte.cxx
 index 807575a51..c66ffb0f1 100644
 --- a/src/MEFISTO2/aptrte.cxx
 +++ b/src/MEFISTO2/aptrte.cxx
-@@ -40,9 +40,9 @@ extern "C"
+@@ -40,9 +40,10 @@ extern "C"
        __stdcall
    #endif
    #endif
@@ -11,6 +11,7 @@ index 807575a51..c66ffb0f1 100644
    {
 -    return aretemaxface_;
 +      _areteideale = aretemaxface_;
++    return(_areteideale);
    }
  }
  //calcul de la longueur ideale de l'arete au sommet xyz (z ici inactif)
