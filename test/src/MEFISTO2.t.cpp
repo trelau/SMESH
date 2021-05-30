@@ -25,7 +25,7 @@ TEST_CASE("Mesh the faces of a box.", "[MEFISTO2][Box]") {
 	hyp1d->SetLength(1.0);
 	StdMeshers_Regular_1D* algo1d = new StdMeshers_Regular_1D(1, gen);
 
-	StdMeshers_QuadranglePreference *hyp2d = new StdMeshers_QuadranglePreference(2, gen);
+	StdMeshers_QuadranglePreference* hyp2d = new StdMeshers_QuadranglePreference(2, gen);
 	StdMeshers_MEFISTO_2D* algo2d = new StdMeshers_MEFISTO_2D(3, gen);
 
 	mesh->ShapeToMesh(box);
@@ -43,6 +43,8 @@ TEST_CASE("Mesh the faces of a box.", "[MEFISTO2][Box]") {
 
 	delete hyp1d;
 	delete algo1d;
+	delete hyp2d;
+	delete algo2d;
 	delete mesh;
 	delete gen;
 }
