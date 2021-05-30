@@ -102,6 +102,16 @@ set(test_Execs ${test_Execs} test_StdMeshers)
 
 
 # --------------------------------------------------------------------------- #
+# Test MEFISTO2
+# --------------------------------------------------------------------------- #
+add_executable(test_MEFISTO2 src/MEFISTO2.t.cpp)
+target_link_libraries(test_MEFISTO2 Catch2::Catch2 ${SMESH_LIBRARIES})
+catch_discover_tests(test_MEFISTO2)
+
+set(test_Execs ${test_Execs} test_MEFISTO2)
+
+
+# --------------------------------------------------------------------------- #
 # Test NETGENPlugin
 # --------------------------------------------------------------------------- #
 if(ENABLE_NETGEN)
