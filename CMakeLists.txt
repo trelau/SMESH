@@ -6,7 +6,14 @@ project(SMESH VERSION 9.6.0.2 LANGUAGES C CXX)
 # --------------------------------------------------------------------------- #
 option(ENABLE_NETGEN "Enable Netgen" ON)
 set(CMAKE_INSTALL_PREFIX "${CMAKE_SOURCE_DIR}/install" CACHE PATH "Installation directory")
-set(CMAKE_INSTALL_LIBDIR lib CACHE PATH "Output directory for libraries")
+if(UNIX)
+	include(GNUInstallDirs)
+	mark_as_advanced(CLEAR CMAKE_INSTALL_BINDIR)
+	mark_as_advanced(CLEAR CMAKE_INSTALL_LIBDIR)
+else()
+	set(CMAKE_INSTALL_LIBDIR lib CACHE PATH "Output directory for libraries")
+	set(CMAKE_INSTALL_BINDIR bin CACHE PATH "Output directory for binaries")
+endif()
 
 
 # --------------------------------------------------------------------------- #
@@ -156,11 +163,17 @@ get_directory_property(SMESH_LIBRARIES
 # Install
 # --------------------------------------------------------------------------- #
 install(TARGETS ${Netgen_LIBRARIES} ${Kernel_LIBRARIES} ${Geom_LIBRARIES} ${SMESH_LIBRARIES} EXPORT SMESH-targets
-  ARCHIVE DESTINATION "lib"
-  RUNTIME DESTINATION "bin"
+  ARCHIVE DESTINATION ${CMAKE_INSTALL_LINDIR}
+  RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
   LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR})
 
-install(EXPORT SMESH-targets DESTINATION cmake)
+if(UNIX)
+	set(CMAKE_EXPORT_DIR ${CMAKE_INSTALL_LIBDIR}/cmake)
+else()
+	set(CMAKE_EXPORT_DIR cmake)
+endif()
+
+install(EXPORT SMESH-targets DESTINATION ${CMAKE_EXPORT_DIR})
 
 
 # --------------------------------------------------------------------------- #
@@ -176,4 +189,4 @@ write_basic_package_version_file(${CMAKE_CURRENT_BINARY_DIR}/SMESHConfigVersion.
 
 install(FILES ${CMAKE_CURRENT_BINARY_DIR}/SMESHConfig.cmake
               ${CMAKE_CURRENT_BINARY_DIR}/SMESHConfigVersion.cmake
-  DESTINATION cmake)
+  DESTINATION ${CMAKE_EXPORT_DIR})
