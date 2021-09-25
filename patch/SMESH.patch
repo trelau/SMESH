@@ -1,7 +1,9 @@
 diff --git a/src/SMESH/SMESH_Mesh.cxx b/src/SMESH/SMESH_Mesh.cxx
 --- a/src/SMESH/SMESH_Mesh.cxx
 +++ b/src/SMESH/SMESH_Mesh.cxx
-@@ -44,8 +44,10 @@
+@@ -42,12 +42,14 @@
+ #include "utilities.h"
+ 
  #include "DriverDAT_W_SMDS_Mesh.h"
  #include "DriverGMF_Read.hxx"
  #include "DriverGMF_Write.hxx"
@@ -12,7 +14,11 @@ diff --git a/src/SMESH/SMESH_Mesh.cxx b/src/SMESH/SMESH_Mesh.cxx
  #include "DriverSTL_R_SMDS_Mesh.h"
  #include "DriverSTL_W_SMDS_Mesh.h"
  #include "DriverUNV_R_SMDS_Mesh.h"
-@@ -502,6 +504,7 @@ int SMESH_Mesh::UNVToMesh(const char* theFileName)
+ #include "DriverUNV_W_SMDS_Mesh.h"
+ #ifdef WITH_CGNS
+@@ -500,10 +502,11 @@ int SMESH_Mesh::UNVToMesh(const char* theFileName)
+ //purpose  :
+ //=======================================================================
  
  int SMESH_Mesh::MEDToMesh(const char* theFileName, const char* theMeshName)
  {
@@ -20,7 +26,11 @@ diff --git a/src/SMESH/SMESH_Mesh.cxx b/src/SMESH/SMESH_Mesh.cxx
    if ( _isShapeToMesh )
      throw SALOME_Exception(LOCALIZED("a shape to mesh has already been defined"));
    _isShapeToMesh = false;
-@@ -536,6 +539,9 @@ int SMESH_Mesh::MEDToMesh(const char* theFileName, const char* theMeshName)
+ 
+   DriverMED_R_SMESHDS_Mesh myReader;
+@@ -534,10 +537,13 @@ int SMESH_Mesh::MEDToMesh(const char* theFileName, const char* theMeshName)
+ 
+   _myMeshDS->Modified();
    _myMeshDS->CompactMesh();
  
    return (int) status;
@@ -30,31 +40,47 @@ diff --git a/src/SMESH/SMESH_Mesh.cxx b/src/SMESH/SMESH_Mesh.cxx
  }
  
  //=======================================================================
-@@ -1434,6 +1440,7 @@ void SMESH_Mesh::ExportMED(const char *        file,
+ //function : STLToMesh
+ //purpose  :
+@@ -1425,10 +1431,11 @@ void SMESH_Mesh::ExportMED(const char *        file,
+                            bool                theAutoDimension,
+                            bool                theAddODOnVertices,
+                            double              theZTolerance,
                             bool                theAllElemsToGroup)
- throw(SALOME_Exception)
  {
 +#ifdef WITH_MED
    MESSAGE("MED_VERSION:"<< theVersion);
+ 
+   Driver_Mesh::Status status;
    SMESH_TRY;
  
-@@ -1492,6 +1499,7 @@ throw(SALOME_Exception)
-   myWriter.Perform();
+@@ -1488,10 +1495,11 @@ void SMESH_Mesh::ExportMED(const char *        file,
  
    SMESH_CATCH( SMESH::throwSalomeEx );
+ 
+   if ( status == Driver_Mesh::DRS_TOO_LARGE_MESH )
+     throw TooLargeForExport("MED");
 +#endif
  }
  
  //================================================================================
-@@ -1505,6 +1513,7 @@ void SMESH_Mesh::ExportSAUV(const char *file,
+ /*!
+  * \brief Export the mesh to a SAUV file
+@@ -1500,10 +1508,11 @@ void SMESH_Mesh::ExportMED(const char *        file,
+ 
+ void SMESH_Mesh::ExportSAUV(const char *file, 
+                             const char* theMeshName, 
                              bool theAutoGroups)
-   throw(SALOME_Exception)
  {
 +#ifdef WITH_MED
    std::string medfilename(file);
    medfilename += ".med";
    std::string cmd;
-@@ -1538,6 +1547,7 @@ void SMESH_Mesh::ExportSAUV(const char *file,
+ #ifdef WIN32
+   cmd = "%PYTHONBIN% ";
+@@ -1539,10 +1548,11 @@ void SMESH_Mesh::ExportSAUV(const char *file,
+ #endif
+   cmd += "-c \"";
    cmd += "from medutilities import my_remove ; my_remove(r'" + medfilename + "')";
    cmd += "\"";
    system(cmd.c_str());
@@ -62,15 +88,5 @@ diff --git a/src/SMESH/SMESH_Mesh.cxx b/src/SMESH/SMESH_Mesh.cxx
  }
  
  //================================================================================
-diff --git a/src/StdMeshers/StdMeshers_Cartesian_3D.cxx b/src/StdMeshers/StdMeshers_Cartesian_3D.cxx
---- a/src/StdMeshers/StdMeshers_Cartesian_3D.cxx
-+++ b/src/StdMeshers/StdMeshers_Cartesian_3D.cxx
-@@ -2561,7 +2561,7 @@ namespace
-         case 3: // at a corner
-         {
-           _Node& node = _hexNodes[ subEntity - SMESH_Block::ID_FirstV ];
--          if ( node.Node() > 0 )
-+          if ( node.Node() != nullptr )
-           {
-             if ( node._intPoint )
-               node._intPoint->Add( _eIntPoints[ iP ]->_faceIDs, _eIntPoints[ iP ]->_node );
+ /*!
+  * \brief Export the mesh to a DAT file

@@ -125,6 +125,7 @@ install(FILES ${SMDS_INCLUDES} DESTINATION "include/smesh/SMDS")
 
 # SMESH
 file(GLOB SMESH_SRC ${SMESH_SRC_DIR}/SMESH/*.cxx)
+list(REMOVE_ITEM SMESH_SRC "${SMESH_SRC_DIR}/SMESH/MG_ADAPT.cxx")
 add_library(SMESH ${SMESH_SRC})
 target_link_libraries(SMESH Kernel Geom Controls SMESHDS Driver DriverDAT DriverSTL DriverUNV DriverGMF TKShHealing TKPrim TKG2d TKCDF TKMeshVS ${Boost_LIBRARIES})
 target_include_directories(SMESH PUBLIC
@@ -193,6 +194,7 @@ if(ENABLE_NETGEN)
     list(REMOVE_ITEM NETGENPlugin_SRC ${NETGENPlugin_Remesher_2D_SRC})
     file(GLOB NETGENPlugin_SRC_i ${NETGENPlugin_SRC_DIR}/*_i.cxx)
     list(REMOVE_ITEM NETGENPlugin_SRC ${NETGENPlugin_SRC_i})
+
     add_library(NETGENPlugin ${NETGENPlugin_SRC})
     target_link_libraries(NETGENPlugin StdMeshers nglib4smesh)
     target_include_directories(NETGENPlugin PUBLIC

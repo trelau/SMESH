@@ -20,6 +20,7 @@ def prepare_netgen():
     # Patch Netgen sources for SALOME
     pset = patch.fromfile('external/NETGENPlugin/src/NETGEN/netgen53ForSalome.patch')
     pset.apply(strip=1, root='src/Netgen')
+
     if sys.platform == 'win32':
         pset = patch.fromfile('external/NETGENPlugin/src/NETGEN/netgen53ForWindows.patch')
         pset.apply(strip=1, root='src/Netgen')
@@ -50,7 +51,9 @@ def prepare_kernel():
 
     # Patch sources
     pset = patch.fromfile('patch/Kernel.patch')
-    pset.apply(strip=0, root='src/Kernel')
+    success = pset.apply(strip=0, root='src/Kernel')
+    if not success:
+        raise RuntimeError('Failed to apply Kernel patch.')
 
 
 def prepare_geom():
@@ -88,11 +91,15 @@ def prepare_smesh():
 
     # Patch sources
     pset = patch.fromfile('patch/SMESH.patch')
-    pset.apply(strip=0, root='src/SMESH')
+    success = pset.apply(strip=0, root='src/SMESH')
+    if not success:
+        raise RuntimeError('Failed to apply SMESH patch.')
 
     # Patch sources
     pset = patch.fromfile('patch/mefisto.patch')
-    pset.apply(strip=0, root='src/SMESH')
+    success = pset.apply(strip=0, root='src/SMESH')
+    if not success:
+        raise RuntimeError('Failed to apply mefisto patch.')
 
     # Copy MeshVSLink sources
     shutil.copytree('extra/MeshVSLink',
@@ -116,7 +123,9 @@ def prepare_netgen_plugin():
 
     # Patch sources
     pset = patch.fromfile('patch/NETGENPlugin.patch')
-    pset.apply(strip=0, root='src/SMESH/src/NETGENPlugin')
+    success = pset.apply(strip=0, root='src/SMESH/src/NETGENPlugin')
+    if not success:
+        raise RuntimeError('Failed to apply NETGENPlugin patch.')
 
 
 def prepare_noexcept():
@@ -136,6 +145,6 @@ if __name__ == '__main__':
     prepare_geom()
     prepare_smesh()
     prepare_netgen_plugin()
-    prepare_noexcept()
+    # prepare_noexcept()
 
 

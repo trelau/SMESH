@@ -1,7 +1,9 @@
 diff --git a/src/NETGENPlugin/NETGENPlugin_Mesher.cxx b/src/NETGENPlugin/NETGENPlugin_Mesher.cxx
 --- a/src/NETGENPlugin/NETGENPlugin_Mesher.cxx
 +++ b/src/NETGENPlugin/NETGENPlugin_Mesher.cxx
-@@ -41,14 +41,14 @@
+@@ -39,18 +39,18 @@
+ #include <SMESH_Block.hxx>
+ #include <SMESH_Comment.hxx>
  #include <SMESH_ComputeError.hxx>
  #include <SMESH_ControlPnt.hxx>
  #include <SMESH_File.hxx>
@@ -18,41 +20,61 @@ diff --git a/src/NETGENPlugin/NETGENPlugin_Mesher.cxx b/src/NETGENPlugin/NETGENP
  
  #include <utilities.h>
  
-@@ -646,6 +646,7 @@ void NETGENPlugin_Mesher::SetParameters(const NETGENPlugin_Hypothesis* hyp)
-     // mesh size file
+ #include <BRepAdaptor_Surface.hxx>
+ #include <BRepBuilderAPI_Copy.hxx>
+@@ -645,10 +645,11 @@ void NETGENPlugin_Mesher::SetParameters(const NETGENPlugin_Hypothesis* hyp)
+     mparams.meshsizefilename = hyp->GetMeshSizeFile();
+ #else
+     // const char*
      mparams.meshsizefilename= hyp->GetMeshSizeFile().empty() ? 0 : hyp->GetMeshSizeFile().c_str();
- 
-+	/*
+ #endif
++    /*
      const NETGENPlugin_Hypothesis::TLocalSize& localSizes = hyp->GetLocalSizesAndEntries();
      if ( !localSizes.empty() )
      {
-@@ -667,6 +668,7 @@ void NETGENPlugin_Mesher::SetParameters(const NETGENPlugin_Hypothesis* hyp)
+       SMESH_Gen_i* smeshGen_i = SMESH_Gen_i::GetSMESHGen();
+       NETGENPlugin_Hypothesis::TLocalSize::const_iterator it = localSizes.begin();
+@@ -666,10 +667,11 @@ void NETGENPlugin_Mesher::SetParameters(const NETGENPlugin_Hypothesis* hyp)
+         }
+         TopoDS_Shape S = smeshGen_i->GeomObjectToShape( aGeomObj.in() );
          setLocalSize(S, val);
        }
      }
-+	*/
++    */
    }
  }
  
-@@ -4430,7 +4432,8 @@ void NETGENPlugin_NetgenLibWrapper::setMesh( Ng_Mesh* mesh )
+ //=============================================================================
+ /*!
+@@ -4473,11 +4475,12 @@ void NETGENPlugin_NetgenLibWrapper::CalcLocalH( netgen::Mesh * ngMesh )
+  */
+ //================================================================================
  
  std::string NETGENPlugin_NetgenLibWrapper::getOutputFileName()
  {
 -  std::string aTmpDir = SALOMEDS_Tool::GetTmpDir();
 +  // std::string aTmpDir = SALOMEDS_Tool::GetTmpDir();
-+	std::string aTmpDir = "/tmp";
++  std::string aTmpDir = "/tmp";
  
-   TCollection_AsciiString aGenericName = (char*)aTmpDir.c_str();
+   TCollection_AsciiString aGenericName = aTmpDir.c_str();
    aGenericName += "NETGEN_";
-@@ -4474,6 +4477,7 @@ void NETGENPlugin_NetgenLibWrapper::RemoveTmpFiles()
+ #ifndef WIN32
+   aGenericName += getpid();
+@@ -4517,10 +4520,11 @@ void NETGENPlugin_NetgenLibWrapper::RemoveTmpFiles()
+  */
+ //================================================================================
  
  void NETGENPlugin_NetgenLibWrapper::removeOutputFile()
  {
-+	/*
++  /*
    if ( !_outputFileName.empty() )
    {
      if ( _ngcout )
-@@ -4491,4 +4495,5 @@ void NETGENPlugin_NetgenLibWrapper::removeOutputFile()
+     {
+       delete netgen::mycout;
+@@ -4534,6 +4538,7 @@ void NETGENPlugin_NetgenLibWrapper::removeOutputFile()
+     aFiles.reserve(1);
+     aFiles.push_back(aFileName.c_str());
  
      SALOMEDS_Tool::RemoveTemporaryFiles( tmpDir.c_str(), aFiles, true );
    }
