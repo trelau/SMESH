@@ -50,7 +50,8 @@ else(UNIX)
 endif(UNIX)
 
 if(CMAKE_SIZEOF_VOID_P STREQUAL 8)
-    add_definitions(-D_OCC64 -DSALOME_USE_64BIT_IDS)
+    add_definitions(-D_OCC64)
+    # add_definitions(-DSALOME_USE_64BIT_IDS)
 endif(CMAKE_SIZEOF_VOID_P STREQUAL 8)
 
 
