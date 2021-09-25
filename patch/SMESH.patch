@@ -90,3 +90,20 @@ diff --git a/src/SMESH/SMESH_Mesh.cxx b/src/SMESH/SMESH_Mesh.cxx
  //================================================================================
  /*!
   * \brief Export the mesh to a DAT file
+diff --git a/src/SMDS/SMDS_UnstructuredGrid.hxx b/src/SMDS/SMDS_UnstructuredGrid.hxx
+--- a/src/SMDS/SMDS_UnstructuredGrid.hxx
++++ b/src/SMDS/SMDS_UnstructuredGrid.hxx
+@@ -24,10 +24,13 @@
+ #ifndef _SMDS_UNSTRUCTUREDGRID_HXX
+ #define _SMDS_UNSTRUCTUREDGRID_HXX
+ 
+ #include "SMESH_SMDS.hxx"
+ 
++ // Fix for https://discourse.vtk.org/t/compilation-error-include-limits-required-in-several-files/6496
++#include <limits>
++
+ #include <vtkUnstructuredGrid.h>
+ #include <vtkCellLinks.h>
+ #include <smIdType.hxx>
+ 
+ #include <vector>
