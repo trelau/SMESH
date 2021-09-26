@@ -37,6 +37,8 @@ else()
     set_target_properties(Kernel PROPERTIES COMPILE_FLAGS "-DSMESH_ONLY")
 endif()
 
+configure_file(${Kernel_SRC_DIR}/Basics/smIdType.hxx.in ${Kernel_SRC_DIR}/Basics/smIdType.hxx)
+
 file(GLOB Kernel_INCLUDES
      ${Kernel_SRC_DIR}/Basics/*.h*
      ${Kernel_SRC_DIR}/SALOMELocalTrace/*.h*
