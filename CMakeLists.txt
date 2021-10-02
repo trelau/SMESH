@@ -77,6 +77,7 @@ find_package(VTK REQUIRED COMPONENTS CommonCore CommonDataModel FiltersVerdict)
 # --------------------------------------------------------------------------- #
 message(STATUS "Searching for Boost...")
 find_package(Boost REQUIRED COMPONENTS filesystem thread serialization)
+inclue_directories(${Boost_INCLUDE_DIRS})
 
 if (MSVC)
   # find the shared boost libs
