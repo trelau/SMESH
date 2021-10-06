@@ -1,6 +1,6 @@
 package:
   name: smesh4pyocct
-  version: "9.7.0.0"
+  version: "9.7.0.1"
 
 source:
   path: ../..
