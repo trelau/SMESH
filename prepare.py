@@ -101,6 +101,12 @@ def prepare_smesh():
     if not success:
         raise RuntimeError('Failed to apply mefisto patch.')
 
+    # Patch sources
+    pset = patch.fromfile('patch/SMESH_SMDS.patch')
+    success = pset.apply(strip=0, root='src/SMESH')
+    if not success:
+        raise RuntimeError('Failed to apply SMESH_SMDS patch.')
+
     # Copy MeshVSLink sources
     shutil.copytree('extra/MeshVSLink',
                     'src/SMESH/src/MeshVSLink', dirs_exist_ok=True)
