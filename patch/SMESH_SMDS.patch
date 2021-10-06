@@ -85,7 +85,7 @@ index dcc00a3..cb216fd 100644
 +  {
 +    if (!myNodeElements.empty())
 +      return (int)( static_cast<const SMDS_MeshNode*>(e) - myNodeElements.data() );
-+    else;
++    else
 +      return (int)( static_cast<const SMDS_MeshCell*>(e) - myCellElements.data() );
 +  }
  
