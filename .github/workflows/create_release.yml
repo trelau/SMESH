@@ -25,12 +25,13 @@ jobs:
     run: |
       wget https://raw.githubusercontent.com/fabacab/git-archive-all.sh/master/git-archive-all.sh
       ./git-archive-all
+      mv SMESH.tar.gz SMESH_${{ steps.vars.outputs.tag }}.tar.gz
 
   - uses: svenstaro/upload-release-action@v2
     name: Upload binaries to release
     with:
       repo_token: ${{ secrets.GITHUB_TOKEN }}
-      file: SMESH.tar.gz
+      file: SMESH_${{ steps.vars.outputs.tag }}.tar.gz
       tag: ${{ steps.vars.outputs.tag }}
       overwrite: true
       file_glob: true
