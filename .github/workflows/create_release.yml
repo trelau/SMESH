@@ -23,14 +23,14 @@ jobs:
  
   - name: prepare
     run: |
-    wget https://raw.githubusercontent.com/fabacab/git-archive-all.sh/master/git-archive-all.sh
-    ./git-archive-all
+      wget https://raw.githubusercontent.com/fabacab/git-archive-all.sh/master/git-archive-all.sh
+      ./git-archive-all
 
-  - name: Upload binaries to release
-        uses: svenstaro/upload-release-action@v2
-        with:
-          repo_token: ${{ secrets.GITHUB_TOKEN }}
-          file: SMESH.tar.gz
-          tag: ${{ steps.vars.outputs.tag }}
-          overwrite: true
-          file_glob: true
+  - uses: svenstaro/upload-release-action@v2
+    name: Upload binaries to release
+    with:
+      repo_token: ${{ secrets.GITHUB_TOKEN }}
+      file: SMESH.tar.gz
+      tag: ${{ steps.vars.outputs.tag }}
+      overwrite: true
+      file_glob: true
