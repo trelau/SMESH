@@ -1,7 +1,11 @@
 name: create release
 
-on:
+on:  
+  push:
+    branches:    
+      - '*' 
   workflow_dispatch:
+
       
 jobs:
   create-release:
