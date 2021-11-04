@@ -23,7 +23,7 @@ jobs:
     - name: prepare
       run: |
         wget https://raw.githubusercontent.com/fabacab/git-archive-all.sh/master/git-archive-all.sh
-        ./git-archive-all
+        ./git-archive-all.sh
         mv SMESH.tar.gz SMESH_${{ steps.vars.outputs.tag }}.tar.gz
 
     - uses: svenstaro/upload-release-action@v2
