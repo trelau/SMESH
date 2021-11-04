@@ -26,7 +26,7 @@ jobs:
       run: |
         wget https://raw.githubusercontent.com/fabacab/git-archive-all.sh/master/git-archive-all.sh
         chmod 777 git-archive-all.sh
-        ./git-archive-all.sh --format=tar
+        ./git-archive-all.sh
         gzip < SMESH.tar > SMESH_${{ steps.vars.outputs.tag }}.tar.gz
 
     - uses: svenstaro/upload-release-action@v2
