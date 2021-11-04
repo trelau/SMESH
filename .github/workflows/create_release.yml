@@ -4,17 +4,15 @@ on:
   create:
     tags:
       - v*
-
-  workflow_dispatch:
       
 jobs:
   create-release:
     runs-on: ubuntu-latest
- 
     steps:
-    - name: Checkout
-      uses: actions/checkout@v2
-      submodules: true
+    - uses: actions/checkout@v2
+      name: Checkout
+      with:
+        submodules: true
 
     - name: Set output
       id: vars
