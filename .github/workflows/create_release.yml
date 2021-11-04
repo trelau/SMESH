@@ -25,6 +25,7 @@ jobs:
         wget https://raw.githubusercontent.com/fabacab/git-archive-all.sh/master/git-archive-all.sh
         chmod 777 git-archive-all.sh
         ./git-archive-all.sh
+        ls -ll
         mv SMESH.tar.gz SMESH_${{ steps.vars.outputs.tag }}.tar.gz
 
     - uses: svenstaro/upload-release-action@v2
