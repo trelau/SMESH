@@ -1,9 +1,7 @@
 name: create release
 
 on:
-  create:
-    tags:
-      - v*
+  workflow_dispatch:
       
 jobs:
   create-release:
