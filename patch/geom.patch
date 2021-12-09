@@ -1,0 +1,25 @@
+# See OCCT commit ee2be2a88 0028316: Coding Rules - Elimilate confusing aliases of Standard_Real type in V3d_View
+# and `git diff 2e9da863f 5480ab03f` in OCCT to see the same changes applied
+# V3d_Coordinate was removed in 7fd4958d451a9c8dcf1c58e100c8ac898484addd
+diff --git a/src/GEOMUtils/GEOMUtils.cxx b/src/GEOMUtils/GEOMUtils.cxx
+index d5d48c0ea..442cacecd 100644
+--- a/src/GEOMUtils/GEOMUtils.cxx
++++ b/src/GEOMUtils/GEOMUtils.cxx
+@@ -94,7 +94,7 @@
+ #include <sstream>
+ #include <algorithm>
+
+-#include <V3d_Coordinate.hxx>
++#include <Standard_Real.hxx>
+
+ #include <Standard_Failure.hxx>
+ #include <Standard_NullObject.hxx>
+@@ -1028,7 +1028,7 @@ Standard_Real GEOMUtils::GetMinDistance
+ //=======================================================================
+ gp_Pnt GEOMUtils::ConvertClickToPoint( int x, int y, Handle(V3d_View) aView )
+ {
+-  V3d_Coordinate XEye, YEye, ZEye, XAt, YAt, ZAt;
++  Standard_Real XEye, YEye, ZEye, XAt, YAt, ZAt;
+   aView->Eye( XEye, YEye, ZEye );
+
+   aView->At( XAt, YAt, ZAt );
