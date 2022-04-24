@@ -2,10 +2,17 @@
 
 #include <catch2/catch.hpp>
 
+#include <gp_Pnt.hxx>
+#include <gp_Dir.hxx>
+#include <gp_Pln.hxx>
 #include <BRepPrimAPI_MakeBox.hxx>
+#include <BRepBuilderAPI_MakeFace.hxx>
+#include <TopoDS_Face.hxx>
 #include <TopoDS_Solid.hxx>
 #include <TopExp_Explorer.hxx>
 #include <TopAbs_ShapeEnum.hxx>
+#include <BRepAlgoAPI_Splitter.hxx>
+#include <TopTools_ListOfShape.hxx>
 
 #include <SMESH_Gen.hxx>
 #include <SMESH_Mesh.hxx>
@@ -77,6 +84,54 @@ TEST_CASE("Mesh a box with tetrahedral elements and a local edge length.", "[NET
 	delete algo3d;
 	delete hyp1d;
 	delete algo1d;
+	delete mesh;
+	delete gen;
+}
+
+TEST_CASE("Mesh a box with tetrahedral elements and split faces.", "[NETGENPlugin]") {
+
+	TopoDS_Solid box = BRepPrimAPI_MakeBox(10.0, 10.0, 10.0).Solid();
+
+	gp_Pnt origin = gp_Pnt(5.0, 0.0, 0.0);
+	gp_Dir normal = gp_Dir(1.0, 0.0, 0.0);
+	gp_Pln pln = gp_Pln(origin, normal);
+
+	TopoDS_Face face = BRepBuilderAPI_MakeFace(pln, -5.0, 5.0, -5.0, 5.0).Face();
+
+	TopTools_ListOfShape args = TopTools_ListOfShape();
+	args.Append(box);
+
+	TopTools_ListOfShape tools = TopTools_ListOfShape();
+	tools.Append(face);
+
+	BRepAlgoAPI_Splitter splitter = BRepAlgoAPI_Splitter();
+	splitter.SetArguments(args);
+	splitter.SetTools(tools);
+	splitter.Build();
+	REQUIRE(splitter.IsDone() == true);
+
+	TopoDS_Shape split_box = splitter.Shape();
+
+	SMESH_Gen* gen = new SMESH_Gen();
+	SMESH_Mesh* mesh = gen->CreateMesh(true);
+
+	NETGENPlugin_SimpleHypothesis_3D* hyp = new NETGENPlugin_SimpleHypothesis_3D(0, gen);
+	hyp->SetLocalLength(1.0);
+
+	NETGENPlugin_NETGEN_2D3D* algo = new NETGENPlugin_NETGEN_2D3D(1, gen);
+
+	mesh->ShapeToMesh(split_box);
+	mesh->AddHypothesis(split_box, 0);
+	mesh->AddHypothesis(split_box, 1);
+
+	bool success = gen->Compute(*mesh, split_box);
+	REQUIRE(success == true);
+
+	REQUIRE(mesh->NbTetras() == 4757);
+	REQUIRE(mesh->NbNodes() == 1194);
+
+	delete hyp;
+	delete algo;
 	delete mesh;
 	delete gen;
 }
