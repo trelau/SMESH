@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.3)
-project(SMESH VERSION 9.7.0.1 LANGUAGES C CXX)
+project(SMESH VERSION 9.7.0.2 LANGUAGES C CXX)
 
 # --------------------------------------------------------------------------- #
 # OPTIONS
@@ -15,7 +15,7 @@ set(CMAKE_INSTALL_LIBDIR lib CACHE PATH "Output directory for libraries")
 set(SMESH_VERSION_MAJOR 9)
 set(SMESH_VERSION_MINOR 7)
 set(SMESH_VERSION_PATCH 0)
-set(SMESH_VERSION_TWEAK 1)
+set(SMESH_VERSION_TWEAK 2)
 
 # Build shared libraries
 set(BUILD_SHARED_LIBS TRUE)
