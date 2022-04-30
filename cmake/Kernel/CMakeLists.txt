@@ -1,6 +1,7 @@
 set(Kernel_SRCS
     # Basics
     ${Kernel_SRC_DIR}/Basics/Basics_Utils.cxx
+    ${Kernel_SRC_DIR}/Basics/Basics_DirUtils.cxx
     ${Kernel_SRC_DIR}/Basics/BasicsGenericDestructor.cxx
     # Local Trace
     ${Kernel_SRC_DIR}/SALOMELocalTrace/BaseTraceCollector.cxx

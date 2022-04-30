@@ -1,5 +1,4 @@
 diff --git a/src/SMDS/SMDS_ElementFactory.cxx b/src/SMDS/SMDS_ElementFactory.cxx
-index c3ab97c..5430921 100644
 --- a/src/SMDS/SMDS_ElementFactory.cxx
 +++ b/src/SMDS/SMDS_ElementFactory.cxx
 @@ -524,9 +524,9 @@ SMDS_ElementChunk::SMDS_ElementChunk( SMDS_ElementFactory* factory, smIdType id0
@@ -24,7 +23,6 @@ index c3ab97c..5430921 100644
  }
  
 diff --git a/src/SMDS/SMDS_ElementFactory.hxx b/src/SMDS/SMDS_ElementFactory.hxx
-index dcc00a3..cb216fd 100644
 --- a/src/SMDS/SMDS_ElementFactory.hxx
 +++ b/src/SMDS/SMDS_ElementFactory.hxx
 @@ -26,6 +26,7 @@

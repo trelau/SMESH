@@ -90,22 +90,28 @@ def prepare_smesh():
     shutil.copyfile('cmake/SMESH/CMakeLists.txt', target)
 
     # Patch sources
-    pset = patch.fromfile('patch/SMESH.patch')
+    pset = patch.fromfile('patch/SMESH_Mesh.patch')
     success = pset.apply(strip=0, root='src/SMESH')
     if not success:
-        raise RuntimeError('Failed to apply SMESH patch.')
-
-    # Patch sources
-    pset = patch.fromfile('patch/mefisto.patch')
-    success = pset.apply(strip=0, root='src/SMESH')
-    if not success:
-        raise RuntimeError('Failed to apply mefisto patch.')
+        raise RuntimeError('Failed to apply SMESH_Mesh patch.')
 
     # Patch sources
     pset = patch.fromfile('patch/SMESH_SMDS.patch')
     success = pset.apply(strip=0, root='src/SMESH')
     if not success:
         raise RuntimeError('Failed to apply SMESH_SMDS patch.')
+
+    # Patch sources
+    # pset = patch.fromfile('patch/SMDS_UnstructuredGrid.patch')
+    # success = pset.apply(strip=0, root='src/SMESH')
+    # if not success:
+    #     raise RuntimeError('Failed to apply SMDS_UnstructuredGrid patch.')
+
+    # Patch sources
+    pset = patch.fromfile('patch/mefisto.patch')
+    success = pset.apply(strip=0, root='src/SMESH')
+    if not success:
+        raise RuntimeError('Failed to apply mefisto patch.')
 
     # Copy MeshVSLink sources
     shutil.copytree('extra/MeshVSLink',
@@ -150,7 +156,7 @@ if __name__ == '__main__':
     prepare_kernel()
     prepare_geom()
     prepare_smesh()
-    prepare_netgen_plugin()
+    # prepare_netgen_plugin()
     # prepare_noexcept()
 
 

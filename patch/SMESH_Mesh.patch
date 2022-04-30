@@ -1,0 +1,107 @@
+diff --git a/src/SMESH/SMESH_Mesh.hxx b/src/SMESH/SMESH_Mesh.hxx
+--- a/src/SMESH/SMESH_Mesh.hxx
++++ b/src/SMESH/SMESH_Mesh.hxx
+@@ -41,7 +41,9 @@
+ #include <TopTools_IndexedDataMapOfShapeListOfShape.hxx>
+ #include <TopTools_ListOfShape.hxx>
+ 
++#ifdef WITH_MED
+ #include "MEDCouplingMemArray.hxx"
++#endif
+ 
+ #include <map>
+ #include <list>
+@@ -265,6 +267,7 @@ class SMESH_EXPORT SMESH_Mesh
+     TooLargeForExport(const char* format):runtime_error(format) {}
+   };
+ 
++#ifdef WITH_MED
+   MEDCoupling::MCAuto<MEDCoupling::DataArrayByte>
+     ExportMEDCoupling(const char*         theMeshName = NULL,
+                       bool                theAutoGroups = true,
+@@ -273,6 +276,7 @@ class SMESH_EXPORT SMESH_Mesh
+                       bool                theAddODOnVertices = false,
+                       double              theZTolerance = -1.,
+                       bool                theSaveNumbers = true);
++#endif
+ 
+   void ExportMED(const char *        theFile,
+                  const char*         theMeshName = NULL,
+diff --git a/src/SMESH/SMESH_Mesh.cxx b/src/SMESH/SMESH_Mesh.cxx
+--- a/src/SMESH/SMESH_Mesh.cxx
++++ b/src/SMESH/SMESH_Mesh.cxx
+@@ -44,8 +44,10 @@
+ #include "DriverDAT_W_SMDS_Mesh.h"
+ #include "DriverGMF_Read.hxx"
+ #include "DriverGMF_Write.hxx"
++#ifdef WITH_MED
+ #include "DriverMED_R_SMESHDS_Mesh.h"
+ #include "DriverMED_W_SMESHDS_Mesh.h"
++#endif
+ #include "DriverSTL_R_SMDS_Mesh.h"
+ #include "DriverSTL_W_SMDS_Mesh.h"
+ #include "DriverUNV_R_SMDS_Mesh.h"
+@@ -520,6 +522,7 @@ int SMESH_Mesh::UNVToMesh(const char* theFileName)
+ 
+ int SMESH_Mesh::MEDToMesh(const char* theFileName, const char* theMeshName)
+ {
++#ifdef WITH_MED
+   if ( _isShapeToMesh )
+     throw SALOME_Exception(LOCALIZED("a shape to mesh has already been defined"));
+   _isShapeToMesh = false;
+@@ -554,6 +557,9 @@ int SMESH_Mesh::MEDToMesh(const char* theFileName, const char* theMeshName)
+   _meshDS->CompactMesh();
+ 
+   return (int) status;
++ #else
++  return 0;
++ #endif
+ }
+ 
+ //=======================================================================
+@@ -1418,6 +1424,7 @@ void SMESH_Mesh::exportMEDCommmon(DriverMED_W_SMESHDS_Mesh& theWriter,
+                                   double                    theZTolerance,
+                                   bool                      theSaveNumbers)
+ {
++#ifdef WITH_MED
+   Driver_Mesh::Status status = Driver_Mesh::DRS_OK;
+ 
+   SMESH_TRY;
+@@ -1477,6 +1484,7 @@ void SMESH_Mesh::exportMEDCommmon(DriverMED_W_SMESHDS_Mesh& theWriter,
+ 
+   if ( status == Driver_Mesh::DRS_TOO_LARGE_MESH )
+     throw TooLargeForExport("MED");
++#endif
+ }
+ 
+ //================================================================================
+@@ -1484,7 +1492,7 @@ void SMESH_Mesh::exportMEDCommmon(DriverMED_W_SMESHDS_Mesh& theWriter,
+  * Same as SMESH_Mesh::ExportMED except for \a file and \a theVersion
+  */
+ //================================================================================
+-
++#ifdef WITH_MED
+ MEDCoupling::MCAuto<MEDCoupling::DataArrayByte>
+ SMESH_Mesh::ExportMEDCoupling(const char*         theMeshName,
+                               bool                theAutoGroups,
+@@ -1499,6 +1507,7 @@ SMESH_Mesh::ExportMEDCoupling(const char*         theMeshName,
+                           theAddODOnVertices, theZTolerance, theSaveNumbers);
+   return writer.getData();
+ }
++#endif
+ 
+ //================================================================================
+ /*!
+@@ -1535,10 +1544,12 @@ void SMESH_Mesh::ExportMED(const char *        theFile,
+                            double              theZTolerance,
+                            bool                theSaveNumbers)
+ {
++#ifdef WITH_MED
+   MESSAGE("MED_VERSION:"<< theVersion);
+   DriverMED_W_SMESHDS_Mesh writer;
+   writer.SetFile( theFile, theVersion );
+   this->exportMEDCommmon( writer, theMeshName, theAutoGroups, theMeshPart, theAutoDimension, theAddODOnVertices, theZTolerance, theSaveNumbers );
++#endif
+ }
+ 
+ //================================================================================
