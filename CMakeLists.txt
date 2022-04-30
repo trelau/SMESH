@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.3)
-project(SMESH VERSION 9.7.0.2 LANGUAGES C CXX)
+project(SMESH VERSION 9.8.0.0 LANGUAGES C CXX)
 
 # --------------------------------------------------------------------------- #
 # OPTIONS
@@ -13,9 +13,9 @@ set(CMAKE_INSTALL_LIBDIR lib CACHE PATH "Output directory for libraries")
 # SETTINGS
 # --------------------------------------------------------------------------- #
 set(SMESH_VERSION_MAJOR 9)
-set(SMESH_VERSION_MINOR 7)
+set(SMESH_VERSION_MINOR 8)
 set(SMESH_VERSION_PATCH 0)
-set(SMESH_VERSION_TWEAK 2)
+set(SMESH_VERSION_TWEAK 0)
 
 # Build shared libraries
 set(BUILD_SHARED_LIBS TRUE)
@@ -39,6 +39,8 @@ if(UNIX)
   add_definitions(-DHAVE_LIMITS_H -DCSFDB -DLIN -DOCC_CONVERT_SIGNALS)
 else(UNIX)
   if(WIN32)
+    # Define NOMINMAX to avoid conflice with Windows.h max and min
+    add_definitions(-DNOMINMAX)
       if(MSVC)
           add_definitions(-DWNT -DWIN32 -D_WINDOWS -DCSFDB -DUSE_CLOCK -DMSDOS -DNO_ONEXIT -DNO_My_ctype -DNO_ISATTY -DNO_FPINIT)
       else(MSVC)
@@ -51,7 +53,7 @@ endif(UNIX)
 
 if(CMAKE_SIZEOF_VOID_P STREQUAL 8)
     add_definitions(-D_OCC64)
-    # add_definitions(-DSALOME_USE_64BIT_IDS)
+    add_definitions(-DSALOME_USE_64BIT_IDS)
 endif(CMAKE_SIZEOF_VOID_P STREQUAL 8)
 
 
@@ -76,7 +78,7 @@ find_package(VTK REQUIRED COMPONENTS CommonCore CommonDataModel FiltersVerdict)
 # BOOST
 # --------------------------------------------------------------------------- #
 message(STATUS "Searching for Boost...")
-find_package(Boost REQUIRED COMPONENTS filesystem thread serialization)
+find_package(Boost REQUIRED COMPONENTS filesystem thread serialization regex)
 
 if (MSVC)
   # find the shared boost libs

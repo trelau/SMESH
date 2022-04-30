@@ -1,6 +1,7 @@
 set(Kernel_SRCS
     # Basics
     ${Kernel_SRC_DIR}/Basics/Basics_Utils.cxx
+    ${Kernel_SRC_DIR}/Basics/Basics_DirUtils.cxx
     ${Kernel_SRC_DIR}/Basics/BasicsGenericDestructor.cxx
     # Local Trace
     ${Kernel_SRC_DIR}/SALOMELocalTrace/BaseTraceCollector.cxx
@@ -31,10 +32,7 @@ if(WIN32)
     set_target_properties(Kernel PROPERTIES COMPILE_FLAGS
         "-DBASICS_EXPORTS \
         -DSALOMELOCALTRACE_EXPORTS \
-        -DUTILS_EXPORTS \
-        -DSMESH_ONLY")
-else()
-    set_target_properties(Kernel PROPERTIES COMPILE_FLAGS "-DSMESH_ONLY")
+        -DUTILS_EXPORTS")
 endif()
 
 configure_file(${Kernel_SRC_DIR}/Basics/smIdType.hxx.in ${Kernel_SRC_DIR}/Basics/smIdType.hxx)

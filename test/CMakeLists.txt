@@ -16,6 +16,10 @@ set(CMAKE_CXX_STANDARD 11)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_CXX_EXTENSIONS OFF)
 
+if(CMAKE_SIZEOF_VOID_P STREQUAL 8)
+    add_definitions(-DSALOME_USE_64BIT_IDS)
+endif(CMAKE_SIZEOF_VOID_P STREQUAL 8)
+
 
 # --------------------------------------------------------------------------- #
 # Catch
@@ -29,7 +33,7 @@ include(Catch)
 # BOOST
 # --------------------------------------------------------------------------- #
 message(STATUS "Searching for Boost...")
-find_package(Boost REQUIRED COMPONENTS filesystem thread serialization)
+find_package(Boost REQUIRED COMPONENTS filesystem thread serialization regex)
 
 if (MSVC)
   # find the shared boost libs
