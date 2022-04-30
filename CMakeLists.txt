@@ -4,7 +4,7 @@ project(SMESH VERSION 9.8.0.0 LANGUAGES C CXX)
 # --------------------------------------------------------------------------- #
 # OPTIONS
 # --------------------------------------------------------------------------- #
-option(ENABLE_NETGEN "Enable Netgen" OFF)
+option(ENABLE_NETGEN "Enable Netgen" ON)
 set(CMAKE_INSTALL_PREFIX "${CMAKE_SOURCE_DIR}/install" CACHE PATH "Installation directory")
 set(CMAKE_INSTALL_LIBDIR lib CACHE PATH "Output directory for libraries")
 
