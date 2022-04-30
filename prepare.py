@@ -102,12 +102,6 @@ def prepare_smesh():
         raise RuntimeError('Failed to apply SMESH_SMDS patch.')
 
     # Patch sources
-    # pset = patch.fromfile('patch/SMDS_UnstructuredGrid.patch')
-    # success = pset.apply(strip=0, root='src/SMESH')
-    # if not success:
-    #     raise RuntimeError('Failed to apply SMDS_UnstructuredGrid patch.')
-
-    # Patch sources
     pset = patch.fromfile('patch/mefisto.patch')
     success = pset.apply(strip=0, root='src/SMESH')
     if not success:
@@ -134,10 +128,10 @@ def prepare_netgen_plugin():
                     'src/SMESH/src/NETGENPlugin/src')
 
     # Patch sources
-    pset = patch.fromfile('patch/NETGENPlugin.patch')
+    pset = patch.fromfile('patch/NETGENPlugin_Mesher.patch')
     success = pset.apply(strip=0, root='src/SMESH/src/NETGENPlugin')
     if not success:
-        raise RuntimeError('Failed to apply NETGENPlugin patch.')
+        raise RuntimeError('Failed to apply NETGENPlugin_Mesher patch.')
 
 
 def prepare_noexcept():
