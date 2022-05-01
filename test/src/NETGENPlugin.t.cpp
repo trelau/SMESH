@@ -41,8 +41,8 @@ TEST_CASE("Mesh a box with tetrahedral elements.", "[NETGENPlugin]") {
     bool success = gen->Compute(*mesh, box);
     REQUIRE(success == true);
 
-    REQUIRE(mesh->NbTetras() == 4671);
-    REQUIRE(mesh->NbNodes() == 1172);
+    REQUIRE(mesh->NbTetras() == 5427);
+    REQUIRE(mesh->NbNodes() == 1290);
 
     delete hyp;
     delete algo;
@@ -77,8 +77,8 @@ TEST_CASE("Mesh a box with tetrahedral elements and a local edge length.", "[NET
 	bool success = gen->Compute(*mesh, box);
 	REQUIRE(success == true);
 
-	REQUIRE(mesh->NbTetras() == 34068);
-	REQUIRE(mesh->NbNodes() == 6665);
+	REQUIRE(mesh->NbTetras() == 36896);
+	REQUIRE(mesh->NbNodes() == 7201);
 
 	delete hyp3d;
 	delete algo3d;
@@ -127,8 +127,8 @@ TEST_CASE("Mesh a box with tetrahedral elements and split faces.", "[NETGENPlugi
 	bool success = gen->Compute(*mesh, split_box);
 	REQUIRE(success == true);
 
-	REQUIRE(mesh->NbTetras() == 4757);
-	REQUIRE(mesh->NbNodes() == 1194);
+	REQUIRE(mesh->NbTetras() == 5184);
+	REQUIRE(mesh->NbNodes() == 1258);
 
 	delete hyp;
 	delete algo;

@@ -11,8 +11,8 @@ option(ENABLE_NETGEN "Enable Netgen" ON)
 # --------------------------------------------------------------------------- #
 # SETTINGS
 # --------------------------------------------------------------------------- #
-# Force C++ 11
-set(CMAKE_CXX_STANDARD 11)
+# Force C++ 17
+set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_CXX_EXTENSIONS OFF)
 
