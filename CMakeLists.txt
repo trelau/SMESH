@@ -25,6 +25,11 @@ set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_CXX_EXTENSIONS OFF)
 
+# To get std::set_unexpected for Clang
+if(CMAKE_CXX_COMPILER_ID MATCHES "Clang")
+    add_definitions(-D_LIBCPP_ENABLE_CXX17_REMOVED_UNEXPECTED_FUNCTIONS)
+endif()
+
 # Warning and errors
 if(MSVC)
     add_compile_options(/W1)
