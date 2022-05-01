@@ -1,2 +1,5 @@
-CONDA_BUILD_SYSROOT:
-  - /Applications/Xcode_12.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.9.sdk        # [osx]
+# Ref: https://conda-forge.org/docs/maintainer/knowledge_base.html#requiring-newer-macos-sdks
+MACOSX_DEPLOYMENT_TARGET:  # [osx and x86_64]
+  - "10.12"                # [osx and x86_64]
+MACOSX_SDK_VERSION:        # [osx and x86_64]
+  - "10.12"                # [osx and x86_64]

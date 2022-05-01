@@ -18,15 +18,18 @@ def prepare_netgen():
     shutil.copytree('external/Netgen/nglib', 'src/Netgen/nglib')
 
     # Patch Netgen sources for SALOME
-    pset = patch.fromfile('external/NETGENPlugin/src/NETGEN/netgen53ForSalome.patch')
-    pset.apply(strip=1, root='src/Netgen')
-
-    if sys.platform == 'win32':
-        pset = patch.fromfile('external/NETGENPlugin/src/NETGEN/netgen53ForWindows.patch')
-        pset.apply(strip=1, root='src/Netgen')
+    pset = patch.fromfile('external/NETGENPlugin/src/NETGEN/netgen62ForSalome.patch')
+    success = pset.apply(strip=1, root='src/Netgen')
+    if not success:
+        raise RuntimeError('Failed to apply Netgen patch.')
 
     # Copy Netgen cmake files into source directory
     shutil.copytree('cmake/Netgen', 'src/Netgen', dirs_exist_ok=True)
+
+    # Copy netgen_version.hpp
+    # Obtained from distribution at https://anaconda.org/ngsolve/netgen
+    shutil.copyfile('extra/Netgen/netgen_version.hpp',
+                    'src/Netgen/libsrc/include/netgen_version.hpp')
 
 
 def prepare_kernel():

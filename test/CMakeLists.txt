@@ -11,10 +11,15 @@ option(ENABLE_NETGEN "Enable Netgen" ON)
 # --------------------------------------------------------------------------- #
 # SETTINGS
 # --------------------------------------------------------------------------- #
-# Force C++ 11
-set(CMAKE_CXX_STANDARD 11)
+# Force C++ 17
+set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_CXX_EXTENSIONS OFF)
+
+# Ref https://conda-forge.org/docs/maintainer/knowledge_base.html#newer-c-features-with-old-sdk
+if(CMAKE_CXX_COMPILER_ID MATCHES "Clang")
+    add_definitions(-D_LIBCPP_DISABLE_AVAILABILITY)
+endif()
 
 if(CMAKE_SIZEOF_VOID_P STREQUAL 8)
     add_definitions(-DSALOME_USE_64BIT_IDS)
