@@ -133,10 +133,10 @@ jobs:
       - name: "MacOS fix"
         run: |
           sudo chown -R $USER $CONDA
-          curl -o  MacOSX10.9.sdk.tar.xz -L https://github.com/phracker/MacOSX-SDKs/releases/download/10.15/MacOSX10.9.sdk.tar.xz
-          tar xf MacOSX10.9.sdk.tar.xz
+          curl -o  MacOSX10.12.sdk.tar.xz -L https://github.com/phracker/MacOSX-SDKs/releases/download/10.15/MacOSX10.12.sdk.tar.xz
+          tar xf MacOSX10.12.sdk.tar.xz
           sudo mkdir -p /Applications/Xcode_12.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs
-          sudo mv -v MacOSX10.9.sdk /Applications/Xcode_12.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/
+          sudo mv -v MacOSX10.12.sdk /Applications/Xcode_12.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/
 
       - name: "Configure conda"
         shell: pwsh
