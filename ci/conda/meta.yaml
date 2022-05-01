@@ -50,7 +50,6 @@ test:
     - cmake
     - ninja
     - catch2
-    - __osx >={{ MACOSX_DEPLOYMENT_TARGET|default("10.9") }}  # [osx and x86_64]
 
 about:
   home: https://github.com/trelau/SMESH
