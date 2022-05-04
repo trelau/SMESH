@@ -41,6 +41,15 @@ diff --git a/src/SMESH/SMESH_Mesh.cxx b/src/SMESH/SMESH_Mesh.cxx
  #include "DriverSTL_R_SMDS_Mesh.h"
  #include "DriverSTL_W_SMDS_Mesh.h"
  #include "DriverUNV_R_SMDS_Mesh.h"
+@@ -57,7 +59,7 @@
+ 
+ #include <GEOMUtils.hxx>
+ 
+-#undef _Precision_HeaderFile
++// #undef _Precision_HeaderFile
+ #include <BRepBndLib.hxx>
+ #include <BRepPrimAPI_MakeBox.hxx>
+ #include <Bnd_Box.hxx>
 @@ -520,6 +522,7 @@ int SMESH_Mesh::UNVToMesh(const char* theFileName)
  
  int SMESH_Mesh::MEDToMesh(const char* theFileName, const char* theMeshName)

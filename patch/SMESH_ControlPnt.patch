@@ -1,0 +1,16 @@
+diff --git a/src/SMESHUtils/SMESH_ControlPnt.cxx b/src/SMESHUtils/SMESH_ControlPnt.cxx
+--- a/src/SMESHUtils/SMESH_ControlPnt.cxx
++++ b/src/SMESHUtils/SMESH_ControlPnt.cxx
+@@ -170,7 +170,11 @@ void SMESHUtils::createPointsSampleFromFace( const TopoDS_Face&       theFace,
+   // GetNodes
+   int nbNodes = aTri->NbNodes();
+   TColgp_Array1OfPnt nodes(1,nbNodes);
+-  nodes = aTri->Nodes();
++  // nodes = aTri->Nodes();
++  for (int i = 1; i <= nbNodes; i++)
++  {
++      nodes.SetValue(i, aTri->Node(i));
++  }
+ 
+   // Iterate on triangles and subdivide them
+   thePoints.reserve( thePoints.size() + nbTriangles );

@@ -1,0 +1,21 @@
+diff --git a/src/GEOMUtils/GEOMUtils.cxx b/src/GEOMUtils/GEOMUtils.cxx
+--- a/src/GEOMUtils/GEOMUtils.cxx
++++ b/src/GEOMUtils/GEOMUtils.cxx
+@@ -94,8 +94,6 @@
+ #include <sstream>
+ #include <algorithm>
+ 
+-#include <V3d_Coordinate.hxx>
+-
+ #include <Standard_Failure.hxx>
+ #include <Standard_NullObject.hxx>
+ #include <Standard_ErrorHandler.hxx> // CAREFUL ! position of this file is critic : see Lucien PIGNOLONI / OCC
+@@ -1028,7 +1026,7 @@ Standard_Real GEOMUtils::GetMinDistance
+ //=======================================================================
+ gp_Pnt GEOMUtils::ConvertClickToPoint( int x, int y, Handle(V3d_View) aView )
+ {
+-  V3d_Coordinate XEye, YEye, ZEye, XAt, YAt, ZAt;
++  Standard_Real XEye, YEye, ZEye, XAt, YAt, ZAt;
+   aView->Eye( XEye, YEye, ZEye );
+ 
+   aView->At( XAt, YAt, ZAt );

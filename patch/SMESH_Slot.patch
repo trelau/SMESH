@@ -1,0 +1,23 @@
+diff --git a/src/SMESHUtils/SMESH_Slot.cxx b/src/SMESHUtils/SMESH_Slot.cxx
+--- a/src/SMESHUtils/SMESH_Slot.cxx
++++ b/src/SMESHUtils/SMESH_Slot.cxx
+@@ -27,8 +27,6 @@
+ #include "SMDS_Mesh.hxx"
+ #include "SMDS_MeshGroup.hxx"
+ 
+-#include <IntAna_IntConicQuad.hxx>
+-#include <IntAna_Quadric.hxx>
+ #include <NCollection_DataMap.hxx>
+ #include <NCollection_Map.hxx>
+ #include <Precision.hxx>
+@@ -39,6 +37,10 @@
+ #include <gp_Pln.hxx>
+ #include <gp_Pnt.hxx>
+ #include <gp_Vec.hxx>
++#include <gp_Cone.hxx>
++#include <gp_Sphere.hxx>
++#include <IntAna_IntConicQuad.hxx>
++#include <IntAna_Quadric.hxx>
+ 
+ #include <Utils_SALOME_Exception.hxx>
+ 

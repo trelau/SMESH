@@ -1,7 +1,7 @@
 diff --git a/src/NETGENPlugin/NETGENPlugin_Mesher.cxx b/src/NETGENPlugin/NETGENPlugin_Mesher.cxx
 --- a/src/NETGENPlugin/NETGENPlugin_Mesher.cxx
 +++ b/src/NETGENPlugin/NETGENPlugin_Mesher.cxx
-@@ -41,14 +41,14 @@
+@@ -41,17 +41,18 @@
  #include <SMESH_ComputeError.hxx>
  #include <SMESH_ControlPnt.hxx>
  #include <SMESH_File.hxx>
@@ -18,7 +18,11 @@ diff --git a/src/NETGENPlugin/NETGENPlugin_Mesher.cxx b/src/NETGENPlugin/NETGENP
  
  #include <utilities.h>
  
-@@ -659,6 +659,7 @@ void NETGENPlugin_Mesher::SetParameters(const NETGENPlugin_Hypothesis* hyp)
++#include <Standard_Version.hxx>
+ #include <BRepAdaptor_Surface.hxx>
+ #include <BRepBuilderAPI_Copy.hxx>
+ #include <BRepLProp_SLProps.hxx>
+@@ -659,6 +660,7 @@ void NETGENPlugin_Mesher::SetParameters(const NETGENPlugin_Hypothesis* hyp)
      // const char*
      mparams.meshsizefilename= hyp->GetMeshSizeFile().empty() ? 0 : hyp->GetMeshSizeFile().c_str();
  #endif
@@ -26,7 +30,7 @@ diff --git a/src/NETGENPlugin/NETGENPlugin_Mesher.cxx b/src/NETGENPlugin/NETGENP
      const NETGENPlugin_Hypothesis::TLocalSize& localSizes = hyp->GetLocalSizesAndEntries();
      if ( !localSizes.empty() )
      {
-@@ -680,6 +681,7 @@ void NETGENPlugin_Mesher::SetParameters(const NETGENPlugin_Hypothesis* hyp)
+@@ -680,6 +682,7 @@ void NETGENPlugin_Mesher::SetParameters(const NETGENPlugin_Hypothesis* hyp)
          setLocalSize(S, val);
        }
      }
@@ -34,7 +38,40 @@ diff --git a/src/NETGENPlugin/NETGENPlugin_Mesher.cxx b/src/NETGENPlugin/NETGENP
    }
  
  #ifdef NETGEN_V6
-@@ -4554,6 +4556,8 @@ void NETGENPlugin_NetgenLibWrapper::CalcLocalH( netgen::Mesh * ngMesh )
+@@ -873,12 +876,12 @@ void NETGENPlugin_Mesher::SetLocalSizeForChordalError( netgen::OCCGeometry& occg
+       {
+         Standard_Integer n1,n2,n3;
+         triangulation->Triangles()(i).Get( n1,n2,n3 );
+-        p [0] = triangulation->Nodes()(n1).Transformed(loc).XYZ();
+-        p [1] = triangulation->Nodes()(n2).Transformed(loc).XYZ();
+-        p [2] = triangulation->Nodes()(n3).Transformed(loc).XYZ();
+-        uv[0] = triangulation->UVNodes()(n1).XY();
+-        uv[1] = triangulation->UVNodes()(n2).XY();
+-        uv[2] = triangulation->UVNodes()(n3).XY();
++        p [0] = triangulation->Node(n1).Transformed(loc).XYZ();
++        p [1] = triangulation->Node(n2).Transformed(loc).XYZ();
++        p [2] = triangulation->Node(n3).Transformed(loc).XYZ();
++        uv[0] = triangulation->UVNode(n1).XY();
++        uv[1] = triangulation->UVNode(n2).XY();
++        uv[2] = triangulation->UVNode(n3).XY();
+         surfProp.SetParameters( uv[0].X(), uv[0].Y() );
+         if ( !surfProp.IsCurvatureDefined() )
+           break;
+@@ -1036,7 +1039,13 @@ double NETGENPlugin_Mesher::GetDefaultMinSize(const TopoDS_Shape& geom,
+       BRep_Tool::Triangulation ( TopoDS::Face( fExp.Current() ), loc);
+     if ( triangulation.IsNull() ) continue;
+     const double fTol = BRep_Tool::Tolerance( TopoDS::Face( fExp.Current() ));
++#if OCC_VERSION_HEX < 0x070600
+     const TColgp_Array1OfPnt&   points = triangulation->Nodes();
++#else
++    auto points = [&triangulation](Standard_Integer index) {
++        return triangulation->Node(index);
++    };
++#endif
+     const Poly_Array1OfTriangle& trias = triangulation->Triangles();
+     for ( int iT = trias.Lower(); iT <= trias.Upper(); ++iT )
+     {
+@@ -4554,6 +4563,8 @@ void NETGENPlugin_NetgenLibWrapper::CalcLocalH( netgen::Mesh * ngMesh )
  
  std::string NETGENPlugin_NetgenLibWrapper::getOutputFileName()
  {
@@ -43,7 +80,7 @@ diff --git a/src/NETGENPlugin/NETGENPlugin_Mesher.cxx b/src/NETGENPlugin/NETGENP
    std::string aTmpDir = SALOMEDS_Tool::GetTmpDir();
  
    TCollection_AsciiString aGenericName = aTmpDir.c_str();
-@@ -4568,6 +4572,7 @@ std::string NETGENPlugin_NetgenLibWrapper::getOutputFileName()
+@@ -4568,6 +4579,7 @@ std::string NETGENPlugin_NetgenLibWrapper::getOutputFileName()
    aGenericName += ".out";
  
    return aGenericName.ToCString();
@@ -51,7 +88,7 @@ diff --git a/src/NETGENPlugin/NETGENPlugin_Mesher.cxx b/src/NETGENPlugin/NETGENP
  }
  
  //================================================================================
-@@ -4607,6 +4612,7 @@ void NETGENPlugin_NetgenLibWrapper::removeOutputFile()
+@@ -4607,6 +4619,7 @@ void NETGENPlugin_NetgenLibWrapper::removeOutputFile()
        netgen::myerr  = _ngcerr;
        _ngcout        = 0;
      }
@@ -59,11 +96,10 @@ diff --git a/src/NETGENPlugin/NETGENPlugin_Mesher.cxx b/src/NETGENPlugin/NETGENP
      string    tmpDir = SALOMEDS_Tool::GetDirFromPath ( _outputFileName );
      string aFileName = SALOMEDS_Tool::GetNameFromPath( _outputFileName ) + ".out";
      SALOMEDS_Tool::ListOfFiles aFiles;
-@@ -4614,5 +4620,6 @@ void NETGENPlugin_NetgenLibWrapper::removeOutputFile()
+@@ -4614,5 +4627,6 @@ void NETGENPlugin_NetgenLibWrapper::removeOutputFile()
      aFiles.push_back(aFileName.c_str());
  
      SALOMEDS_Tool::RemoveTemporaryFiles( tmpDir.c_str(), aFiles, true );
 +    */
    }
--}
-+}
+ }
