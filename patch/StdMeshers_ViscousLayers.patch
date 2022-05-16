@@ -1,0 +1,29 @@
+diff --git a/src/StdMeshers/StdMeshers_ViscousLayers.cxx b/src/StdMeshers/StdMeshers_ViscousLayers.cxx
+--- a/src/StdMeshers/StdMeshers_ViscousLayers.cxx
++++ b/src/StdMeshers/StdMeshers_ViscousLayers.cxx
+@@ -52,7 +52,10 @@
+ #include "StdMeshers_Quadrangle_2D.hxx"
+ #include "StdMeshers_ViscousLayers2D.hxx"
+ 
++#include <Standard_Version.hxx>
++#if OCC_VERSION_HEX < 0x070600
+ #include <Adaptor3d_HSurface.hxx>
++#endif
+ #include <BRepAdaptor_Curve.hxx>
+ #include <BRepAdaptor_Curve2d.hxx>
+ #include <BRepAdaptor_Surface.hxx>
+@@ -1818,8 +1821,13 @@ namespace VISCOUS_3D
+     //case GeomAbs_SurfaceOfExtrusion:
+     case GeomAbs_OffsetSurface:
+     {
++#if OCC_VERSION_HEX < 0x070600
+       Handle(Adaptor3d_HSurface) base = surface.BasisSurface();
+-      return getRovolutionAxis( base->Surface(), axis );
++      return getRovolutionAxis(base->Surface(), axis);
++#else
++      Handle(Adaptor3d_Surface) base = surface.BasisSurface();
++      return getRovolutionAxis(*base, axis);
++#endif
+     }
+     default: return false;
+     }

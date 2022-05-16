@@ -1,6 +1,5 @@
 import os
 import shutil
-import sys
 
 import patch
 
@@ -22,6 +21,12 @@ def prepare_netgen():
     success = pset.apply(strip=1, root='src/Netgen')
     if not success:
         raise RuntimeError('Failed to apply Netgen patch.')
+
+    # Patch occgenmesh for OCCT 7.6
+    pset = patch.fromfile('patch/occgenmesh_OCCT76.patch')
+    success = pset.apply(strip=0, root='src/Netgen')
+    if not success:
+        raise RuntimeError('Failed to apply occgenmesh for OCCT 7.6 patch.')
 
     # Copy Netgen cmake files into source directory
     shutil.copytree('cmake/Netgen', 'src/Netgen', dirs_exist_ok=True)
@@ -75,6 +80,12 @@ def prepare_geom():
     target = os.path.join('src/Geom', 'CMakeLists.txt')
     shutil.copyfile('cmake/Geom/CMakeLists.txt', target)
 
+    # Patch sources
+    pset = patch.fromfile('patch/GEOMUtils.patch')
+    success = pset.apply(strip=0, root='src/Geom')
+    if not success:
+        raise RuntimeError('Failed to apply GEOMUtils patch.')
+
 
 def prepare_smesh():
     """
@@ -93,22 +104,55 @@ def prepare_smesh():
     shutil.copyfile('cmake/SMESH/CMakeLists.txt', target)
 
     # Patch sources
+    pset = patch.fromfile('patch/mefisto.patch')
+    success = pset.apply(strip=0, root='src/SMESH')
+    if not success:
+        raise RuntimeError('Failed to apply mefisto patch.')
+
+    pset = patch.fromfile('patch/SMESH_ControlPnt.patch')
+    success = pset.apply(strip=0, root='src/SMESH')
+    if not success:
+        raise RuntimeError('Failed to apply SMESH_ControlPnt patch.')
+
+    pset = patch.fromfile('patch/SMESH_Controls.patch')
+    success = pset.apply(strip=0, root='src/SMESH')
+    if not success:
+        raise RuntimeError('Failed to apply SMESH_Controls patch.')
+
     pset = patch.fromfile('patch/SMESH_Mesh.patch')
     success = pset.apply(strip=0, root='src/SMESH')
     if not success:
         raise RuntimeError('Failed to apply SMESH_Mesh patch.')
 
-    # Patch sources
+    pset = patch.fromfile('patch/SMESH_MeshAlgos.patch')
+    success = pset.apply(strip=0, root='src/SMESH')
+    if not success:
+        raise RuntimeError('Failed to apply SMESH_MeshAlgos patch.')
+
+    pset = patch.fromfile('patch/SMESH_Slot.patch')
+    success = pset.apply(strip=0, root='src/SMESH')
+    if not success:
+        raise RuntimeError('Failed to apply SMESH_Slot patch.')
+
     pset = patch.fromfile('patch/SMESH_SMDS.patch')
     success = pset.apply(strip=0, root='src/SMESH')
     if not success:
         raise RuntimeError('Failed to apply SMESH_SMDS patch.')
 
-    # Patch sources
-    pset = patch.fromfile('patch/mefisto.patch')
+    pset = patch.fromfile('patch/StdMeshers_Adaptive1D.patch')
     success = pset.apply(strip=0, root='src/SMESH')
     if not success:
-        raise RuntimeError('Failed to apply mefisto patch.')
+        raise RuntimeError('Failed to apply StdMeshers_Adaptive1D patch.')
+
+    pset = patch.fromfile('patch/StdMeshers_Projection_2D.patch')
+    success = pset.apply(strip=0, root='src/SMESH')
+    if not success:
+        raise RuntimeError('Failed to apply StdMeshers_Projection_2D patch.')
+
+    pset = patch.fromfile('patch/StdMeshers_ViscousLayers.patch')
+    success = pset.apply(strip=0, root='src/SMESH')
+    if not success:
+        raise RuntimeError('Failed to apply StdMeshers_ViscousLayers patch.')
 
     # Copy MeshVSLink sources
     shutil.copytree('extra/MeshVSLink',
@@ -137,23 +181,9 @@ def prepare_netgen_plugin():
         raise RuntimeError('Failed to apply NETGENPlugin_Mesher patch.')
 
 
-def prepare_noexcept():
-    """
-    change throw to noexcept to align with c++17
-    """
-    os.system("grep -rl 'throw(SALOME_Exception)' ./src | xargs sed -i 's/throw(SALOME_Exception)/noexcept(false)/g'")
-    os.system("grep -rl 'throw( SALOME_Exception )' ./src | xargs sed -i 's/throw( SALOME_Exception )/noexcept(false)/g'")
-    os.system("grep -rl 'throw (SALOME_Exception)' ./src | xargs sed -i 's/throw (SALOME_Exception)/noexcept(false)/g'")
-    os.system("grep -rl 'throw ( SALOME_Exception )' ./src | xargs sed -i 's/throw ( SALOME_Exception )/noexcept(false)/g'")
-    os.system("grep -rl 'throw (std::bad_alloc)' ./src | xargs sed -i 's/throw (std::bad_alloc)/noexcept(false)/g'")
-
-
 if __name__ == '__main__':
     prepare_netgen()
     prepare_kernel()
     prepare_geom()
     prepare_smesh()
     prepare_netgen_plugin()
-    # prepare_noexcept()
-
-
