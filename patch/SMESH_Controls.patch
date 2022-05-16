@@ -1,0 +1,37 @@
+diff --git a/src/Controls/SMESH_Controls.cxx b/src/Controls/SMESH_Controls.cxx
+--- a/src/Controls/SMESH_Controls.cxx
++++ b/src/Controls/SMESH_Controls.cxx
+@@ -4375,7 +4375,7 @@ private:
+   bool (Classifier::*          myIsOutFun)(const gp_Pnt& p);
+   BRepClass3d_SolidClassifier* mySolidClfr; // ptr because of a run-time forbidden copy-constructor
+   Bnd_B3d                      myBox;
+-  GeomAPI_ProjectPointOnSurf   myProjFace;
++  GeomAPI_ProjectPointOnSurf*  myProjFace; // ptr because of deleted copy constructor in OCCT 7.6 in Extrema_GenExtPS.hxx
+   GeomAPI_ProjectPointOnCurve  myProjEdge;
+   gp_Pnt                       myVertexXYZ;
+   TopoDS_Shape                 myShape;
+@@ -4740,7 +4740,7 @@ void ElementsOnShape::Classifier::Init( const TopoDS_Shape& theShape,
+     else
+     {
+       surf->Bounds( u1,u2,v1,v2 );
+-      myProjFace.Init(surf, u1,u2, v1,v2, myTol );
++      myProjFace->Init(surf, u1,u2, v1,v2, myTol );
+       myIsOutFun = & ElementsOnShape::Classifier::isOutOfFace;
+     }
+     break;
+@@ -4839,12 +4839,12 @@ bool ElementsOnShape::Classifier::isOutOfBox( const gp_Pnt& p )
+ bool ElementsOnShape::Classifier::isOutOfFace( const gp_Pnt& p )
+ {
+   if ( isOutOfBox( p )) return true;
+-  myProjFace.Perform( p );
+-  if ( myProjFace.IsDone() && myProjFace.LowerDistance() <= myTol )
++  myProjFace->Perform( p );
++  if ( myProjFace->IsDone() && myProjFace->LowerDistance() <= myTol )
+   {
+     // check relatively to the face
+     Standard_Real u, v;
+-    myProjFace.LowerDistanceParameters(u, v);
++    myProjFace->LowerDistanceParameters(u, v);
+     gp_Pnt2d aProjPnt (u, v);
+     BRepClass_FaceClassifier aClsf ( TopoDS::Face( myShape ), aProjPnt, myTol );
+     if ( aClsf.State() == TopAbs_IN || aClsf.State() == TopAbs_ON )

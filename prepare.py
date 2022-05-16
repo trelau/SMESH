@@ -114,6 +114,11 @@ def prepare_smesh():
     if not success:
         raise RuntimeError('Failed to apply SMESH_ControlPnt patch.')
 
+    pset = patch.fromfile('patch/SMESH_Controls.patch')
+    success = pset.apply(strip=0, root='src/SMESH')
+    if not success:
+        raise RuntimeError('Failed to apply SMESH_Controls patch.')
+
     pset = patch.fromfile('patch/SMESH_Mesh.patch')
     success = pset.apply(strip=0, root='src/SMESH')
     if not success:
