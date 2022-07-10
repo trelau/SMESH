@@ -5,16 +5,16 @@
 [submodule "external/NETGENPlugin"]
 	path = external/NETGENPlugin
 	url = https://git.salome-platform.org/gitpub/plugins/netgenplugin.git
-	branch = V9_8_0
+	branch = V9_9_0
 [submodule "external/SMESH"]
 	path = external/SMESH
 	url = https://git.salome-platform.org/gitpub/modules/smesh.git
-	branch = V9_8_0
+	branch = V9_9_0
 [submodule "external/Kernel"]
 	path = external/Kernel
 	url = https://git.salome-platform.org/gitpub/modules/kernel.git
-	branch = V9_8_0
+	branch = V9_9_0
 [submodule "external/Geom"]
 	path = external/Geom
 	url = https://git.salome-platform.org/gitpub/modules/geom.git
-	branch = V9_8_0
+	branch = V9_9_0
