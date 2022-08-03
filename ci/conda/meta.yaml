@@ -49,7 +49,7 @@ test:
     - {{ cdt('libxxf86vm') }}         # [linux]
     - cmake
     - ninja
-    - catch2
+    - catch2 < 3.0
 
 about:
   home: https://github.com/trelau/SMESH
