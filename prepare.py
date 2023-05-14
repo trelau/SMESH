@@ -154,6 +154,11 @@ def prepare_smesh():
     if not success:
         raise RuntimeError('Failed to apply StdMeshers_ViscousLayers patch.')
 
+    pset = patch.fromfile('patch/SMESH_swap_bool_vector.patch')
+    success = pset.apply(strip=0, root='src/SMESH')
+    if not success:
+        raise RuntimeError('Failed to apply SMESH_swap_bool_vector patch.')
+
     # Copy MeshVSLink sources
     shutil.copytree('extra/MeshVSLink',
                     'src/SMESH/src/MeshVSLink', dirs_exist_ok=True)
