@@ -18,7 +18,7 @@ requirements:
     - ninja
 
   host:
-    - occt ==7.6
+    - occt
     - boost-cpp
     - tbb-devel
     - vtk
@@ -26,7 +26,7 @@ requirements:
     - pthreads-win32  # [win]
 
   run:
-    - occt ==7.6
+    - {{ pin_compatible('occt', max_pin='x.x.x') }}
     - vtk
     - boost-cpp
     - zlib
