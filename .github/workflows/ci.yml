@@ -29,10 +29,10 @@ jobs:
           sudo apt-get install libxext-dev
           sudo ln -s /usr/lib/x86_64-linux-gnu/ /usr/lib64
 
-      - name: "Configure conda"
-        shell: pwsh
-        run: |
-          conda init --all
+      - name: "Configure conda" 
+        uses: conda-incubator/setup-miniconda@v2
+        with:
+          auto-activate-base: true
 
       - name: "Install conda build"
         shell: pwsh
