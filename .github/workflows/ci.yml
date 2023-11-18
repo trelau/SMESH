@@ -82,9 +82,9 @@ jobs:
         run: echo "$CONDA/Scripts" >> $GITHUB_PATH
 
       - name: "Configure conda"
-        shell: bash -l {0}
-        run: |
-          conda init --all
+        uses: conda-incubator/setup-miniconda@v2
+        with:
+          auto-activate-base: true
 
       - name: "Install conda build"
         shell: bash -l {0}
@@ -131,9 +131,9 @@ jobs:
           submodules: 'recursive'
 
       - name: "Configure conda"
-        shell: pwsh
-        run: |
-          conda init --all
+        uses: conda-incubator/setup-miniconda@v2
+        with:
+          auto-activate-base: true
 
       - name: "Install conda build"
         shell: pwsh
