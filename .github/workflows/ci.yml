@@ -26,7 +26,7 @@ jobs:
         uses: conda-incubator/setup-miniconda@v2
         with:        
           auto-activate-base: true
-          activate-environment: ""
+          activate-environment: "base"
 
       - name: "Install conda build"
         run: conda install -c conda-forge conda-build python-patch
