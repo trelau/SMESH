@@ -2,7 +2,7 @@ import os
 import shutil
 
 import patch
-
+print("debug: which patch library is loaded? " + patch.__file__)
 
 def prepare_netgen():
     """
