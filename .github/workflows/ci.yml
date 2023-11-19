@@ -30,9 +30,11 @@ jobs:
           channels: conda-forge
 
       - name: "Install conda build"
-        run: mamba install conda-build python-patch
+        shell: sh -l {0}
+        run: mamba install conda-build python-patch 
 
       - name: "Check conda"
+        shell: sh -l {0}
         run: |
           conda info -a
           conda list
@@ -44,10 +46,12 @@ jobs:
           sudo ln -s /usr/lib/x86_64-linux-gnu/ /usr/lib64
 
       - name: "Prepare sources"
+        shell: sh -l {0}
         run: |
           python prepare.py
 
       - name: "Run conda build"
+        shell: sh -l {0}
         run: |
           mkdir conda
           conda build ci/conda --output-folder conda
