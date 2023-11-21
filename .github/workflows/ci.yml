@@ -9,12 +9,64 @@ on:
     types: [published]
 
 jobs:
-  build:
+  build_linux:
     runs-on: ${{ matrix.os }}
     strategy:
       fail-fast: false
       matrix:
-        os: ['ubuntu-latest', 'windows-latest', 'macos-latest']
+        os: ['ubuntu-latest']
+        
+    steps:
+      - name: "Clone SMESH"
+        uses: actions/checkout@v2
+        with:
+          submodules: 'recursive'
+
+      - name: "Configure conda"
+        uses: conda-incubator/setup-miniconda@v2
+        with:        
+          miniforge-version: latest
+          use-mamba: true
+          channels: conda-forge
+
+      - name: "Install conda build"
+        shell: pwsh
+        run: mamba install conda-build python-patch 
+
+      - name: "Check conda"
+        shell: pwsh
+        run: |
+          conda info -a
+          conda list
+
+      - name: "Install Linux Dependencies"
+        run: |
+          sudo apt-get install -y libxext-dev
+          sudo ln -s /usr/lib/x86_64-linux-gnu/ /usr/lib64
+
+      - name: "Prepare sources"
+        shell: pwsh
+        run: |
+          python prepare.py
+
+      - name: "Run conda build"
+        shell: pwsh
+        run: |
+          mkdir conda
+          conda build ci/conda --output-folder conda
+
+      - name: "Upload conda package"
+        uses: actions/upload-artifact@v2
+        with:
+          name: smesh-${{ matrix.os }}
+          path: conda
+
+  build_osx:
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        os: ['macos-latest']
         
     steps:
       - name: "Clone SMESH"
@@ -39,11 +91,52 @@ jobs:
           conda info -a
           conda list
 
-      - name: "Install Linux Dependencies"
-        if: matrix.os == 'ubuntu-latest'
+      - name: "Prepare sources"
+        shell: sh -l {0}
         run: |
-          sudo apt-get install -y libxext-dev
-          sudo ln -s /usr/lib/x86_64-linux-gnu/ /usr/lib64
+          python prepare.py
+
+      - name: "Run conda build"
+        shell: sh -l {0}
+        run: |
+          mkdir conda
+          conda build ci/conda --output-folder conda
+
+      - name: "Upload conda package"
+        uses: actions/upload-artifact@v2
+        with:
+          name: smesh-${{ matrix.os }}
+          path: conda
+
+  build_windows:
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        os: ['windows-latest']
+        
+    steps:
+      - name: "Clone SMESH"
+        uses: actions/checkout@v2
+        with:
+          submodules: 'recursive'
+
+      - name: "Configure conda"
+        uses: conda-incubator/setup-miniconda@v2
+        with:        
+          miniforge-version: latest
+          use-mamba: true
+          channels: conda-forge
+
+      - name: "Install conda build"
+        shell: sh -l {0}
+        run: mamba install conda-build python-patch 
+
+      - name: "Check conda"
+        shell: sh -l {0}
+        run: |
+          conda info -a
+          conda list
 
       - name: "Prepare sources"
         shell: sh -l {0}
@@ -61,3 +154,4 @@ jobs:
         with:
           name: smesh-${{ matrix.os }}
           path: conda
+
