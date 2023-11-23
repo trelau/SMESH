@@ -3,7 +3,6 @@ import shutil
 
 import patch
 
-
 def prepare_netgen():
     """
     Prepare sources for Netgen.
@@ -153,6 +152,11 @@ def prepare_smesh():
     success = pset.apply(strip=0, root='src/SMESH')
     if not success:
         raise RuntimeError('Failed to apply StdMeshers_ViscousLayers patch.')
+
+    pset = patch.fromfile('patch/SMESH_swap_bool_vector.patch')
+    success = pset.apply(strip=0, root='src/SMESH')
+    if not success:
+        raise RuntimeError('Failed to apply SMESH_swap_bool_vector patch.')
 
     # Copy MeshVSLink sources
     shutil.copytree('extra/MeshVSLink',

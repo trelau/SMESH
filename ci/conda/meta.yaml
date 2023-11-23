@@ -1,6 +1,6 @@
 package:
   name: smesh4pyocct
-  version: "9.8.0.2"
+  version: "9.9.0.0"
 
 source:
   path: ../..
@@ -18,7 +18,7 @@ requirements:
     - ninja
 
   host:
-    - occt ==7.6
+    - occt
     - boost-cpp
     - tbb-devel
     - vtk
@@ -26,7 +26,7 @@ requirements:
     - pthreads-win32  # [win]
 
   run:
-    - occt ==7.6
+    - {{ pin_compatible('occt', max_pin='x.x.x') }}
     - vtk
     - boost-cpp
     - zlib
@@ -49,7 +49,7 @@ test:
     - {{ cdt('libxxf86vm') }}         # [linux]
     - cmake
     - ninja
-    - catch2
+    - catch2 < 3.0
 
 about:
   home: https://github.com/trelau/SMESH
